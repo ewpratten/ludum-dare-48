@@ -8,3 +8,4 @@
  */
 
 rootProject.name = 'ludum-dare-48'
+include('app')
