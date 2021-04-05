@@ -42,9 +42,9 @@ dependencies {
     implementation "ca.retrylife:jstate:1.+-javadoc"
 
     // GameJ
-    implementation "dev.rsninja:gamej:1.+"
-    implementation "dev.rsninja:gamej:1.+-sources"
-    implementation "dev.rsninja:gamej:1.+-javadoc"
+    implementation "dev.rsninja:gamej:1.0.1"
+    implementation "dev.rsninja:gamej:1.0.1-sources"
+    implementation "dev.rsninja:gamej:1.0.1-javadoc"
 
     // JSON
     implementation 'com.google.code.gson:gson:2.8.6'
