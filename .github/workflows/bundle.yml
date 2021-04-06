@@ -1,0 +1,41 @@
+name: Bundle
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+
+      - name: Install cross compile tool
+        run: cargo install cross
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+        
+      - name: Build bundles
+        run: ./bundle/create-releases.sh
+
+      - name: Upload Linux bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux
+          path: ./bundle/linux/release-x86_64-unknown-linux-gnu.zip
+
+      - name: Upload Windows bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows
+          path: ./bundle/windows/release-x86_64-pc-windows-gnu.zip
+        
