@@ -16,4 +16,5 @@ echo "Copying assets"
 cp -r ./assets ./bundle/windows/release
 
 echo "Packing assets"
-zip -r ./bundle/windows/release-x86_64-pc-windows-gnu.zip ./bundle/windows/release
+cd ./bundle/windows/release
+zip -r ../release-x86_64-pc-windows-gnu.zip ./

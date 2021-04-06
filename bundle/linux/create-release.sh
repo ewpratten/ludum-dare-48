@@ -17,4 +17,5 @@ echo "Copying assets"
 cp -r ./assets ./bundle/linux/release
 
 echo "Packing assets"
-zip -r ./bundle/linux/release-x86_64-unknown-linux-gnu.zip ./bundle/linux/release
+cd ./bundle/linux/release
+zip -r ../release-x86_64-unknown-linux-gnu.zip ./
