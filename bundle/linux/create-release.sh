@@ -8,6 +8,7 @@ cross build --target x86_64-unknown-linux-gnu --release
 
 echo "Creating bundle output"
 rm -rf ./bundle/linux/release
+rm -rf ./bundle/linux/release-x86_64-unknown-linux-gnu.zip
 mkdir -p ./bundle/linux/release
 
 echo "Copying binary"

@@ -67,9 +67,8 @@ impl FrameAnimationWrapper {
             width: self.size.x,
             height: self.size.y,
         };
-        println!("{:?}", frame_box);
+        
         // Render
-        // handle.draw_texture(&mut self.sprite_sheet, 0, 0, Color::WHITE);
         handle.draw_texture_rec(&mut self.sprite_sheet, frame_box, position, Color::WHITE);
     }
 }

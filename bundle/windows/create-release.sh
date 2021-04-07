@@ -7,6 +7,7 @@ cross build --target x86_64-pc-windows-gnu --release
 
 echo "Creating bundle output"
 rm -rf ./bundle/windows/release
+rm -rf ./bundle/windows/release-x86_64-pc-windows-gnu.zip
 mkdir -p ./bundle/windows/release
 
 echo "Copying binary"
