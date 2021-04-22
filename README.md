@@ -1,5 +1,9 @@
 # ludum-dare-48
 
+[![Build](https://github.com/Ewpratten/ludum-dare-48/actions/workflows/build.yml/badge.svg)](https://github.com/Ewpratten/ludum-dare-48/actions/workflows/build.yml)
+[![Bundle](https://github.com/Ewpratten/ludum-dare-48/actions/workflows/bundle.yml/badge.svg)](https://github.com/Ewpratten/ludum-dare-48/actions/workflows/bundle.yml)
+[![Ludum Dare 48](https://img.shields.io/badge/Ludum%20Dare-48-orange)](https://ldjam.com/events/ludum-dare/48/$236526)
+
 ## Development Resources
 
 Documentation:
