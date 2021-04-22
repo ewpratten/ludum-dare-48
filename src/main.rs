@@ -2,6 +2,7 @@ mod lib;
 mod gamecore;
 
 use gamecore::{GameCore, GameState};
+use lib::profiler::GameProfiler;
 use raylib::prelude::*;
 
 // Game Launch Configuration
@@ -25,6 +26,10 @@ fn main() {
         state: GameState::Loading
     };
 
+    // Set up the game's profiler
+    let mut profiler = GameProfiler::new();
+    profiler.start();
+
     // Main rendering loop
     while !raylib.window_should_close() {
         let mut draw_handle = raylib.begin_drawing(&raylib_thread);
@@ -34,5 +39,15 @@ fn main() {
 
         // Call appropriate render function
         // TODO: the usual match statement on `game_core.state`
+
+        // Feed the profiler
+        profiler.seconds_per_frame = draw_handle.get_frame_time();
+        profiler.frames_per_second = draw_handle.get_fps();
+
+        // Send telemetry data
+        profiler.update();
     }
+
+    // Cleanup
+    profiler.stop();
 }
