@@ -8,3 +8,7 @@
  - [Raylib Rust examples](https://github.com/deltaphc/raylib-rs/tree/master/samples)
  - ["Are We Game Yet?"](https://arewegameyet.rs/#ecosystem)
  - [`cross` cross-compiler tool](https://github.com/rust-embedded/cross)
+
+### VSCode Setup
+
+If using VSCode, disable the `Rust` extension, and install everything in the **Workspace Recommendations** (You will see this list by searching `@recommended` in the extensions panel)
