@@ -1,6 +1,6 @@
 mod lib;
 
-use lib::{animation::wrapper::FrameAnimationWrapper, audio::wrapper::AudioWrapper};
+use lib::wrappers::{animation::FrameAnimationWrapper, audio::AudioWrapper};
 use raylib::prelude::*;
 
 fn main() {

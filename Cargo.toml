@@ -5,8 +5,6 @@ authors = ["Evan Pratten <ewpratten@gmail.com>"]
 edition = "2018"
 description = ""
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-raylib = { version = "3.5", git = "https://github.com/ewpratten/raylib-rs", branch = "cross_compile_fixes" }
+raylib = { version = "3.5", git = "https://github.com/ewpratten/raylib-rs", branch = "master" }
 

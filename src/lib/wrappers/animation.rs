@@ -5,6 +5,7 @@ use raylib::{
     texture::Texture2D,
 };
 
+/// A wrapper around an animation spritesheet
 pub struct FrameAnimationWrapper {
     sprite_sheet: Texture2D,
     size: Vector2,
@@ -14,6 +15,8 @@ pub struct FrameAnimationWrapper {
 }
 
 impl FrameAnimationWrapper {
+
+    /// Create a new animation from a texture containing all frames
     pub fn new(sprite_sheet: Texture2D, frame_size: Vector2, frame_count: u32, fps: u8) -> Self {
         Self {
             sprite_sheet,
@@ -24,14 +27,17 @@ impl FrameAnimationWrapper {
         }
     }
 
+    /// Start the animation
     pub fn start(&mut self, handle: &RaylibDrawHandle) {
         self.start_time_seconds = handle.get_time();
     }
 
+    /// Stop (and reset) the animation
     pub fn stop(&mut self) {
         self.start_time_seconds = 0.0;
     }
 
+    /// Get the index of the currently displayed frame
     pub fn get_current_frame_id(&self, handle: &RaylibDrawHandle) -> u32 {
         // Get the time since start
         let time_since_start = handle.get_time() - self.start_time_seconds;
@@ -41,11 +47,13 @@ impl FrameAnimationWrapper {
             as u32;
     }
 
+    /// Draw the next frame to the screen at `position`
     pub fn draw(&mut self, handle: &mut RaylibDrawHandle, position: Vector2) {
         let frame_id = self.get_current_frame_id(handle);
         self.draw_frame(handle, position, frame_id);
     }
 
+    /// Draw a specified frame to the screen at `position`
     pub fn draw_frame(
         &mut self,
         handle: &mut RaylibDrawHandle,
@@ -67,7 +75,7 @@ impl FrameAnimationWrapper {
             width: self.size.x,
             height: self.size.y,
         };
-        
+
         // Render
         handle.draw_texture_rec(&mut self.sprite_sheet, frame_box, position, Color::WHITE);
     }
