@@ -5,7 +5,7 @@ pub struct GlobalResources {}
 
 impl GlobalResources {
     /// Load all resources. **THIS WILL HANG!**
-    pub fn load_all(&mut self) -> Result<GlobalResources, Error> {
+    pub fn load_all() -> Result<GlobalResources, Error> {
         Ok(GlobalResources {})
     }
 }

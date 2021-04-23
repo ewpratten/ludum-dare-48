@@ -5,11 +5,14 @@ mod resources;
 
 use gamecore::{GameCore, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
-use logic::{loadingscreen::handle_loading_screen, mainmenu::handle_main_menu};
+use logic::{loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, screen::Screen};
 use raylib::prelude::*;
 
 // Game Launch Configuration
-const DEFAULT_WINDOW_DIMENSIONS: Vector2 = Vector2 { x: 800.0, y: 600.0 };
+const DEFAULT_WINDOW_DIMENSIONS: Vector2 = Vector2 {
+    x: 1080.0,
+    y: 720.0,
+};
 const WINDOW_TITLE: &str = r"Ludum Dare 48";
 const MAX_FPS: u32 = 60;
 
@@ -37,14 +40,22 @@ fn main() {
     // Init the audio subsystem
     let mut audio_system = AudioPlayer::new(RaylibAudio::init_audio_device());
 
+    // Create all the game screens
+    let mut loading_screen = LoadingScreen::new();
+    let mut main_menu_screen = MainMenuScreen::new();
+
     // Main rendering loop
     while !raylib.window_should_close() {
         let mut draw_handle = raylib.begin_drawing(&raylib_thread);
 
         // Call appropriate render function
         let new_state: Option<GameState> = match game_core.state {
-            GameState::Loading => handle_loading_screen(&mut draw_handle, &mut game_core),
-            GameState::MainMenu => handle_main_menu(&mut draw_handle, &mut game_core),
+            GameState::Loading => {
+                loading_screen.render(&mut draw_handle, &mut audio_system, &mut game_core)
+            }
+            GameState::MainMenu => {
+                main_menu_screen.render(&mut draw_handle, &mut audio_system, &mut game_core)
+            }
         };
 
         if new_state.is_some() {
@@ -67,6 +78,9 @@ fn main() {
             // Send telemetry data
             profiler.update();
         }
+
+        // Set the first frame flag
+        game_core.has_rendered_first_frame = true;
     }
 
     // Cleanup

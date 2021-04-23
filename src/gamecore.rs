@@ -5,7 +5,7 @@ use std::fmt;
 use crate::resources::GlobalResources;
 
 /// Overall states for the game
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum GameState {
     Loading,
     MainMenu,
@@ -22,6 +22,7 @@ pub struct GameCore {
     /// The game's overall state
     pub state: GameState,
     pub last_state_change_time: f64,
+    pub has_rendered_first_frame: bool,
 
     /// Resources
     pub resources: Option<GlobalResources>,
@@ -32,6 +33,7 @@ impl GameCore {
         Self {
             state: GameState::Loading,
             last_state_change_time: 0.0,
+            has_rendered_first_frame:false,
             resources: None,
         }
     }
