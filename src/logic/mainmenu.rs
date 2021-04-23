@@ -19,6 +19,10 @@ impl Screen for MainMenuScreen {
         audio_system: &mut AudioPlayer,
         game_core: &mut GameCore,
     ) -> Option<GameState> {
+
+        // Clear frame
+        draw_handle.clear_background(Color::RED);
+
         return None;
     }
 }

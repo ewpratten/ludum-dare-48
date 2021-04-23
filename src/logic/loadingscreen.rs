@@ -8,7 +8,7 @@ use crate::{
 
 use super::screen::Screen;
 
-const SECONDS_PER_LOGO: f64 = 2.0;
+const SECONDS_PER_LOGO: f64 = 4.0;
 const RUST_ORANGE: Color = Color::new(222, 165, 132, 255);
 
 #[derive(Debug, PartialEq)]
@@ -72,7 +72,7 @@ impl LoadingScreen {
         self.state = LoadingScreenState::LoadingResources;
     }
 
-    fn get_logo_mask(&self, draw_handle: &RaylibDrawHandle, playthrough_percent: f64) -> Color {
+    fn get_logo_mask(&self, playthrough_percent: f64) -> Color {
         // Determine the alpha
         let alpha;
         if playthrough_percent < 0.25 {
@@ -105,7 +105,7 @@ impl LoadingScreen {
             (draw_handle.get_time() - self.last_state_switch_time) / SECONDS_PER_LOGO;
 
         // Build a color mask
-        let mask = self.get_logo_mask(draw_handle, playthrough_percent);
+        let mask = self.get_logo_mask( playthrough_percent);
 
         // Render the logo
         // TODO
@@ -120,7 +120,7 @@ impl LoadingScreen {
     fn show_raylib_logo(
         &mut self,
         draw_handle: &mut RaylibDrawHandle,
-        game_core: &mut GameCore,
+        _game_core: &mut GameCore,
         win_height: i32,
         win_width: i32,
     ) {
@@ -130,19 +130,13 @@ impl LoadingScreen {
             (draw_handle.get_time() - self.last_state_switch_time) / SECONDS_PER_LOGO;
 
         // Build a color mask
-        let mask = self.get_logo_mask(draw_handle, playthrough_percent);
+        let mask = self.get_logo_mask( playthrough_percent);
 
         // Create modified colors
         let alpha_orange = Color {
             r: RUST_ORANGE.r,
             g: RUST_ORANGE.g,
             b: RUST_ORANGE.b,
-            a: mask.a
-        };
-        let alpha_black = Color {
-            r: Color::BLACK.r,
-            g: Color::BLACK.g,
-            b: Color::BLACK.b,
             a: mask.a
         };
 
@@ -198,8 +192,6 @@ impl Screen for LoadingScreen {
         let win_height = draw_handle.get_screen_height();
         let win_width = draw_handle.get_screen_width();
 
-        //TODO: Debug mode skip button
-
         // Call the appropriate internal handler function
         match self.state {
             LoadingScreenState::Preload => {
@@ -215,6 +207,20 @@ impl Screen for LoadingScreen {
                 self.show_raylib_logo(draw_handle, game_core, win_height, win_width)
             }
             LoadingScreenState::Finished => return Some(GameState::MainMenu),
+        }
+
+        // A DEBUG warning and skip button
+        #[cfg(debug_assertions)]
+        {
+
+            // Render debug text
+            draw_handle.draw_text("RUNNING IN DEBUG MODE", 0, 0, 20, Color::RED);
+            draw_handle.draw_text("Press ESC to skip this screen", 0, 25, 20, Color::RED);
+
+            if draw_handle.is_key_pressed(KeyboardKey::KEY_ESCAPE) {
+                return Some(GameState::MainMenu);
+            }
+            
         }
 
         return None;
