@@ -7,15 +7,15 @@ use crate::{
 
 use super::screen::Screen;
 
-pub struct MainMenuScreen {}
+pub struct InGameScreen {}
 
-impl MainMenuScreen {
+impl InGameScreen {
     pub fn new() -> Self {
         Self {}
     }
 }
 
-impl Screen for MainMenuScreen {
+impl Screen for InGameScreen {
     fn render(
         &mut self,
         draw_handle: &mut RaylibDrawHandle,
@@ -24,7 +24,7 @@ impl Screen for MainMenuScreen {
         game_core: &mut GameCore,
     ) -> Option<GameState> {
         // Clear frame
-        draw_handle.clear_background(Color::RED);
+        draw_handle.clear_background(Color::WHITE);
 
         return None;
     }

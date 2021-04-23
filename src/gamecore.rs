@@ -2,6 +2,8 @@
 
 use std::fmt;
 
+use raylib::{RaylibHandle, RaylibThread};
+
 use crate::resources::GlobalResources;
 
 /// Overall states for the game
@@ -25,16 +27,16 @@ pub struct GameCore {
     pub has_rendered_first_frame: bool,
 
     /// Resources
-    pub resources: Option<GlobalResources>,
+    pub resources: GlobalResources,
 }
 
 impl GameCore {
-    pub fn new() -> Self {
+    pub fn new(raylib: &mut RaylibHandle, thread: &RaylibThread) -> Self {
         Self {
             state: GameState::Loading,
             last_state_change_time: 0.0,
-            has_rendered_first_frame:false,
-            resources: None,
+            has_rendered_first_frame: false,
+            resources: GlobalResources::load_all(raylib, thread).expect("Failed to load game assets. Can not launch!"),
         }
     }
 }

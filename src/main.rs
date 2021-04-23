@@ -5,6 +5,7 @@ mod resources;
 
 use gamecore::{GameCore, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
+use log::{debug, info};
 use logic::{loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, screen::Screen};
 use raylib::prelude::*;
 
@@ -17,6 +18,9 @@ const WINDOW_TITLE: &str = r"Ludum Dare 48";
 const MAX_FPS: u32 = 60;
 
 fn main() {
+    // Configure the logger
+    env_logger::init();
+
     // Configure a window
     let (mut raylib, raylib_thread) = raylib::init()
         .size(
@@ -31,7 +35,7 @@ fn main() {
     raylib.set_exit_key(None);
 
     // Set up the game's core state
-    let mut game_core = GameCore::new();
+    let mut game_core = GameCore::new(&mut raylib, &raylib_thread);
 
     // Set up the game's profiler
     let mut profiler = GameProfiler::new();
@@ -50,17 +54,24 @@ fn main() {
 
         // Call appropriate render function
         let new_state: Option<GameState> = match game_core.state {
-            GameState::Loading => {
-                loading_screen.render(&mut draw_handle, &mut audio_system, &mut game_core)
-            }
-            GameState::MainMenu => {
-                main_menu_screen.render(&mut draw_handle, &mut audio_system, &mut game_core)
-            }
+            GameState::Loading => loading_screen.render(
+                &mut draw_handle,
+                &raylib_thread,
+                &mut audio_system,
+                &mut game_core,
+            ),
+            GameState::MainMenu => main_menu_screen.render(
+                &mut draw_handle,
+                &raylib_thread,
+                &mut audio_system,
+                &mut game_core,
+            ),
         };
 
         if new_state.is_some() {
             game_core.state = new_state.unwrap();
             game_core.last_state_change_time = draw_handle.get_time();
+            debug!("Switching global state to: {}", game_core.state);
         }
 
         // Feed the profiler
