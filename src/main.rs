@@ -5,8 +5,10 @@ mod resources;
 
 use gamecore::{GameCore, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
-use log::{debug, info};
-use logic::{loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, screen::Screen};
+use logic::{
+    loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen,
+    screen::Screen,
+};
 use raylib::prelude::*;
 
 // Game Launch Configuration
@@ -47,6 +49,7 @@ fn main() {
     // Create all the game screens
     let mut loading_screen = LoadingScreen::new();
     let mut main_menu_screen = MainMenuScreen::new();
+    let mut pause_menu_screen = PauseMenuScreen::new();
 
     // Main rendering loop
     while !raylib.window_should_close() {
@@ -66,12 +69,17 @@ fn main() {
                 &mut audio_system,
                 &mut game_core,
             ),
+            GameState::PauseMenu => pause_menu_screen.render(
+                &mut draw_handle,
+                &raylib_thread,
+                &mut audio_system,
+                &mut game_core,
+            ),
         };
 
+        // If needed, update the global state
         if new_state.is_some() {
-            game_core.state = new_state.unwrap();
-            game_core.last_state_change_time = draw_handle.get_time();
-            debug!("Switching global state to: {}", game_core.state);
+            game_core.switch_state(new_state.unwrap(), Some(&draw_handle));
         }
 
         // Feed the profiler
@@ -88,6 +96,24 @@ fn main() {
 
             // Send telemetry data
             profiler.update();
+        }
+
+        // Debug key
+        if draw_handle.is_key_pressed(KeyboardKey::KEY_F3) {
+            game_core.show_simple_debug_info = !game_core.show_simple_debug_info;
+        }
+
+        // Handle showing some simple debug info if needed
+        if game_core.show_simple_debug_info {
+            draw_handle.draw_text(
+                &format!("FPS: {}", draw_handle.get_fps()),
+                0,
+                0,
+                20,
+                Color::RED,
+            );
+            #[cfg(debug_assertions)]
+            draw_handle.draw_text("DEBUG BUILD", 0, 20, 20, Color::RED);
         }
 
         // Set the first frame flag

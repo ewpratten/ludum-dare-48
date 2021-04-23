@@ -7,15 +7,15 @@ use crate::{
 
 use super::screen::Screen;
 
-pub struct MainMenuScreen {}
+pub struct PauseMenuScreen {}
 
-impl MainMenuScreen {
+impl PauseMenuScreen {
     pub fn new() -> Self {
         Self {}
     }
 }
 
-impl Screen for MainMenuScreen {
+impl Screen for PauseMenuScreen {
     fn render(
         &mut self,
         draw_handle: &mut RaylibDrawHandle,

@@ -2,15 +2,20 @@
 
 use std::fmt;
 
-use raylib::{RaylibHandle, RaylibThread};
+use raylib::{
+    camera::Camera2D, math::Vector2, prelude::RaylibDrawHandle, RaylibHandle, RaylibThread,
+};
 
 use crate::resources::GlobalResources;
 
+use log::debug;
+
 /// Overall states for the game
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub enum GameState {
     Loading,
     MainMenu,
+    PauseMenu,
 }
 
 impl fmt::Display for GameState {
@@ -23,20 +28,47 @@ impl fmt::Display for GameState {
 pub struct GameCore {
     /// The game's overall state
     pub state: GameState,
+    pub last_state: GameState,
     pub last_state_change_time: f64,
     pub has_rendered_first_frame: bool,
 
     /// Resources
     pub resources: GlobalResources,
+
+    /// Camera (more than one maybe?)
+    pub master_camera: Camera2D,
+
+    /// Debug features
+    pub show_simple_debug_info: bool
 }
 
 impl GameCore {
     pub fn new(raylib: &mut RaylibHandle, thread: &RaylibThread) -> Self {
         Self {
             state: GameState::Loading,
+            last_state: GameState::Loading,
             last_state_change_time: 0.0,
             has_rendered_first_frame: false,
-            resources: GlobalResources::load_all(raylib, thread).expect("Failed to load game assets. Can not launch!"),
+            resources: GlobalResources::load_all(raylib, thread)
+                .expect("Failed to load game assets. Can not launch!"),
+            master_camera: Camera2D {
+                offset: Vector2::zero(),
+                target: Vector2::zero(),
+                rotation: 0.0,
+                zoom: 1.0,
+            },
+            show_simple_debug_info: false
+        }
+    }
+
+    pub fn switch_state(&mut self, new_state: GameState, draw_handle: Option<&RaylibDrawHandle>) {
+        debug!("Switching global state to: {}", new_state);
+
+        self.last_state = self.state;
+        self.state = new_state;
+
+        if draw_handle.is_some() {
+            self.last_state_change_time = draw_handle.as_ref().unwrap().get_time();
         }
     }
 }
