@@ -5,6 +5,7 @@ mod resources;
 
 use gamecore::{GameCore, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
+use log::info;
 use logic::{
     loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen,
     screen::Screen,
@@ -75,11 +76,24 @@ fn main() {
                 &mut audio_system,
                 &mut game_core,
             ),
+            GameState::GameQuit => None,
         };
 
         // If needed, update the global state
         if new_state.is_some() {
-            game_core.switch_state(new_state.unwrap(), Some(&draw_handle));
+            let new_state = new_state.unwrap();
+
+            // Handle game quit
+            if new_state == GameState::GameQuit {
+                // For now, just quit
+                // This also throws a SEGFAULT.. yay for unsafe code..
+                info!("User quit game");
+                unsafe {
+                    raylib::ffi::CloseWindow();
+                }
+            }
+
+            game_core.switch_state(new_state, Some(&draw_handle));
         }
 
         // Feed the profiler

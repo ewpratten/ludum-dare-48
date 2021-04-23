@@ -27,7 +27,10 @@ impl Screen for MainMenuScreen {
         // Clear frame
         draw_handle.clear_background(Color::WHITE);
 
-        
+        // TODO: This is only for testing
+        if draw_handle.is_key_pressed(KeyboardKey::KEY_ESCAPE) {
+            return Some(GameState::PauseMenu);
+        }
 
         return None;
     }
