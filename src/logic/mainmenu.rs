@@ -28,11 +28,11 @@ impl Screen for MainMenuScreen {
         let win_width = draw_handle.get_screen_width();
 
         // Clear frame
-        draw_handle.clear_background(Color::WHITE);
+        draw_handle.clear_background(Color::BLUE);
 
         // Render title
         draw_handle.draw_text(
-            "TMP TITLE",
+            "ONE BREATH",
             (win_height / 2) - 80,
             win_width / 4,
             40,

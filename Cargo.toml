@@ -1,5 +1,5 @@
 [package]
-name = "ludum-dare-48"
+name = "one-breath"
 version = "0.1.0"
 authors = ["Evan Pratten <ewpratten@gmail.com>"]
 edition = "2018"

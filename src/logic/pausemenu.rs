@@ -7,7 +7,7 @@ use crate::{
 
 use super::screen::Screen;
 
-const SCREEN_PANEL_SIZE: Vector2 = Vector2 { x: 300.0, y: 300.0 };
+const SCREEN_PANEL_SIZE: Vector2 = Vector2 { x: 300.0, y: 380.0 };
 
 pub struct PauseMenuScreen {}
 
@@ -117,6 +117,15 @@ impl Screen for PauseMenuScreen {
                 }
             }
         }
+
+        // Render credits
+        draw_handle.draw_text(
+            "Credits:\n\t- @ewpratten\n\t- @rsninja722\n\t- @wm-c\n\t- @catarinaburghi",
+            (win_width / 2) - (SCREEN_PANEL_SIZE.x as i32 / 2) + 10,
+            (win_height / 2) - (SCREEN_PANEL_SIZE.y as i32 / 2) + 120,
+            20,
+            Color::BLACK,
+        );
 
         // Close and quit buttons
         let bottom_left_button_dimensions = Rectangle {

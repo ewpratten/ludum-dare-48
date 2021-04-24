@@ -134,7 +134,7 @@ impl GameProfiler {
                             w_type: None,
                         },
                         DataSet {
-                            title: Some("Breath".to_string()),
+                            title: Some("Boost".to_string()),
                             value: json!(self.data.player_boost_percent),
                             graph: Some(false),
                             unit: Some("%".to_string()),
