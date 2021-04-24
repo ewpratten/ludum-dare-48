@@ -48,9 +48,9 @@ impl FrameAnimationWrapper {
     }
 
     /// Draw the next frame to the screen at `position`
-    pub fn draw(&mut self, handle: &mut RaylibDrawHandle, position: Vector2) {
+    pub fn draw(&mut self, handle: &mut RaylibDrawHandle, position: Vector2, rotation: f32) {
         let frame_id = self.get_current_frame_id(handle);
-        self.draw_frame(handle, position, frame_id);
+        self.draw_frame(handle, position, rotation, frame_id);
     }
 
     /// Draw a specified frame to the screen at `position`
@@ -58,6 +58,7 @@ impl FrameAnimationWrapper {
         &mut self,
         handle: &mut RaylibDrawHandle,
         position: Vector2,
+        rotation: f32,
         frame_number: u32,
     ) {
         // Determine the col number
@@ -76,7 +77,13 @@ impl FrameAnimationWrapper {
             height: self.size.y,
         };
 
+        // Rotation origin
+        let origin = Vector2 {
+            x: self.size.x,
+            y: self.size.y
+        };
+
         // Render
-        handle.draw_texture_rec(&mut self.sprite_sheet, frame_box, position, Color::WHITE);
+        handle.draw_texture_pro(&mut self.sprite_sheet, frame_box, position, origin, rotation, Color::WHITE);
     }
 }
