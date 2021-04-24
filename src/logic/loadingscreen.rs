@@ -1,9 +1,6 @@
 use raylib::prelude::*;
 
-use crate::{
-    gamecore::{GameCore, GameState},
-    lib::wrappers::audio::player::AudioPlayer,
-};
+use crate::{gamecore::{GameCore, GameState}, lib::{utils::calculate_linear_slide, wrappers::audio::player::AudioPlayer}};
 
 use super::screen::Screen;
 
@@ -32,14 +29,7 @@ impl LoadingScreen {
 
     fn get_logo_mask(&self, playthrough_percent: f64) -> Color {
         // Determine the alpha
-        let alpha;
-        if playthrough_percent < 0.25 {
-            alpha = playthrough_percent / 0.25
-        } else if playthrough_percent > 0.75 {
-            alpha = 1.0 - ((playthrough_percent - 0.75) / 0.25);
-        } else {
-            alpha = 1.0;
-        }
+        let alpha = calculate_linear_slide(playthrough_percent);
 
         // Build a color mask
         Color {

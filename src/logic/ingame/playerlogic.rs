@@ -76,6 +76,10 @@ pub fn update_player_movement(
     let user_request_boost = draw_handle.is_mouse_button_down(MouseButton::MOUSE_LEFT_BUTTON);
     let user_request_action = draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_RIGHT_BUTTON);
 
+    if user_request_action {
+        game_core.player.begin_attack();
+    }
+
     // Move the player in their direction
     let speed_multiplier;
     if user_request_boost && game_core.player.boost_percent >= 0.0 {
@@ -128,7 +132,8 @@ pub fn update_player_movement(
 
     // Only do this if the mouse is far enough away
     let player_real_movement = game_core.player.direction * speed_multiplier;
-    if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0 {
+    let player_stunned = game_core.player.stun_timer > 0.0;
+    if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0 || player_stunned{
         game_core.player.is_moving = true;
         game_core.player.position += player_real_movement;
 
@@ -145,6 +150,11 @@ pub fn update_player_movement(
         }
     } else {
         game_core.player.is_moving = false;
+
+        // Handle updating the stun timer
+        if player_stunned {
+            game_core.player.stun_timer -= dt;
+        }
     }
 
     // Move the camera to follow the player
@@ -169,60 +179,3 @@ pub fn update_player_movement(
     // }
 }
 
-pub fn render_player(context_2d: &mut RaylibMode2D<RaylibDrawHandle>, game_core: &mut GameCore) {
-    // Get the player
-    let player = &game_core.player;
-
-    // Convert the player direction to a rotation
-    let player_rotation = Vector2::zero().angle_to(player.direction);
-
-    // Render the player's boost ring
-    // This functions both as a breath meter, and as a boost meter
-    let boost_ring_max_radius = player.size.x + 5.0;
-    context_2d.draw_circle(
-        player.position.x as i32,
-        player.position.y as i32,
-        boost_ring_max_radius * player.boost_percent,
-        TRANSLUCENT_WHITE_64,
-    );
-    context_2d.draw_ring(
-        Vector2 {
-            x: player.position.x as i32 as f32,
-            y: player.position.y as i32 as f32,
-        },
-        boost_ring_max_radius,
-        boost_ring_max_radius + 1.0,
-        0,
-        (360.0 * player.breath_percent) as i32,
-        0,
-        TRANSLUCENT_WHITE_96,
-    );
-
-    // Render the player based on what is happening
-    if player.is_boost_charging {
-        game_core.resources.player_animation_boost_charge.draw(
-            context_2d,
-            player.position,
-            player_rotation.to_degrees() - 90.0,
-        );
-    } else if player.is_boosting {
-        game_core.resources.player_animation_boost.draw(
-            context_2d,
-            player.position,
-            player_rotation.to_degrees() - 90.0,
-        );
-    } else if player.is_moving {
-        game_core.resources.player_animation_regular.draw(
-            context_2d,
-            player.position,
-            player_rotation.to_degrees() - 90.0,
-        );
-    } else {
-        game_core.resources.player_animation_regular.draw_frame(
-            context_2d,
-            player.position,
-            player_rotation.to_degrees() - 90.0,
-            0,
-        );
-    }
-}

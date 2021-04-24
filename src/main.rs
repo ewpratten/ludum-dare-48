@@ -134,6 +134,7 @@ fn main() {
             profiler.data.player_coins = game_core.player.coins;
             profiler.data.player_boost_percent = game_core.player.boost_percent;
             profiler.data.player_breath_percent = game_core.player.breath_percent;
+            profiler.data.player_pose = game_core.player.position;
 
             // Send telemetry data
             profiler.update();
