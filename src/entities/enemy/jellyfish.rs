@@ -11,7 +11,7 @@ pub struct JellyFish {
     pub stunned_timer: f64,
 
     #[serde(skip)]
-    pub do_stun_player: bool
+    pub do_stun_player: bool,
 }
 
 impl JellyFish {}
@@ -37,22 +37,20 @@ impl EnemyBase for JellyFish {
         resources.jellyfish_animation_attack.draw(
             context_2d,
             Vector2 {
-                x: self.position.x
-                    ,
-                y: self.position.y + (2.0 * v_trans as f32)
-                    ,
+                x: self.position.x,
+                y: self.position.y + (2.0 * v_trans as f32),
             },
             0.0,
         );
-        self.do_stun_player = resources.jellyfish_animation_attack.get_current_frame_id(context_2d) == 13;
+        self.do_stun_player = resources
+            .jellyfish_animation_attack
+            .get_current_frame_id(context_2d)
+            == 13;
     }
 
     fn handle_logic(&mut self, player: &mut Player, dt: f64) {
-        
         // Handle stunning the player
-        if self.do_stun_player {
-            
-        }
+        if self.do_stun_player {}
     }
 
     fn handle_getting_attacked(&mut self) {
