@@ -126,6 +126,11 @@ pub fn update_player_movement(
         }
     }
 
+    // Handle flippers doing a speed increase
+    if game_core.player.inventory.flippers.is_some() {
+        let speed_multiplier = speed_multiplier * game_core.player.inventory.flippers.as_ref().unwrap().speed_increase;
+    }
+
     // Update the player's breath
     game_core.player.breath_percent =
         (game_core.player.breath_percent - BREATH_DECREASE_PER_SECOND * dt as f32).clamp(0.0, 1.0);
