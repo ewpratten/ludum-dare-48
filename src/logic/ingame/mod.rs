@@ -3,11 +3,7 @@ mod playerlogic;
 
 use raylib::prelude::*;
 
-use crate::{
-    gamecore::{GameCore, GameState},
-    lib::wrappers::audio::player::AudioPlayer,
-    pallette::{SKY, WATER},
-};
+use crate::{entities::enemy::base::EnemyBase, gamecore::{GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer, pallette::{SKY, WATER}};
 
 use super::screen::Screen;
 
@@ -124,9 +120,11 @@ impl Screen for InGameScreen {
                 fish.update_position(&mut game_core.player, dt, &fish_clone);
                 fish.render(&mut context_2d);
             }
+            for jellyfish in game_core.world.jellyfish.iter() {
+                jellyfish.render(&mut context_2d);
+            }
 
             // Render Player
-            // playerlogic::render_player(&mut context_2d, game_core);
             game_core.player.render(&mut context_2d, &mut game_core.resources, dt);
         }
 
