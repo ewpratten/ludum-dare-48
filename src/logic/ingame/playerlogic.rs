@@ -81,7 +81,7 @@ pub fn update_player_movement(
     }
 
     // Move the player in their direction
-    let speed_multiplier;
+    let mut speed_multiplier;
     if user_request_boost && game_core.player.boost_percent >= 0.0 {
         // Set the speed multiplier
         speed_multiplier = BOOST_PLAYER_SPEED as f32;
@@ -128,7 +128,7 @@ pub fn update_player_movement(
 
     // Handle flippers doing a speed increase
     if game_core.player.inventory.flippers.is_some() {
-        let speed_multiplier = speed_multiplier * game_core.player.inventory.flippers.as_ref().unwrap().speed_increase;
+        speed_multiplier = speed_multiplier * game_core.player.inventory.flippers.as_ref().unwrap().speed_increase;
     }
 
     // Update the player's breath

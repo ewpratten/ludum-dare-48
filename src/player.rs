@@ -83,6 +83,10 @@ impl Player {
         }
     }
 
+    pub fn is_stun_gun_active(&self) -> bool {
+        return self.attacking_timer != 0.0 && self.inventory.stun_gun.is_some();
+    }
+
     /// Calculate how far the player is
     pub fn calculate_depth_percent(&self, world: &World) -> f32 {
         let dist_from_player_to_end = self.position.distance_to(world.end_position);
@@ -134,7 +138,7 @@ impl Player {
         );
 
         // Calculate AOE ring
-        if self.attacking_timer != 0.0 && self.inventory.stun_gun.is_some() {
+        if self.is_stun_gun_active() {
             let aoe_ring = calculate_linear_slide( self.attacking_timer / self.inventory.stun_gun.as_ref().unwrap().duration) as f32;
             self.attacking_timer = (self.attacking_timer - dt).max(0.0);
 
