@@ -10,6 +10,7 @@ use crate::entities::fish::FishEntity;
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct World {
     pub end_position: Vector2,
+    pub player_spawn: Vector2,
 
     #[serde(rename = "fish")]
     pub fish_positions: Vec<Vector2>,

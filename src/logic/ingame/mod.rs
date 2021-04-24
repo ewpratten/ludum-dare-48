@@ -36,8 +36,8 @@ impl InGameScreen {
             height: game_core.resources.cave_mid_layer.height as f32,
         };
         let world_bounds = Rectangle {
-            x: -200.0,
-            y: -100.0,
+            x: 0.0,
+            y: 0.0,
             width: game_core.resources.cave_mid_layer.width as f32,
             height: game_core.resources.cave_mid_layer.height as f32,
         };
@@ -55,6 +55,18 @@ impl InGameScreen {
             },
             Color::WHITE,
         );
+    }
+
+    fn render_colliders(
+        &mut self,
+        context_2d: &mut RaylibMode2D<RaylibDrawHandle>,
+        game_core: &mut GameCore,
+    ) {
+        
+        // Render every collider
+        for collider in game_core.world.colliders.iter() {
+            context_2d.draw_rectangle_lines_ex(collider, 2, Color::RED);
+        }
     }
 }
 
@@ -95,6 +107,7 @@ impl Screen for InGameScreen {
 
             // Render the world
             self.render_world(&mut context_2d, game_core);
+            self.render_colliders(&mut context_2d, game_core);
 
             // Render entities
             let mut fish = &mut game_core.world.fish;

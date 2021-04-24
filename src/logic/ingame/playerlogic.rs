@@ -129,8 +129,20 @@ pub fn update_player_movement(
     // Only do this if the mouse is far enough away
     let player_real_movement = game_core.player.direction * speed_multiplier;
     if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0 {
-        game_core.player.position += player_real_movement;
         game_core.player.is_moving = true;
+
+        // Check for any collisions
+        for collider in game_core.world.colliders.iter() {
+            if collider.check_collision_point_rec(game_core.player.position + player_real_movement)
+            {
+                // game_core.player.is_moving = false;
+                break;
+            }
+        }
+
+        if game_core.player.is_moving {
+            game_core.player.position += player_real_movement;
+        }
     } else {
         game_core.player.is_moving = false;
     }
@@ -146,12 +158,15 @@ pub fn update_player_movement(
         game_core.master_camera.target += player_real_movement;
     }
 
+    // If the player is not on screen, snap the camera to them
+    if player_screen_position.distance_to(window_center).abs() > window_center.y {
+        game_core.master_camera.target = game_core.player.position - (window_center / 2.0);
+    }
+
     // // Clamp camera target y to 0
     // if game_core.master_camera.target.y < -100.0 {
     //     game_core.master_camera.target.y = -100.0;
     // }
-
-
 }
 
 pub fn render_player(context_2d: &mut RaylibMode2D<RaylibDrawHandle>, game_core: &mut GameCore) {
