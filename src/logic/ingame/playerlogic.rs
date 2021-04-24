@@ -65,7 +65,9 @@ pub fn update_player_movement(
     }
 
     // set angle
-    game_core.player.direction = Vector2::new(f32::cos(player_angle), f32::sin(player_angle));
+    if !game_core.player.is_stunned() {
+        game_core.player.direction = Vector2::new(f32::cos(player_angle), f32::sin(player_angle));
+    }
 
     // In the case the player is in "null", just jump the camera to them
     if game_core.player.position == Vector2::zero() {
@@ -145,7 +147,9 @@ pub fn update_player_movement(
     // Only do this if the mouse is far enough away
     let player_stunned = game_core.player.stun_timer > 0.0;
     let mut player_real_movement = game_core.player.direction * speed_multiplier;
-    if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0 {
+    if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0
+        && !game_core.player.is_stunned()
+    {
         if game_core.player.is_moving {
             // move in x
             game_core.player.position.x += player_real_movement.x;

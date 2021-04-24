@@ -99,7 +99,7 @@ impl Player {
 
     /// Try to attack with the stun gun
     pub fn begin_attack(&mut self, world: &mut World) {
-        if self.inventory.stun_gun.is_some() && self.stun_timer == 0.0 {
+        if self.inventory.stun_gun.is_some() && !self.is_stunned() {
             self.attacking_timer = self.inventory.stun_gun.as_ref().unwrap().duration;
 
             // Stun everything in reach
@@ -115,6 +115,10 @@ impl Player {
 
     pub fn is_stun_gun_active(&self) -> bool {
         return self.attacking_timer != 0.0 && self.inventory.stun_gun.is_some();
+    }
+
+    pub fn is_stunned(&self) -> bool {
+        return self.stun_timer > 0.0;
     }
 
     /// Calculate how far the player is
@@ -193,7 +197,13 @@ impl Player {
         }
 
         // Render the player based on what is happening
-        if self.is_boost_charging {
+        if self.is_stunned() {
+            resources.player_animation_stunned.draw(
+                context_2d,
+                self.position,
+                player_rotation.to_degrees() - 90.0,
+            );
+        } else if self.is_boost_charging {
             resources.player_animation_boost_charge.draw(
                 context_2d,
                 self.position,
