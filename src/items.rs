@@ -12,8 +12,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct StunGun {
-    range: f32,
-    duration: f64
+    pub range: f32,
+    pub duration: f64
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
@@ -24,5 +24,5 @@ pub struct Flashlight;
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Flippers {
-    speed_increase: f32
+    pub speed_increase: f32
 }

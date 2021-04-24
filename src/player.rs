@@ -79,7 +79,7 @@ impl Player {
     /// Try to attack with the stun gun
     pub fn begin_attack(&mut self) {
         if true || self.inventory.stun_gun.is_some() && self.stun_timer == 0.0 {
-            self.attacking_timer = STUN_ATTACK_TIME;
+            self.attacking_timer = self.inventory.stun_gun.as_ref().unwrap().duration;
         }
     }
 
