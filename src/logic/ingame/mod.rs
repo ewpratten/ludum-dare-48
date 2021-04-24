@@ -10,6 +10,7 @@ use super::screen::Screen;
 const NORMAL_PLAYER_SPEED: i32 = 4;
 const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
 const CAMERA_FOLLOW_SPEED: f32 = 0.7;
+const TURN_SPEED: f32 = 0.05;
 
 pub enum InGameState {
     BUYING,
@@ -41,7 +42,41 @@ impl InGameScreen {
         let raw_movement_direction = mouse_world_pose - game_core.player.position;
         let mut normalized_movement_direction = raw_movement_direction;
         normalized_movement_direction.normalize();
-        game_core.player.direction = normalized_movement_direction;
+
+        let tau: f32 =  PI as f32 * 2.0;
+        let mut player_angle: f32 = Vector2::zero().angle_to(game_core.player.direction);
+        let mut desired_angle: f32 = Vector2::zero().angle_to(normalized_movement_direction);
+
+        if desired_angle < 0.0 {
+            desired_angle += tau;
+        }
+
+        if player_angle % tau > desired_angle {
+            if (player_angle % tau) - desired_angle > PI as f32 {
+                player_angle += TURN_SPEED;
+            } else {
+                player_angle -= TURN_SPEED;
+            }
+        } else {
+            if desired_angle - (player_angle % tau) > PI as f32 {
+                player_angle -= TURN_SPEED;
+            } else {
+                player_angle += TURN_SPEED;
+            }
+        }
+
+        if f32::abs(player_angle - desired_angle) < (TURN_SPEED * 1.1) {
+            player_angle = desired_angle;
+        }
+        if player_angle > tau {
+            player_angle -= tau;
+        }
+        if player_angle < 0.0 {
+            player_angle += tau;
+        }
+
+
+        game_core.player.direction = Vector2::new(f32::cos(player_angle), f32::sin(player_angle));
     
         // In the case the player is in "null", just jump the camera to them
         if game_core.player.position == Vector2::zero() {
