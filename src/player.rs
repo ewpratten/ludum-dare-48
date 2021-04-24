@@ -7,10 +7,10 @@ const STUN_ATTACK_TIME: f64 = 0.75;
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 pub struct PlayerInventory {
-    stun_gun: Option<StunGun>,
-    air_bag: Option<AirBag>,
-    flashlight: Option<Flashlight>,
-    flippers: Option<Flippers>
+    pub stun_gun: Option<StunGun>,
+    pub air_bag: Option<AirBag>,
+    pub flashlight: Option<Flashlight>,
+    pub flippers: Option<Flippers>
 }
 
 #[derive(Debug, Default)]
@@ -78,7 +78,7 @@ impl Player {
 
     /// Try to attack with the stun gun
     pub fn begin_attack(&mut self) {
-        if true || self.inventory.stun_gun.is_some() && self.stun_timer == 0.0 {
+        if self.inventory.stun_gun.is_some() && self.stun_timer == 0.0 {
             self.attacking_timer = self.inventory.stun_gun.as_ref().unwrap().duration;
         }
     }
@@ -134,15 +134,15 @@ impl Player {
         );
 
         // Calculate AOE ring
-        if self.attacking_timer != 0.0 {
-            let aoe_ring = calculate_linear_slide( self.attacking_timer / STUN_ATTACK_TIME) as f32;
+        if self.attacking_timer != 0.0 && self.inventory.stun_gun.is_some() {
+            let aoe_ring = calculate_linear_slide( self.attacking_timer / self.inventory.stun_gun.as_ref().unwrap().duration) as f32;
             self.attacking_timer = (self.attacking_timer - dt).max(0.0);
 
             // Render attack AOE
             context_2d.draw_circle_lines(
                 self.position.x as i32,
                 self.position.y as i32,
-                AOE_RING_MAX_RADIUS * aoe_ring,
+                self.inventory.stun_gun.as_ref().unwrap().range * aoe_ring,
                 TRANSLUCENT_WHITE_64,
             );
         }
