@@ -1,29 +1,36 @@
 use super::base::EnemyBase;
+use crate::{player::Player, resources::GlobalResources};
 use raylib::prelude::*;
 use serde::{Deserialize, Serialize};
-use crate::{player::Player, resources::GlobalResources};
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 pub struct JellyFish {
     pub position: Vector2,
 
     #[serde(skip)]
-    pub stunned_timer: f64
+    pub stunned_timer: f64,
 }
 
-impl JellyFish {
-    
-
-}
+impl JellyFish {}
 
 impl EnemyBase for JellyFish {
-    fn render(&self, context_2d: &mut raylib::prelude::RaylibMode2D<raylib::prelude::RaylibDrawHandle>, resources: &mut GlobalResources) {
+    fn render(
+        &self,
+        context_2d: &mut raylib::prelude::RaylibMode2D<raylib::prelude::RaylibDrawHandle>,
+        resources: &mut GlobalResources,
+    ) {
+        // Simple sine position
+        let v_trans = context_2d.get_time().sin();
 
         // Render the jellyfish
-        resources.jellyfish_animation_regular.draw(context_2d, self.position, 0.0);
-        
-        // // TODO
-        // context_2d.draw_circle_v(self.position, 5.0, Color::RED);
+        resources.jellyfish_animation_regular.draw(
+            context_2d,
+            Vector2 {
+                x: self.position.x,
+                y: self.position.y+ (2.0 * v_trans as f32),
+            },
+            0.0,
+        );
     }
 
     fn handle_logic(&mut self, player: &mut Player, dt: f64) {
