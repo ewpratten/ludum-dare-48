@@ -14,6 +14,8 @@ pub struct GlobalResources {
 
     // Player
     pub player_animation_regular: FrameAnimationWrapper,
+    pub player_animation_boost_charge: FrameAnimationWrapper,
+    pub player_animation_boost: FrameAnimationWrapper,
 }
 
 impl GlobalResources {
@@ -35,6 +37,24 @@ impl GlobalResources {
                 Vector2 { x: 11.0, y: 21.0 },
                 8,
                 100 / 8,
+            ),
+            player_animation_boost_charge: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/character/diveStrokeCharge.png")?,
+                )?,
+                Vector2 { x: 11.0, y: 21.0 },
+                21,
+                100 / 4,
+            ),
+            player_animation_boost: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/character/diveStroke.png")?,
+                )?,
+                Vector2 { x: 17.0, y: 21.0 },
+                21,
+                30,
             ),
         })
     }

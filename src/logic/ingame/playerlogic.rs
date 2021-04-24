@@ -9,7 +9,7 @@ const NORMAL_PLAYER_SPEED: i32 = 3;
 const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
 const CAMERA_FOLLOW_SPEED: f32 = 0.7;
 const TURN_SPEED: f32 = 0.15;
-const BOOST_DECREASE_PER_SECOND: f32 = 0.75;
+const BOOST_DECREASE_PER_SECOND: f32 = 0.65;
 const BOOST_REGEN_PER_SECOND: f32 = 0.25;
 const BREATH_DECREASE_PER_SECOND: f32 = 0.01;
 
@@ -84,9 +84,35 @@ pub fn update_player_movement(
 
         // Decrease the boost
         game_core.player.boost_percent -= BOOST_DECREASE_PER_SECOND * dt as f32;
+        game_core.player.is_boosting = true;
+        if game_core.player.boost_percent >= 0.9 {
+            game_core
+                .resources
+                .player_animation_boost_charge
+                .start(draw_handle);
+            game_core.resources.player_animation_regular.stop();
+            game_core.player.is_boost_charging = true;
+        } else {
+            game_core.resources.player_animation_boost_charge.stop();
+            game_core
+                .resources
+                .player_animation_boost
+                .start(draw_handle);
+            game_core.player.is_boost_charging = false;
+        }
     } else {
         // Set the speed multiplier
         speed_multiplier = NORMAL_PLAYER_SPEED as f32;
+
+        // Reset boost animation
+        game_core.player.is_boosting = false;
+        game_core.player.is_boost_charging = false;
+        game_core.resources.player_animation_boost_charge.stop();
+        game_core.resources.player_animation_boost.stop();
+        game_core
+            .resources
+            .player_animation_regular
+            .start(draw_handle);
 
         // Handle boost regen
         if !user_request_boost {
@@ -104,6 +130,9 @@ pub fn update_player_movement(
     let player_real_movement = game_core.player.direction * speed_multiplier;
     if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0 {
         game_core.player.position += player_real_movement;
+        game_core.player.is_moving = true;
+    } else {
+        game_core.player.is_moving = false;
     }
 
     // Move the camera to follow the player
@@ -139,7 +168,7 @@ pub fn render_player(context_2d: &mut RaylibMode2D<RaylibDrawHandle>, game_core:
             x: player.position.x as i32 as f32,
             y: player.position.y as i32 as f32,
         },
-        boost_ring_max_radius ,
+        boost_ring_max_radius,
         boost_ring_max_radius + 1.0,
         0,
         (360.0 * player.breath_percent) as i32,
@@ -147,19 +176,31 @@ pub fn render_player(context_2d: &mut RaylibMode2D<RaylibDrawHandle>, game_core:
         TRANSLUCENT_WHITE_96,
     );
 
-    // Render the player
-    game_core.resources.player_animation_regular.draw(context_2d, player.position, player_rotation.to_degrees() + 90.0);
-
-    // TODO: tmp rect
-    // context_2d.draw_rectangle_pro(
-    //     Rectangle {
-    //         x: player.position.x,
-    //         y: player.position.y,
-    //         width: player.size.x,
-    //         height: player.size.y,
-    //     },
-    //     player.size / 2.0,
-    //     player_rotation.to_degrees() + 90.0,
-    //     Color::BLACK,
-    // );
+    // Render the player based on what is happening
+    if player.is_boost_charging {
+        game_core.resources.player_animation_boost_charge.draw(
+            context_2d,
+            player.position,
+            player_rotation.to_degrees() - 90.0,
+        );
+    } else if player.is_boosting {
+        game_core.resources.player_animation_boost.draw(
+            context_2d,
+            player.position,
+            player_rotation.to_degrees() - 90.0,
+        );
+    } else if player.is_moving {
+        game_core.resources.player_animation_regular.draw(
+            context_2d,
+            player.position,
+            player_rotation.to_degrees() - 90.0,
+        );
+    } else {
+        game_core.resources.player_animation_regular.draw_frame(
+            context_2d,
+            player.position,
+            player_rotation.to_degrees() - 90.0,
+            0,
+        );
+    }
 }

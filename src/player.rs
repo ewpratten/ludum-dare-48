@@ -9,7 +9,10 @@ pub struct Player {
     pub size: Vector2,
     pub coins: u32,
     pub boost_percent: f32,
-    pub breath_percent: f32
+    pub breath_percent: f32,
+    pub is_moving: bool,
+    pub is_boosting: bool,
+    pub is_boost_charging: bool
 }
 
 impl Player {

@@ -24,7 +24,9 @@ impl FrameAnimationWrapper {
 
     /// Start the animation
     pub fn start(&mut self, handle: &RaylibDrawHandle) {
-        self.start_time_seconds = handle.get_time();
+        if self.start_time_seconds == 0.0 {
+            self.start_time_seconds = handle.get_time();
+        }
     }
 
     /// Stop (and reset) the animation
@@ -80,8 +82,8 @@ impl FrameAnimationWrapper {
 
         // Rotation origin
         let origin = Vector2 {
-            x: self.size.x,
-            y: self.size.y
+            x: self.size.x / 2.0,
+            y: self.size.y / 2.0
         };
 
         // Render
