@@ -3,7 +3,11 @@ mod playerlogic;
 
 use raylib::prelude::*;
 
-use crate::{gamecore::{GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer, pallette::{SKY, WATER}};
+use crate::{
+    gamecore::{GameCore, GameState},
+    lib::wrappers::audio::player::AudioPlayer,
+    pallette::{SKY, WATER},
+};
 
 use super::screen::Screen;
 
@@ -42,7 +46,7 @@ impl InGameScreen {
             height: game_core.resources.cave_mid_layer.height as f32,
         };
 
-        // Clear the background 
+        // Clear the background
         context_2d.draw_rectangle_rec(world_bounds, WATER);
 
         // Render the world texture
@@ -51,7 +55,7 @@ impl InGameScreen {
             source_bounds,
             Vector2 {
                 x: world_bounds.x,
-                y: world_bounds.y
+                y: world_bounds.y,
             },
             Color::WHITE,
         );
@@ -62,10 +66,18 @@ impl InGameScreen {
         context_2d: &mut RaylibMode2D<RaylibDrawHandle>,
         game_core: &mut GameCore,
     ) {
-        
         // Render every collider
         for collider in game_core.world.colliders.iter() {
-            context_2d.draw_rectangle_lines_ex(collider, 2, Color::RED);
+            context_2d.draw_rectangle_lines_ex(
+                Rectangle {
+                    x: collider.x - (collider.width / 2.0),
+                    y: collider.y - (collider.height / 2.0),
+                    width: collider.width,
+                    height: collider.height,
+                },
+                2,
+                Color::RED,
+            );
         }
     }
 }
