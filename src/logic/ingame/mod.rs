@@ -61,6 +61,7 @@ impl Screen for InGameScreen {
             x: (win_width as f32 / 2.0),
             y: (win_height as f32 / 2.0),
         };
+        let camera_window_center = window_center * (1.0 / game_core.master_camera.zoom);
 
         // Update player movement
         playerlogic::update_player_movement(draw_handle, game_core, window_center);
