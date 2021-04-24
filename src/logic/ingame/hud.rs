@@ -8,13 +8,7 @@ pub fn render_hud(
     window_center: Vector2,
 ) {
     // Get the relevant data
-    let dist_from_player_to_end = game_core
-        .player
-        .position
-        .distance_to(game_core.world.end_position);
-    let dist_from_start_to_end = Vector2::zero().distance_to(game_core.world.end_position);
-    let progress = ((dist_from_start_to_end - dist_from_player_to_end) / dist_from_start_to_end)
-        .clamp(0.0, 1.0);
+    let progress = game_core.player.calculate_depth_percent(&game_core.world);
 
     // Determine the progress slider position
     let slider_bound_height = 20.0;

@@ -1,6 +1,13 @@
-use raylib::math::{Rectangle, Vector2};
+use raylib::prelude::*;
 
-use crate::lib::utils::triangles::rotate_vector;
+use crate::{
+    gamecore::{GameCore, GameProgress},
+    items::ShopItems,
+    lib::utils::triangles::rotate_vector,
+    pallette::{TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96},
+    resources::GlobalResources,
+    world::World,
+};
 
 #[derive(Debug, Default)]
 pub struct Player {
@@ -13,6 +20,7 @@ pub struct Player {
     pub is_moving: bool,
     pub is_boosting: bool,
     pub is_boost_charging: bool,
+    pub inventory: Vec<ShopItems>,
 }
 
 impl Player {
@@ -55,5 +63,83 @@ impl Player {
         //     || rectangle.check_collision_point_rec(bottom_left_corner);
 
         return rectangle.check_collision_circle_rec(self.position, (self.size.y * 0.5) / 2.0);
+    }
+
+    /// Calculate how far the player is
+    pub fn calculate_depth_percent(&self, world: &World) -> f32 {
+        let dist_from_player_to_end = self.position.distance_to(world.end_position);
+        let dist_from_start_to_end = Vector2::zero().distance_to(world.end_position);
+        return ((dist_from_start_to_end - dist_from_player_to_end) / dist_from_start_to_end)
+            .clamp(0.0, 1.0);
+    }
+
+    /// Create GameProgress from the current life
+    pub fn create_statistics(&self, game_core: &GameCore, current_time: f64) -> GameProgress {
+        GameProgress {
+            coins: self.coins,
+            inventory: self.inventory.clone(),
+            max_depth: self.calculate_depth_percent(&game_core.world),
+            fastest_time: Some(current_time - game_core.last_state_change_time),
+        }
+    }
+
+    /// Render the player
+    pub fn render(
+        &self,
+        context_2d: &mut RaylibMode2D<RaylibDrawHandle>,
+        resources: &mut GlobalResources,
+    ) {
+        // Convert the player direction to a rotation
+        let player_rotation = Vector2::zero().angle_to(self.direction);
+
+        // Render the player's boost ring
+        // This functions both as a breath meter, and as a boost meter
+        let boost_ring_max_radius = self.size.x + 5.0;
+        context_2d.draw_circle(
+            self.position.x as i32,
+            self.position.y as i32,
+            boost_ring_max_radius * self.boost_percent,
+            TRANSLUCENT_WHITE_64,
+        );
+        context_2d.draw_ring(
+            Vector2 {
+                x: self.position.x as i32 as f32,
+                y: self.position.y as i32 as f32,
+            },
+            boost_ring_max_radius,
+            boost_ring_max_radius + 1.0,
+            0,
+            (360.0 * self.breath_percent) as i32,
+            0,
+            TRANSLUCENT_WHITE_96,
+        );
+
+        // Render the player based on what is happening
+        if self.is_boost_charging {
+            resources.player_animation_boost_charge.draw(
+                context_2d,
+                self.position,
+                player_rotation.to_degrees() - 90.0,
+            );
+        } else if self.is_boosting {
+            resources.player_animation_boost.draw(
+                context_2d,
+                self.position,
+                player_rotation.to_degrees() - 90.0,
+            );
+        } else if self.is_moving {
+            resources.player_animation_regular.draw(
+                context_2d,
+                self.position,
+                player_rotation.to_degrees() - 90.0,
+            );
+        } else {
+            resources.player_animation_regular.draw_frame(
+                context_2d,
+                self.position,
+                player_rotation.to_degrees() - 90.0,
+                0,
+            );
+        }
     }
 }

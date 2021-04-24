@@ -31,10 +31,10 @@ impl fmt::Display for GameState {
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct GameProgress {
-    coins: u32,
-    max_depth: f32,
-    fastest_time: Option<f64>,
-    inventory: Vec<ShopItems>,
+    pub coins: u32,
+    pub max_depth: f32,
+    pub fastest_time: Option<f64>,
+    pub inventory: Vec<ShopItems>,
 }
 
 impl GameProgress {
@@ -43,6 +43,7 @@ impl GameProgress {
             ..Default::default()
         }
     }
+    
 
     pub fn from_file(file: String) -> Result<Self, Error> {
         // Load the file
