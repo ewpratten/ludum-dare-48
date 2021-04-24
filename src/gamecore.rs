@@ -6,7 +6,11 @@ use raylib::{
     camera::Camera2D, math::Vector2, prelude::RaylibDrawHandle, RaylibHandle, RaylibThread,
 };
 
-use crate::{items::ShopItems, player::Player, resources::GlobalResources, world::World};
+use crate::{
+    player::{Player, PlayerInventory},
+    resources::GlobalResources,
+    world::World,
+};
 
 use failure::Error;
 use log::debug;
@@ -34,7 +38,7 @@ pub struct GameProgress {
     pub coins: u32,
     pub max_depth: f32,
     pub fastest_time: Option<f64>,
-    pub inventory: Vec<ShopItems>,
+    pub inventory: PlayerInventory,
 }
 
 impl GameProgress {
@@ -43,7 +47,6 @@ impl GameProgress {
             ..Default::default()
         }
     }
-    
 
     pub fn from_file(file: String) -> Result<Self, Error> {
         // Load the file

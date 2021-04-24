@@ -1,8 +1,17 @@
 use raylib::prelude::*;
+use serde::{Serialize, Deserialize};
+use crate::{gamecore::{GameCore, GameProgress}, items::{AirBag, Flashlight, Flippers, StunGun}, lib::utils::{calculate_linear_slide}, pallette::{TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96}, resources::GlobalResources, world::World};
 
-use crate::{gamecore::{GameCore, GameProgress}, items::ShopItems, lib::utils::{calculate_linear_slide, triangles::rotate_vector}, pallette::{TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96}, resources::GlobalResources, world::World};
+const AOE_RING_MAX_RADIUS: f32 = 60.0;
+const STUN_ATTACK_TIME: f64 = 0.75;
 
-const AOE_RING_MAX_RADIUS: f32 = 40.0;
+#[derive(Debug, Serialize, Deserialize, Default, Clone)]
+pub struct PlayerInventory {
+    stun_gun: Option<StunGun>,
+    air_bag: Option<AirBag>,
+    flashlight: Option<Flashlight>,
+    flippers: Option<Flippers>
+}
 
 #[derive(Debug, Default)]
 pub struct Player {
@@ -15,7 +24,7 @@ pub struct Player {
     pub is_moving: bool,
     pub is_boosting: bool,
     pub is_boost_charging: bool,
-    pub inventory: Vec<ShopItems>,
+    pub inventory: PlayerInventory,
     pub stun_timer: f64,
     pub attacking_timer: f64,
 }
@@ -69,8 +78,8 @@ impl Player {
 
     /// Try to attack with the stun gun
     pub fn begin_attack(&mut self) {
-        if true || self.inventory.contains(&ShopItems::StunGun) && self.stun_timer == 0.0 {
-            self.stun_timer = 2.0;
+        if true || self.inventory.stun_gun.is_some() && self.stun_timer == 0.0 {
+            self.attacking_timer = STUN_ATTACK_TIME;
         }
     }
 
@@ -97,7 +106,7 @@ impl Player {
         &mut self,
         context_2d: &mut RaylibMode2D<RaylibDrawHandle>,
         resources: &mut GlobalResources,
-        dt: f64
+        dt: f64,
     ) {
         // Convert the player direction to a rotation
         let player_rotation = Vector2::zero().angle_to(self.direction);
@@ -125,16 +134,18 @@ impl Player {
         );
 
         // Calculate AOE ring
-        let aoe_ring = calculate_linear_slide(self.attacking_timer) as f32;
-        self.stun_timer = (self.stun_timer - dt).max(0.0);
+        if self.attacking_timer != 0.0 {
+            let aoe_ring = calculate_linear_slide( self.attacking_timer / STUN_ATTACK_TIME) as f32;
+            self.attacking_timer = (self.attacking_timer - dt).max(0.0);
 
-        // Render attack AOE
-        context_2d.draw_circle_lines(
-            self.position.x as i32,
-            self.position.y as i32,
-            AOE_RING_MAX_RADIUS * aoe_ring,
-            TRANSLUCENT_WHITE_64,
-        );
+            // Render attack AOE
+            context_2d.draw_circle_lines(
+                self.position.x as i32,
+                self.position.y as i32,
+                AOE_RING_MAX_RADIUS * aoe_ring,
+                TRANSLUCENT_WHITE_64,
+            );
+        }
 
         // Render the player based on what is happening
         if self.is_boost_charging {
