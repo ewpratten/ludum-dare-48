@@ -110,7 +110,7 @@ impl InGameScreen {
         context_2d.draw_circle(0, 0, 10.0, Color::BLACK);
     }
 
-    fn render_hud(&mut self, draw_handle: &mut RaylibDrawHandle, game_core: &mut GameCore) {
+    fn render_hud(&mut self, draw_handle: &mut RaylibDrawHandle, game_core: &mut GameCore, window_center: Vector2) {
         // Get the relevant data
         let breath = game_core.player.breath_percent;
         let dist_from_player_to_end = game_core
@@ -120,7 +120,26 @@ impl InGameScreen {
         let dist_from_start_to_end = Vector2::zero().distance_to(game_core.world.end_position);
         let progress = (dist_from_start_to_end - dist_from_player_to_end) / dist_from_start_to_end;
 
-        
+        // Render the base of the progress bar
+        let progress_bar_rect = Rectangle {
+            x: 20.0,
+            y: (window_center.y * 2.0) - 20.0 - 40.0,
+            width: (window_center.x * 2.0) - 40.0,
+            height: 40.0
+        };
+        draw_handle.draw_rectangle_rec(progress_bar_rect, Color::BLUE);
+        draw_handle.draw_rectangle_lines_ex(progress_bar_rect, 6, Color::WHITE);
+
+        // Render the slider of the progress bar
+        let progress_bar_slider = Rectangle {
+            x: (((window_center.x * 2.0) - 40.0) * progress.abs().clamp(0.0, 1.0)) + 10.0,
+            y: (window_center.y * 2.0) - 20.0 - 50.0,
+            width: 40.0,
+            height: 60.0
+        };
+        draw_handle.draw_rectangle_rec(progress_bar_slider, Color::BLUE);
+        //TODO: This causes a render bug
+        draw_handle.draw_rectangle_lines_ex(progress_bar_slider, 6, Color::WHITE);
 
     }
 }
@@ -162,6 +181,9 @@ impl Screen for InGameScreen {
             // Render Player
             self.render_player(&mut context_2d, game_core);
         }
+
+        // Render the hud
+        self.render_hud(draw_handle, game_core, window_center);
 
         return None;
     }
