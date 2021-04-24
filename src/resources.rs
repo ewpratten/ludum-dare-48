@@ -21,7 +21,8 @@ pub struct GlobalResources {
     pub cave_mid_layer: Texture2D,
 
     // Enemies
-    pub jellyfish_animation_regular: FrameAnimationWrapper
+    pub jellyfish_animation_regular: FrameAnimationWrapper,
+    pub jellyfish_animation_attack: FrameAnimationWrapper,
 }
 
 impl GlobalResources {
@@ -73,6 +74,15 @@ impl GlobalResources {
                 )?,
                 Vector2 { x: 10.0, y: 10.0 },
                 6,
+                4,
+            ),
+            jellyfish_animation_attack: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/jellyAttack.png")?,
+                )?,
+                Vector2 { x: 20.0, y: 20.0 },
+                15,
                 4,
             ),
         })

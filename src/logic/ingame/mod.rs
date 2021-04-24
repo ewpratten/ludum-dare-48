@@ -120,7 +120,7 @@ impl Screen for InGameScreen {
                 fish.update_position(&mut game_core.player, dt, &fish_clone);
                 fish.render(&mut context_2d);
             }
-            for jellyfish in game_core.world.jellyfish.iter() {
+            for jellyfish in game_core.world.jellyfish.iter_mut() {
                 jellyfish.render(&mut context_2d, &mut game_core.resources);
             }
 
