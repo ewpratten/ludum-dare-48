@@ -1,7 +1,9 @@
-use rand::{Rng, prelude::ThreadRng};
+use rand::{prelude::ThreadRng, Rng};
 use raylib::prelude::*;
 
-use crate::{gamecore::GameCore, lib::utils::triangles::rotate_vector, player::Player, world::World};
+use crate::{
+    gamecore::GameCore, lib::utils::triangles::rotate_vector, player::Player, world::World,
+};
 
 const FISH_FOLLOW_PLAYER_DISTANCE: f32 = 30.0;
 const FISH_FOLLOW_PLAYER_SPEED: f32 = 1.8;
@@ -24,18 +26,26 @@ pub struct FishEntity {
     velocity: Vector2,
     pub following_player: bool,
     size: Vector2,
-    rng: ThreadRng
+    rng: ThreadRng,
+    color: Color,
 }
 
 impl FishEntity {
     pub fn new(position: Vector2) -> Self {
+        let mut rng = rand::thread_rng();
         Self {
             position: position,
             direction: Vector2::zero(),
             velocity: Vector2::zero(),
             following_player: false,
             size: Vector2 { x: 5.0, y: 8.0 },
-            rng: rand::thread_rng()
+            color: Color {
+                r: rng.gen_range(128..225),
+                g: rng.gen_range(128..225),
+                b: rng.gen_range(128..225),
+                a: 140,
+            },
+            rng,
         }
     }
 
@@ -49,7 +59,7 @@ impl FishEntity {
 
     pub fn handle_follow_player(&mut self, player: &Player, dt: f64, other_fish: &Vec<FishEntity>) {
         let mut acceleration: Vector2 = Vector2::zero();
- 
+
         let mut steer: Vector2 = Vector2::zero();
         let mut count1: u16 = 0;
         let mut sum1: Vector2 = Vector2::zero();
@@ -118,7 +128,7 @@ impl FishEntity {
         // Move the fish
         self.direction = self.velocity.normalized();
         self.velocity += acceleration;
-        
+
         self.velocity.x = f32::min(f32::max(self.velocity.x, -FISH_MAX_SPEED), FISH_MAX_SPEED);
         self.velocity.y = f32::min(f32::max(self.velocity.y, -FISH_MAX_SPEED), FISH_MAX_SPEED);
         self.position += self.velocity;
@@ -186,7 +196,7 @@ impl FishEntity {
             self.position + fish_front,
             self.position + fish_bl,
             self.position + fish_br,
-            Color::BLACK,
+            self.color,
         );
     }
 }
