@@ -5,6 +5,7 @@ mod resources;
 mod player;
 mod world;
 mod pallette;
+mod entities;
 
 use gamecore::{GameCore, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
