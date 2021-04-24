@@ -20,3 +20,17 @@ pub const TRANSLUCENT_WHITE_64: Color = Color {
     b: 255,
     a: 64,
 };
+
+pub const SKY: Color = Color {
+    r: 15,
+    g: 193,
+    b: 217,
+    a: 255
+};
+
+pub const WATER: Color = Color {
+    r: 24,
+    g: 66,
+    b: 143,
+    a: 255
+};

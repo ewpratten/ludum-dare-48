@@ -3,10 +3,7 @@ mod playerlogic;
 
 use raylib::prelude::*;
 
-use crate::{
-    gamecore::{GameCore, GameState},
-    lib::wrappers::audio::player::AudioPlayer,
-};
+use crate::{gamecore::{GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer, pallette::{SKY, WATER}};
 
 use super::screen::Screen;
 
@@ -38,6 +35,15 @@ impl InGameScreen {
             width: game_core.resources.cave_mid_layer.width as f32,
             height: game_core.resources.cave_mid_layer.height as f32,
         };
+        let world_bounds = Rectangle {
+            x: -100.0,
+            y: -100.0,
+            width: game_core.resources.cave_mid_layer.width as f32,
+            height: game_core.resources.cave_mid_layer.height as f32,
+        };
+
+        // Clear the background 
+        context_2d.draw_rectangle_rec(world_bounds, WATER);
 
         // Render the world texture
         context_2d.draw_texture_rec(
@@ -61,7 +67,7 @@ impl Screen for InGameScreen {
         let dt = draw_handle.get_time() - game_core.last_frame_time;
 
         // Clear frame
-        draw_handle.clear_background(Color::BLUE);
+        draw_handle.clear_background(Color::BLACK);
 
         // Handle the pause menu being opened
         if draw_handle.is_key_pressed(KeyboardKey::KEY_ESCAPE) {
