@@ -76,7 +76,7 @@ impl Screen for InGameScreen {
             // Render entities
             let mut fish = &mut game_core.world.fish;
             for fish in fish.iter_mut() {
-                fish.update_position(&game_core.player, dt);
+                fish.update_position(&mut game_core.player, dt);
                 fish.render(&mut context_2d);
             }
 

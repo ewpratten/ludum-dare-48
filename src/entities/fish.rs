@@ -12,7 +12,7 @@ const FISH_ATTACH_RADIUS: f32 = 20.0;
 pub struct FishEntity {
     position: Vector2,
     direction: Vector2,
-    following_player: bool,
+    pub following_player: bool,
     size: Vector2,
     rng: ThreadRng
 }
@@ -66,7 +66,7 @@ impl FishEntity {
         self.position += movement;
     }
 
-    pub fn handle_free_movement(&mut self, player: &Player, dt: f64) {
+    pub fn handle_free_movement(&mut self, player: &mut Player, dt: f64) {
         // Distance and direction to player
         let dist_to_player = player.position - self.position;
         let dist_to_player_lin = self.position.distance_to(player.position);
@@ -76,6 +76,9 @@ impl FishEntity {
         // Handle player picking up fish
         if player.position.distance_to(self.position).abs() <= player.size.y * 2.2 {
             self.following_player = true;
+
+            // Add currency to the player
+            player.coins += 1;
         }
 
         // Look at the player;
@@ -83,7 +86,7 @@ impl FishEntity {
         self.direction = direction_to_player;
     }
 
-    pub fn update_position(&mut self, player: &Player, dt: f64) {
+    pub fn update_position(&mut self, player: &mut Player, dt: f64) {
         if self.following_player {
             self.handle_follow_player(player, dt);
         } else {
