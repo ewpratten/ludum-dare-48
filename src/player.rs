@@ -21,6 +21,8 @@ pub struct Player {
     pub is_boosting: bool,
     pub is_boost_charging: bool,
     pub inventory: Vec<ShopItems>,
+    pub stun_timer: f64,
+    pub attacking_timer: f64,
 }
 
 impl Player {
@@ -63,6 +65,18 @@ impl Player {
         //     || rectangle.check_collision_point_rec(bottom_left_corner);
 
         return rectangle.check_collision_circle_rec(self.position, (self.size.y * 0.5) / 2.0);
+    }
+
+    /// Stun the player
+    pub fn set_stun_seconds(&mut self, seconds: f64) {
+        self.stun_timer = seconds;
+    }
+
+    /// Try to attack with the stun gun
+    pub fn begin_attack(&mut self) {
+        if self.inventory.contains(&ShopItems::StunGun) && self.stun_timer == 0.0 {
+            self.stun_timer = 2.0;
+        }
     }
 
     /// Calculate how far the player is
@@ -112,6 +126,20 @@ impl Player {
             (360.0 * self.breath_percent) as i32,
             0,
             TRANSLUCENT_WHITE_96,
+        );
+
+        // Calculate AOE ring
+        let aoe_ring;
+        if self.attacking_timer <= 0.25 {
+            aoe_ring = self.attacking_timer;
+        }
+
+        // Render attack AOE
+        context_2d.draw_circle_lines(
+            self.position.x as i32,
+            self.position.y as i32,
+            boost_ring_max_radius * self.boost_percent,
+            TRANSLUCENT_WHITE_64,
         );
 
         // Render the player based on what is happening

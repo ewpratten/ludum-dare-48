@@ -128,7 +128,8 @@ pub fn update_player_movement(
 
     // Only do this if the mouse is far enough away
     let player_real_movement = game_core.player.direction * speed_multiplier;
-    if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0 {
+    let player_stunned = game_core.player.stun_timer > 0.0;
+    if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0 || player_stunned{
         game_core.player.is_moving = true;
         game_core.player.position += player_real_movement;
 
@@ -145,6 +146,11 @@ pub fn update_player_movement(
         }
     } else {
         game_core.player.is_moving = false;
+
+        // Handle updating the stun timer
+        if player_stunned {
+            game_core.player.stun_timer -= dt;
+        }
     }
 
     // Move the camera to follow the player
