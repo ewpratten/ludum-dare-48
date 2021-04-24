@@ -20,7 +20,7 @@ impl Player {
                 x: 11.0 * 4.0,
                 y: 21.0 * 4.0
             },
-            breath_percent: 0.5,
+            breath_percent: 1.0,
             ..Default::default()
 			
         }

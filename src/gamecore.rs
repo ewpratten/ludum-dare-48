@@ -18,6 +18,7 @@ pub enum GameState {
     PauseMenu,
     GameQuit,
     InGame,
+    GameEnd
 }
 
 impl fmt::Display for GameState {

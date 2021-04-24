@@ -51,6 +51,9 @@ pub fn update_player_movement(
             (game_core.player.boost_percent + BOOST_REGEN_PER_SECOND * dt as f32).clamp(0.0, 1.0);
     }
 
+    // Update the player's breath
+    game_core.player.breath_percent = (game_core.player.breath_percent - BREATH_DECREASE_PER_SECOND * dt as f32).clamp(0.0, 1.0);
+
     // Only do this if the mouse is far enough away
     let player_real_movement = game_core.player.direction * speed_multiplier;
     if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0 {
