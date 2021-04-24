@@ -120,6 +120,9 @@ fn main() {
             profiler.data.audio_volume = audio_system.get_master_volume();
             profiler.data.active_sounds = audio_system.get_sounds_playing();
             profiler.data.game_state = game_core.state.to_string();
+            profiler.data.player_coins = game_core.player.coins;
+            profiler.data.player_boost_percent = game_core.player.boost_percent;
+            profiler.data.player_breath_percent = game_core.player.breath_percent;
 
             // Send telemetry data
             profiler.update();

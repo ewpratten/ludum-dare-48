@@ -6,7 +6,9 @@ edition = "2018"
 description = ""
 
 [dependencies]
-raylib = { version = "3.5", git = "https://github.com/ewpratten/raylib-rs", branch = "master" }
+raylib = { version = "3.5", git = "https://github.com/ewpratten/raylib-rs", branch = "master", features = [
+    "with_serde"
+] }
 serialstudio = "0.1.0"
 serde = "1.0.125"
 serde_json = "1.0.64"

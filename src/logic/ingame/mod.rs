@@ -34,15 +34,15 @@ impl InGameScreen {
         game_core: &mut GameCore,
         window_center: Vector2,
     ) {
-
         // Handle player movement
         let mouse_pose = draw_handle.get_mouse_position();
-        let mouse_world_pose = draw_handle.get_screen_to_world2D(mouse_pose, game_core.master_camera);
+        let mouse_world_pose =
+            draw_handle.get_screen_to_world2D(mouse_pose, game_core.master_camera);
         let raw_movement_direction = mouse_world_pose - game_core.player.position;
         let mut normalized_movement_direction = raw_movement_direction;
         normalized_movement_direction.normalize();
         game_core.player.direction = normalized_movement_direction;
-    
+
         // In the case the player is in "null", just jump the camera to them
         if game_core.player.position == Vector2::zero() {
             game_core.master_camera.target = game_core.player.position - (window_center / 2.0);
@@ -68,13 +68,13 @@ impl InGameScreen {
         // Move the camera to follow the player
         let direction_from_cam_to_player =
             (game_core.player.position - window_center) - game_core.master_camera.target;
-        let player_screen_position = draw_handle.get_world_to_screen2D(game_core.player.position, game_core.master_camera);
+        let player_screen_position =
+            draw_handle.get_world_to_screen2D(game_core.player.position, game_core.master_camera);
 
         // Camera only moves if you get close to the edge of the screen
         if player_screen_position.distance_to(window_center).abs() > (window_center.y - 40.0) {
             game_core.master_camera.target += player_real_movement;
         }
-
     }
 
     fn render_player(
@@ -107,9 +107,21 @@ impl InGameScreen {
         context_2d: &mut RaylibMode2D<RaylibDrawHandle>,
         game_core: &mut GameCore,
     ) {
-
         context_2d.draw_circle(0, 0, 10.0, Color::BLACK);
-       
+    }
+
+    fn render_hud(&mut self, draw_handle: &mut RaylibDrawHandle, game_core: &mut GameCore) {
+        // Get the relevant data
+        let breath = game_core.player.breath_percent;
+        let dist_from_player_to_end = game_core
+            .player
+            .position
+            .distance_to(game_core.world.end_position);
+        let dist_from_start_to_end = Vector2::zero().distance_to(game_core.world.end_position);
+        let progress = (dist_from_start_to_end - dist_from_player_to_end) / dist_from_start_to_end;
+
+        
+
     }
 }
 

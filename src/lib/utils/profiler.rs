@@ -16,7 +16,12 @@ pub struct ProfilerData {
     pub active_sounds: i32,
 
     // Game core
-    pub game_state: String
+    pub game_state: String,
+
+    // Player 
+    pub player_coins: u32,
+    pub player_boost_percent: f32,
+    pub player_breath_percent: f32
 }
 
 /// The development profiler
@@ -113,6 +118,33 @@ impl GameProfiler {
                             value: json!(self.data.game_state),
                             graph: Some(false),
                             unit: None,
+                            w_type: None,
+                        },
+                    ],
+                },
+                DataGroup {
+                    title: "Player".to_string(),
+                    widget_type: None,
+                    datasets: vec![
+                        DataSet {
+                            title: Some("Coins".to_string()),
+                            value: json!(self.data.player_coins),
+                            graph: Some(false),
+                            unit: Some("coins".to_string()),
+                            w_type: None,
+                        },
+                        DataSet {
+                            title: Some("Breath".to_string()),
+                            value: json!(self.data.player_boost_percent),
+                            graph: Some(false),
+                            unit: Some("%".to_string()),
+                            w_type: None,
+                        },
+                        DataSet {
+                            title: Some("Breath".to_string()),
+                            value: json!(self.data.player_breath_percent),
+                            graph: Some(false),
+                            unit: Some("%".to_string()),
                             w_type: None,
                         },
                     ],
