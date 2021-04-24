@@ -17,8 +17,8 @@ impl Player {
         Self {
             boost_percent: 1.0,
             size: Vector2 {
-                x: 11.0 * 4.0,
-                y: 21.0 * 4.0
+                x: 11.0,
+                y: 21.0
             },
             breath_percent: 1.0,
             ..Default::default()

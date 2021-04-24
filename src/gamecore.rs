@@ -119,7 +119,7 @@ impl GameCore {
                 offset: Vector2::zero(),
                 target: Vector2::zero(),
                 rotation: 0.0,
-                zoom: 1.0,
+                zoom: 2.0,
             },
             show_simple_debug_info: false,
             world: world,

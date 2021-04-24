@@ -5,10 +5,10 @@ use crate::{
     pallette::{TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96},
 };
 
-const NORMAL_PLAYER_SPEED: i32 = 4;
+const NORMAL_PLAYER_SPEED: i32 = 3;
 const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
 const CAMERA_FOLLOW_SPEED: f32 = 0.7;
-const TURN_SPEED: f32 = 0.05;
+const TURN_SPEED: f32 = 0.15;
 const BOOST_DECREASE_PER_SECOND: f32 = 0.75;
 const BOOST_REGEN_PER_SECOND: f32 = 0.25;
 const BREATH_DECREASE_PER_SECOND: f32 = 0.01;
@@ -27,45 +27,45 @@ pub fn update_player_movement(
     let raw_movement_direction = mouse_world_pose - game_core.player.position;
     let mut normalized_movement_direction = raw_movement_direction;
     normalized_movement_direction.normalize();
-    
-    let tau: f32 =  PI as f32 * 2.0;
-        // get angles as floats
-        let mut player_angle: f32 = Vector2::zero().angle_to(game_core.player.direction);
-        let mut desired_angle: f32 = Vector2::zero().angle_to(normalized_movement_direction);
 
-        // make angle positive
-        if desired_angle < 0.0 {
-            desired_angle += tau;
-        }
+    let tau: f32 = PI as f32 * 2.0;
+    // get angles as floats
+    let mut player_angle: f32 = Vector2::zero().angle_to(game_core.player.direction);
+    let mut desired_angle: f32 = Vector2::zero().angle_to(normalized_movement_direction);
 
-        // turn towards mouse at turn speed
-        if player_angle % tau > desired_angle {
-            if (player_angle % tau) - desired_angle > PI as f32 {
-                player_angle += TURN_SPEED;
-            } else {
-                player_angle -= TURN_SPEED;
-            }
+    // make angle positive
+    if desired_angle < 0.0 {
+        desired_angle += tau;
+    }
+
+    // turn towards mouse at turn speed
+    if player_angle % tau > desired_angle {
+        if (player_angle % tau) - desired_angle > PI as f32 {
+            player_angle += TURN_SPEED;
         } else {
-            if desired_angle - (player_angle % tau) > PI as f32 {
-                player_angle -= TURN_SPEED;
-            } else {
-                player_angle += TURN_SPEED;
-            }
+            player_angle -= TURN_SPEED;
         }
+    } else {
+        if desired_angle - (player_angle % tau) > PI as f32 {
+            player_angle -= TURN_SPEED;
+        } else {
+            player_angle += TURN_SPEED;
+        }
+    }
 
-        // snap to mouse if close enough
-        if f32::abs(player_angle - desired_angle) < (TURN_SPEED * 1.1) {
-            player_angle = desired_angle;
-        }
-        if player_angle > tau {
-            player_angle -= tau;
-        }
-        if player_angle < 0.0 {
-            player_angle += tau;
-        }
+    // snap to mouse if close enough
+    if f32::abs(player_angle - desired_angle) < (TURN_SPEED * 1.1) {
+        player_angle = desired_angle;
+    }
+    if player_angle > tau {
+        player_angle -= tau;
+    }
+    if player_angle < 0.0 {
+        player_angle += tau;
+    }
 
-        // set angle 
-        game_core.player.direction = Vector2::new(f32::cos(player_angle), f32::sin(player_angle));
+    // set angle
+    game_core.player.direction = Vector2::new(f32::cos(player_angle), f32::sin(player_angle));
 
     // In the case the player is in "null", just jump the camera to them
     if game_core.player.position == Vector2::zero() {
@@ -135,9 +135,12 @@ pub fn render_player(context_2d: &mut RaylibMode2D<RaylibDrawHandle>, game_core:
         TRANSLUCENT_WHITE_64,
     );
     context_2d.draw_ring(
-        player.position,
-        boost_ring_max_radius - 2.0,
-        boost_ring_max_radius + 2.0,
+        Vector2 {
+            x: player.position.x as i32 as f32,
+            y: player.position.y as i32 as f32,
+        },
+        boost_ring_max_radius ,
+        boost_ring_max_radius + 1.0,
         0,
         (360.0 * player.breath_percent) as i32,
         0,
