@@ -22,7 +22,7 @@ impl FishEntity {
         Self {
             position: position,
             direction: Vector2::zero(),
-            following_player: true,
+            following_player: false,
             size: Vector2 { x: 5.0, y: 8.0 },
             rng: rand::thread_rng()
         }
@@ -67,9 +67,20 @@ impl FishEntity {
     }
 
     pub fn handle_free_movement(&mut self, player: &Player, dt: f64) {
-        if player.position.distance_to(self.position).abs() <= player.size.y * 2.0 {
+        // Distance and direction to player
+        let dist_to_player = player.position - self.position;
+        let dist_to_player_lin = self.position.distance_to(player.position);
+        let mut direction_to_player = dist_to_player;
+        direction_to_player.normalize();
+
+        // Handle player picking up fish
+        if player.position.distance_to(self.position).abs() <= player.size.y * 1.2 {
             self.following_player = true;
         }
+
+        // Look at the player;
+        self.position = self.position;
+        self.direction = direction_to_player;
     }
 
     pub fn update_position(&mut self, player: &Player, dt: f64) {
