@@ -69,13 +69,8 @@ impl InGameScreen {
         // Render every collider
         for collider in game_core.world.colliders.iter() {
             context_2d.draw_rectangle_lines_ex(
-                Rectangle {
-                    x: collider.x - (collider.width / 2.0),
-                    y: collider.y - (collider.height / 2.0),
-                    width: collider.width,
-                    height: collider.height,
-                },
-                2,
+                collider,
+                1,
                 Color::RED,
             );
         }
@@ -119,7 +114,9 @@ impl Screen for InGameScreen {
 
             // Render the world
             self.render_world(&mut context_2d, game_core);
-            self.render_colliders(&mut context_2d, game_core);
+            if game_core.show_simple_debug_info{
+                self.render_colliders(&mut context_2d, game_core);
+            }
 
             // Render entities
             let fish_clone = game_core.world.fish.clone();

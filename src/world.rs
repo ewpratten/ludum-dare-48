@@ -35,7 +35,15 @@ impl World {
         result.fish = FishEntity::new_from_positions(&result.fish_positions);
 
         // Init colliders
-        result.colliders = colliders;
+        result.colliders = Vec::new();
+        for collider in colliders.iter(){
+            result.colliders.push(Rectangle {
+                x: collider.x - (collider.width / 2.0),
+                y: collider.y - (collider.height / 2.0),
+                width: collider.width,
+                height: collider.height,
+            });
+        }
 
         Ok(result)
     }

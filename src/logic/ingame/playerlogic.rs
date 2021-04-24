@@ -130,18 +130,18 @@ pub fn update_player_movement(
     let player_real_movement = game_core.player.direction * speed_multiplier;
     if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0 {
         game_core.player.is_moving = true;
+        game_core.player.position += player_real_movement;
 
         // Check for any collisions
         for collider in game_core.world.colliders.iter() {
-            if collider.check_collision_point_rec(game_core.player.position + player_real_movement)
-            {
-                // game_core.player.is_moving = false;
+            if game_core.player.collides_with_rec(collider) {
+                game_core.player.is_moving = false;
                 break;
             }
         }
 
-        if game_core.player.is_moving {
-            game_core.player.position += player_real_movement;
+        if !game_core.player.is_moving {
+            game_core.player.position -= player_real_movement;
         }
     } else {
         game_core.player.is_moving = false;
