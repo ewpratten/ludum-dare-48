@@ -179,12 +179,12 @@ impl Player {
             self.attacking_timer = (self.attacking_timer - dt).max(0.0);
 
             // Render attack AOE
-            if animation_progression <= 0.5 {
+            if animation_progression >= 0.5 {
                 context_2d.draw_circle_lines(
                     self.position.x as i32,
                     self.position.y as i32,
                     self.inventory.stun_gun.as_ref().unwrap().range * aoe_ring,
-                    TRANSLUCENT_WHITE_64,
+                    TRANSLUCENT_WHITE_64.fade(aoe_ring),
                 );
             } else {
                 context_2d.draw_circle_lines(
