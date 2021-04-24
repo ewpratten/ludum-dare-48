@@ -2,15 +2,18 @@ mod gamecore;
 mod lib;
 mod logic;
 mod resources;
+mod player;
+mod world;
 
 use gamecore::{GameCore, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
 use log::info;
 use logic::{
-    loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen,
-    screen::Screen,
+    ingame::InGameScreen, loadingscreen::LoadingScreen, mainmenu::MainMenuScreen,
+    pausemenu::PauseMenuScreen, screen::Screen,
 };
 use raylib::prelude::*;
+use world::World;
 
 // Game Launch Configuration
 const DEFAULT_WINDOW_DIMENSIONS: Vector2 = Vector2 {
@@ -37,8 +40,11 @@ fn main() {
     // Override the default exit key
     raylib.set_exit_key(None);
 
+    // Load the world
+    let world = World::load_from_json("./assets/worlds/mainworld.json".to_string()).expect("Failed to load main world JSON");
+
     // Set up the game's core state
-    let mut game_core = GameCore::new(&mut raylib, &raylib_thread);
+    let mut game_core = GameCore::new(&mut raylib, &raylib_thread, world);
 
     // Set up the game's profiler
     let mut profiler = GameProfiler::new();
@@ -51,6 +57,7 @@ fn main() {
     let mut loading_screen = LoadingScreen::new();
     let mut main_menu_screen = MainMenuScreen::new();
     let mut pause_menu_screen = PauseMenuScreen::new();
+    let mut ingame_screen = InGameScreen::new();
 
     // Main rendering loop
     while !raylib.window_should_close() {
@@ -77,6 +84,12 @@ fn main() {
                 &mut game_core,
             ),
             GameState::GameQuit => None,
+            GameState::InGame => ingame_screen.render(
+                &mut draw_handle,
+                &raylib_thread,
+                &mut audio_system,
+                &mut game_core,
+            ),
         };
 
         // If needed, update the global state

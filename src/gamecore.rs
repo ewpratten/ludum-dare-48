@@ -6,7 +6,7 @@ use raylib::{
     camera::Camera2D, math::Vector2, prelude::RaylibDrawHandle, RaylibHandle, RaylibThread,
 };
 
-use crate::resources::GlobalResources;
+use crate::{player::Player, resources::GlobalResources, world::World};
 
 use log::debug;
 
@@ -16,7 +16,8 @@ pub enum GameState {
     Loading,
     MainMenu,
     PauseMenu,
-    GameQuit
+    GameQuit,
+    InGame
 }
 
 impl fmt::Display for GameState {
@@ -40,11 +41,17 @@ pub struct GameCore {
     pub master_camera: Camera2D,
 
     /// Debug features
-    pub show_simple_debug_info: bool
+    pub show_simple_debug_info: bool,
+
+    /// The world
+    pub world: World,
+
+    /// The player
+    pub player: Player,
 }
 
 impl GameCore {
-    pub fn new(raylib: &mut RaylibHandle, thread: &RaylibThread) -> Self {
+    pub fn new(raylib: &mut RaylibHandle, thread: &RaylibThread, world: World) -> Self {
         Self {
             state: GameState::Loading,
             last_state: GameState::Loading,
@@ -58,7 +65,9 @@ impl GameCore {
                 rotation: 0.0,
                 zoom: 1.0,
             },
-            show_simple_debug_info: false
+            show_simple_debug_info: false,
+            world: world,
+            player: Player::new()
         }
     }
 
