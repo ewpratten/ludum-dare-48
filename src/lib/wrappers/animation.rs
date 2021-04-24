@@ -1,9 +1,4 @@
-use raylib::{
-    core::color::Color,
-    math::{Rectangle, Vector2},
-    prelude::{RaylibDraw, RaylibDrawHandle},
-    texture::Texture2D,
-};
+use raylib::{core::color::Color, math::{Rectangle, Vector2}, prelude::{RaylibDraw, RaylibDrawHandle, RaylibMode2D}, texture::Texture2D};
 
 /// A wrapper around an animation spritesheet
 pub struct FrameAnimationWrapper {
@@ -29,7 +24,9 @@ impl FrameAnimationWrapper {
 
     /// Start the animation
     pub fn start(&mut self, handle: &RaylibDrawHandle) {
-        self.start_time_seconds = handle.get_time();
+        if self.start_time_seconds == 0.0 {
+            self.start_time_seconds = handle.get_time();
+        }
     }
 
     /// Stop (and reset) the animation
@@ -48,16 +45,17 @@ impl FrameAnimationWrapper {
     }
 
     /// Draw the next frame to the screen at `position`
-    pub fn draw(&mut self, handle: &mut RaylibDrawHandle, position: Vector2) {
+    pub fn draw(&mut self, handle: &mut RaylibMode2D<RaylibDrawHandle>, position: Vector2, rotation: f32) {
         let frame_id = self.get_current_frame_id(handle);
-        self.draw_frame(handle, position, frame_id);
+        self.draw_frame(handle, position, rotation, frame_id);
     }
 
     /// Draw a specified frame to the screen at `position`
     pub fn draw_frame(
         &mut self,
-        handle: &mut RaylibDrawHandle,
+        handle: &mut RaylibMode2D<RaylibDrawHandle>,
         position: Vector2,
+        rotation: f32,
         frame_number: u32,
     ) {
         // Determine the col number
@@ -75,8 +73,20 @@ impl FrameAnimationWrapper {
             width: self.size.x,
             height: self.size.y,
         };
+        let frame_dest = Rectangle {
+            x: position.x,
+            y: position.y,
+            width: self.size.x,
+            height: self.size.y,
+        };
+
+        // Rotation origin
+        let origin = Vector2 {
+            x: self.size.x / 2.0,
+            y: self.size.y / 2.0
+        };
 
         // Render
-        handle.draw_texture_rec(&mut self.sprite_sheet, frame_box, position, Color::WHITE);
+        handle.draw_texture_pro(&mut self.sprite_sheet, frame_box, frame_dest, origin, rotation, Color::WHITE);
     }
 }

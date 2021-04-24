@@ -2,15 +2,18 @@ mod gamecore;
 mod lib;
 mod logic;
 mod resources;
+mod player;
+mod world;
+mod pallette;
+mod entities;
+mod items;
 
-use gamecore::{GameCore, GameState};
+use gamecore::{GameCore, GameProgress, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
 use log::info;
-use logic::{
-    loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen,
-    screen::Screen,
-};
+use logic::{gameend::GameEndScreen, ingame::InGameScreen, loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen, screen::Screen};
 use raylib::prelude::*;
+use world::World;
 
 // Game Launch Configuration
 const DEFAULT_WINDOW_DIMENSIONS: Vector2 = Vector2 {
@@ -37,8 +40,14 @@ fn main() {
     // Override the default exit key
     raylib.set_exit_key(None);
 
+    // Load the world
+    let world = World::load_from_json("./assets/worlds/mainworld.json".to_string()).expect("Failed to load main world JSON");
+
+    // Load the game progress
+    let game_progress = GameProgress::try_from_file("./assets/savestate.json".to_string());
+
     // Set up the game's core state
-    let mut game_core = GameCore::new(&mut raylib, &raylib_thread);
+    let mut game_core = GameCore::new(&mut raylib, &raylib_thread, world, game_progress);
 
     // Set up the game's profiler
     let mut profiler = GameProfiler::new();
@@ -51,6 +60,8 @@ fn main() {
     let mut loading_screen = LoadingScreen::new();
     let mut main_menu_screen = MainMenuScreen::new();
     let mut pause_menu_screen = PauseMenuScreen::new();
+    let mut ingame_screen = InGameScreen::new();
+    let mut game_end_screen = GameEndScreen::new();
 
     // Main rendering loop
     while !raylib.window_should_close() {
@@ -77,6 +88,18 @@ fn main() {
                 &mut game_core,
             ),
             GameState::GameQuit => None,
+            GameState::InGame => ingame_screen.render(
+                &mut draw_handle,
+                &raylib_thread,
+                &mut audio_system,
+                &mut game_core,
+            ),
+            GameState::GameEnd => game_end_screen.render(
+                &mut draw_handle,
+                &raylib_thread,
+                &mut audio_system,
+                &mut game_core,
+            ),
         };
 
         // If needed, update the global state
@@ -107,6 +130,9 @@ fn main() {
             profiler.data.audio_volume = audio_system.get_master_volume();
             profiler.data.active_sounds = audio_system.get_sounds_playing();
             profiler.data.game_state = game_core.state.to_string();
+            profiler.data.player_coins = game_core.player.coins;
+            profiler.data.player_boost_percent = game_core.player.boost_percent;
+            profiler.data.player_breath_percent = game_core.player.breath_percent;
 
             // Send telemetry data
             profiler.update();
@@ -132,6 +158,9 @@ fn main() {
 
         // Set the first frame flag
         game_core.has_rendered_first_frame = true;
+
+        // Update the frame time
+        game_core.last_frame_time = draw_handle.get_time();
     }
 
     // Cleanup
