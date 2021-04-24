@@ -4,14 +4,12 @@ mod logic;
 mod resources;
 mod player;
 mod world;
+mod pallette;
 
 use gamecore::{GameCore, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
 use log::info;
-use logic::{
-    ingame::InGameScreen, loadingscreen::LoadingScreen, mainmenu::MainMenuScreen,
-    pausemenu::PauseMenuScreen, screen::Screen,
-};
+use logic::{gameend::GameEndScreen, ingame::InGameScreen, loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen, screen::Screen};
 use raylib::prelude::*;
 use world::World;
 
@@ -58,6 +56,7 @@ fn main() {
     let mut main_menu_screen = MainMenuScreen::new();
     let mut pause_menu_screen = PauseMenuScreen::new();
     let mut ingame_screen = InGameScreen::new();
+    let mut game_end_screen = GameEndScreen::new();
 
     // Main rendering loop
     while !raylib.window_should_close() {
@@ -85,6 +84,12 @@ fn main() {
             ),
             GameState::GameQuit => None,
             GameState::InGame => ingame_screen.render(
+                &mut draw_handle,
+                &raylib_thread,
+                &mut audio_system,
+                &mut game_core,
+            ),
+            GameState::GameEnd => game_end_screen.render(
                 &mut draw_handle,
                 &raylib_thread,
                 &mut audio_system,
@@ -120,6 +125,9 @@ fn main() {
             profiler.data.audio_volume = audio_system.get_master_volume();
             profiler.data.active_sounds = audio_system.get_sounds_playing();
             profiler.data.game_state = game_core.state.to_string();
+            profiler.data.player_coins = game_core.player.coins;
+            profiler.data.player_boost_percent = game_core.player.boost_percent;
+            profiler.data.player_breath_percent = game_core.player.breath_percent;
 
             // Send telemetry data
             profiler.update();
@@ -145,6 +153,9 @@ fn main() {
 
         // Set the first frame flag
         game_core.has_rendered_first_frame = true;
+
+        // Update the frame time
+        game_core.last_frame_time = draw_handle.get_time();
     }
 
     // Cleanup

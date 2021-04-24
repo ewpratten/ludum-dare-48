@@ -17,7 +17,8 @@ pub enum GameState {
     MainMenu,
     PauseMenu,
     GameQuit,
-    InGame
+    InGame,
+    GameEnd
 }
 
 impl fmt::Display for GameState {
@@ -32,6 +33,7 @@ pub struct GameCore {
     pub state: GameState,
     pub last_state: GameState,
     pub last_state_change_time: f64,
+    pub last_frame_time: f64,
     pub has_rendered_first_frame: bool,
 
     /// Resources
@@ -56,6 +58,7 @@ impl GameCore {
             state: GameState::Loading,
             last_state: GameState::Loading,
             last_state_change_time: 0.0,
+            last_frame_time: 0.0,
             has_rendered_first_frame: false,
             resources: GlobalResources::load_all(raylib, thread)
                 .expect("Failed to load game assets. Can not launch!"),
@@ -67,7 +70,7 @@ impl GameCore {
             },
             show_simple_debug_info: false,
             world: world,
-            player: Player::new()
+            player: Player::new(),
         }
     }
 
