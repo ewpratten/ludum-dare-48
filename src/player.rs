@@ -169,18 +169,27 @@ impl Player {
 
         // Calculate AOE ring
         if self.is_stun_gun_active() {
-            let aoe_ring = calculate_linear_slide(
-                self.attacking_timer / self.inventory.stun_gun.as_ref().unwrap().duration,
-            ) as f32;
+            let animation_progression =
+                self.attacking_timer / self.inventory.stun_gun.as_ref().unwrap().duration;
+            let aoe_ring = calculate_linear_slide(animation_progression) as f32;
             self.attacking_timer = (self.attacking_timer - dt).max(0.0);
 
             // Render attack AOE
-            context_2d.draw_circle_lines(
-                self.position.x as i32,
-                self.position.y as i32,
-                self.inventory.stun_gun.as_ref().unwrap().range * aoe_ring,
-                TRANSLUCENT_WHITE_64,
-            );
+            if animation_progression <= 0.5 {
+                context_2d.draw_circle_lines(
+                    self.position.x as i32,
+                    self.position.y as i32,
+                    self.inventory.stun_gun.as_ref().unwrap().range * aoe_ring,
+                    TRANSLUCENT_WHITE_64,
+                );
+            } else {
+                context_2d.draw_circle_lines(
+                    self.position.x as i32,
+                    self.position.y as i32,
+                    self.inventory.stun_gun.as_ref().unwrap().range,
+                    TRANSLUCENT_WHITE_64.fade(aoe_ring),
+                );
+            }
         }
 
         // Render the player based on what is happening
