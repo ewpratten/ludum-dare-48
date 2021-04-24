@@ -59,7 +59,7 @@ impl Shop {
 
 			// adds an item struct to the item list
 			item_vec.push(Item{
-				x_pose: (x_pose as i32),
+				x_pose: ((x_pose + (5 * box_num) as f32) as i32),
 				y_pose: (draw_height as i32),
 				width: (box_width as i32),
 				height: (box_height as i32),
@@ -89,14 +89,38 @@ pub fn render_shop(
 		inGameScreen.current_state = InGameState::SWIMMING;
 	}
 
+	let mouse_position = draw_handle.get_mouse_position();
 
 	// Draws shop boxes
 	for item in inGameScreen.shop.shop_items.iter() {
 		// Draws in accordance to the struct
-		draw_handle.draw_rectangle(item.x_pose, item.y_pose, item.width, item.height, Color::BLACK);
+		
+		if 	mouse_position.x >= item.x_pose as f32 &&
+			mouse_position.x <= item.x_pose as f32 + item.width as f32 && 
+			mouse_position.y >= item.y_pose as f32 && 
+			mouse_position.y <= item.y_pose as f32 + item.width as f32{
+			draw_handle.draw_rectangle(item.x_pose, item.y_pose, item.width, item.height, Color::BLACK);
+				
+			if draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON) && game_core.player.coins >= item.cost as u32{
+
+				game_core.world.spend_coins(item.cost.into());
+				game_core.player.coins -= item.cost as u32;
+				
+
+			}
 
 
+		}else{
+			draw_handle.draw_rectangle_lines(item.x_pose, item.y_pose, item.width, item.height, Color::BLACK);
+			draw_handle.draw_text(&format!("{}: ${}", item.name, item.cost), item.x_pose + 5, item.y_pose + 5, 12, Color::BLACK);
+			
+		}
+	
+
+		
 	}
+
+	
 
 
 
@@ -104,6 +128,7 @@ pub fn render_shop(
 }
 
 pub fn shop_logic() {
+
 
 	
 
