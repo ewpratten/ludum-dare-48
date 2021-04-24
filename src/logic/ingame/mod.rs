@@ -141,6 +141,9 @@ impl InGameScreen {
         //TODO: This causes a render bug
         draw_handle.draw_rectangle_lines_ex(progress_bar_slider, 6, Color::WHITE);
 
+        // TODO: Breath bar
+        // TODO: Boost bar
+
     }
 }
 
@@ -153,7 +156,7 @@ impl Screen for InGameScreen {
         game_core: &mut GameCore,
     ) -> Option<GameState> {
         // Clear frame
-        draw_handle.clear_background(Color::WHITE);
+        draw_handle.clear_background(Color::RAYWHITE);
 
         // Handle the pause menu being opened
         if draw_handle.is_key_pressed(KeyboardKey::KEY_ESCAPE) {
