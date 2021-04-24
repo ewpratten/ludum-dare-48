@@ -23,6 +23,9 @@ pub struct AirBag;
 pub struct Flashlight;
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
+pub struct Flippers;
+
+#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 #[serde(tag = "t", content = "c")]
 pub enum ShopItems {
     StunGun(u8, u8, String),
@@ -75,7 +78,4 @@ impl ShopItems{
 		}
 
 	}
-}
-pub struct Flippers {
-    pub speed_increase: f32
 }
