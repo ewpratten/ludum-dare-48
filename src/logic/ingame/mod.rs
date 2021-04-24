@@ -1,15 +1,16 @@
 mod hud;
 mod playerlogic;
+mod shop;
 
 use raylib::prelude::*;
 
-use crate::{
-    gamecore::{GameCore, GameState},
-    lib::wrappers::audio::player::AudioPlayer,
-};
+use crate::{gamecore::{self, GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer};
+
+use self::shop::Shop;
 
 use super::screen::Screen;
 
+#[derive(PartialEq)]
 pub enum InGameState {
     BUYING,
     SWIMMING,
@@ -17,12 +18,14 @@ pub enum InGameState {
 
 pub struct InGameScreen {
     current_state: InGameState,
+	shop: Shop,
 }
 
 impl InGameScreen {
     pub fn new() -> Self {
         Self {
-            current_state: InGameState::SWIMMING,
+            current_state: InGameState::BUYING,
+			shop: Shop::new(),
         }
     }
 
@@ -46,6 +49,31 @@ impl Screen for InGameScreen {
         // Calculate DT
         let dt = draw_handle.get_time() - game_core.last_frame_time;
 
+		// Window dimensions
+		let win_height = draw_handle.get_screen_height();
+        let win_width = draw_handle.get_screen_width();
+        let window_center = Vector2 {
+            x: (win_width as f32 / 2.0),
+            y: (win_height as f32 / 2.0),
+        };
+
+		// Creates items for shop
+		if draw_handle.get_time() - game_core.last_state_change_time >= 0.05{
+			self.shop.create_items(Vector2::new(win_width as f32, win_height as f32));
+		}
+		
+
+
+		if draw_handle.get_time() - game_core.last_state_change_time >= 0.05 
+			&& self.current_state == InGameState::BUYING{
+				
+			shop::render_shop(draw_handle, game_core, self);
+			
+		}else{
+			// Update player movement
+			playerlogic::update_player_movement(draw_handle, game_core, window_center);
+		}
+
         // Clear frame
         draw_handle.clear_background(Color::BLUE);
 
@@ -54,16 +82,11 @@ impl Screen for InGameScreen {
             return Some(GameState::PauseMenu);
         }
 
-        // Window dimensions
-        let win_height = draw_handle.get_screen_height();
-        let win_width = draw_handle.get_screen_width();
-        let window_center = Vector2 {
-            x: (win_width as f32 / 2.0),
-            y: (win_height as f32 / 2.0),
-        };
+        
+        
 
-        // Update player movement
-        playerlogic::update_player_movement(draw_handle, game_core, window_center);
+        
+        
 
         // Open a 2D context
         {
@@ -85,6 +108,8 @@ impl Screen for InGameScreen {
 
         // Render the hud
         hud::render_hud(draw_handle, game_core, window_center);
+
+
 
         // Handle player out of breath
         if game_core.player.breath_percent == 0.0 {
