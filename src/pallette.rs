@@ -35,6 +35,13 @@ pub const WATER: Color = Color {
     a: 255
 };
 
+pub const WATER_DARK: Color = Color {
+    r: 8,
+    g: 24,
+    b: 54,
+    a: 255
+};
+
 pub const TRANSLUCENT_RED_64: Color = Color {
     r: 230,
     g: 41,

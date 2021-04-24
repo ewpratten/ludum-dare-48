@@ -3,12 +3,7 @@ mod playerlogic;
 
 use raylib::prelude::*;
 
-use crate::{
-    entities::enemy::base::EnemyBase,
-    gamecore::{GameCore, GameState},
-    lib::wrappers::audio::player::AudioPlayer,
-    pallette::{SKY, WATER},
-};
+use crate::{entities::enemy::base::EnemyBase, gamecore::{GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer, pallette::{SKY, WATER, WATER_DARK}};
 
 use super::screen::Screen;
 
@@ -32,7 +27,7 @@ impl InGameScreen {
         &mut self,
         context_2d: &mut RaylibMode2D<RaylibDrawHandle>,
         game_core: &mut GameCore,
-        dt: f64
+        dt: f64,
     ) {
         // Build source bounds
         let source_bounds = Rectangle {
@@ -49,7 +44,14 @@ impl InGameScreen {
         };
 
         // Clear the background
-        context_2d.draw_rectangle_rec(world_bounds, WATER);
+        context_2d.draw_rectangle_gradient_v(
+            world_bounds.x as i32,
+            world_bounds.y as i32,
+            world_bounds.width as i32,
+            world_bounds.height as i32,
+            WATER,
+            WATER_DARK,
+        );
 
         // Render fish
         let fish_clone = game_core.world.fish.clone();
@@ -115,7 +117,7 @@ impl Screen for InGameScreen {
 
         // Open a 2D context
         {
-            let mut context_2d = draw_handle.begin_mode2D(game_core.master_camera);            
+            let mut context_2d = draw_handle.begin_mode2D(game_core.master_camera);
 
             // Render the world
             self.render_world(&mut context_2d, game_core, dt);
