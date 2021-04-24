@@ -130,6 +130,10 @@ impl Screen for InGameScreen {
                 jellyfish.handle_logic(&mut game_core.player, dt);
                 jellyfish.render(&mut context_2d, &mut game_core.resources, dt);
             }
+            for octopus in game_core.world.octopus.iter_mut() {
+                octopus.handle_logic(&mut game_core.player, dt);
+                octopus.render(&mut context_2d, &mut game_core.resources, dt);
+            }
 
             // Render Player
             game_core
