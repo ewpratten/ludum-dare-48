@@ -1,9 +1,4 @@
-use raylib::{
-    core::color::Color,
-    math::{Rectangle, Vector2},
-    prelude::{RaylibDraw, RaylibDrawHandle},
-    texture::Texture2D,
-};
+use raylib::{core::color::Color, math::{Rectangle, Vector2}, prelude::{RaylibDraw, RaylibDrawHandle, RaylibMode2D}, texture::Texture2D};
 
 /// A wrapper around an animation spritesheet
 pub struct FrameAnimationWrapper {
@@ -48,7 +43,7 @@ impl FrameAnimationWrapper {
     }
 
     /// Draw the next frame to the screen at `position`
-    pub fn draw(&mut self, handle: &mut RaylibDrawHandle, position: Vector2, rotation: f32) {
+    pub fn draw(&mut self, handle: &mut RaylibMode2D<RaylibDrawHandle>, position: Vector2, rotation: f32) {
         let frame_id = self.get_current_frame_id(handle);
         self.draw_frame(handle, position, rotation, frame_id);
     }
@@ -56,7 +51,7 @@ impl FrameAnimationWrapper {
     /// Draw a specified frame to the screen at `position`
     pub fn draw_frame(
         &mut self,
-        handle: &mut RaylibDrawHandle,
+        handle: &mut RaylibMode2D<RaylibDrawHandle>,
         position: Vector2,
         rotation: f32,
         frame_number: u32,
@@ -76,6 +71,12 @@ impl FrameAnimationWrapper {
             width: self.size.x,
             height: self.size.y,
         };
+        let frame_dest = Rectangle {
+            x: position.x,
+            y: position.y,
+            width: self.size.x,
+            height: self.size.y,
+        };
 
         // Rotation origin
         let origin = Vector2 {
@@ -84,6 +85,6 @@ impl FrameAnimationWrapper {
         };
 
         // Render
-        handle.draw_texture_pro(&mut self.sprite_sheet, frame_box, position, origin, rotation, Color::WHITE);
+        handle.draw_texture_pro(&mut self.sprite_sheet, frame_box, frame_dest, origin, rotation, Color::WHITE);
     }
 }

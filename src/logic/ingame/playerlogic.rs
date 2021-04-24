@@ -144,16 +144,19 @@ pub fn render_player(context_2d: &mut RaylibMode2D<RaylibDrawHandle>, game_core:
         TRANSLUCENT_WHITE_96,
     );
 
+    // Render the player
+    game_core.resources.player_animation_regular.draw(context_2d, player.position, player_rotation.to_degrees() + 90.0);
+
     // TODO: tmp rect
-    context_2d.draw_rectangle_pro(
-        Rectangle {
-            x: player.position.x,
-            y: player.position.y,
-            width: player.size.x,
-            height: player.size.y,
-        },
-        player.size / 2.0,
-        player_rotation.to_degrees() + 90.0,
-        Color::BLACK,
-    );
+    // context_2d.draw_rectangle_pro(
+    //     Rectangle {
+    //         x: player.position.x,
+    //         y: player.position.y,
+    //         width: player.size.x,
+    //         height: player.size.y,
+    //     },
+    //     player.size / 2.0,
+    //     player_rotation.to_degrees() + 90.0,
+    //     Color::BLACK,
+    // );
 }
