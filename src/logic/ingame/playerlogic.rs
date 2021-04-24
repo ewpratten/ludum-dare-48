@@ -76,6 +76,10 @@ pub fn update_player_movement(
     let user_request_boost = draw_handle.is_mouse_button_down(MouseButton::MOUSE_LEFT_BUTTON);
     let user_request_action = draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_RIGHT_BUTTON);
 
+    if user_request_action {
+        game_core.player.begin_attack();
+    }
+
     // Move the player in their direction
     let speed_multiplier;
     if user_request_boost && game_core.player.boost_percent >= 0.0 {

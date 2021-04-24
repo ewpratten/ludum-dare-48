@@ -127,7 +127,7 @@ impl Screen for InGameScreen {
 
             // Render Player
             // playerlogic::render_player(&mut context_2d, game_core);
-            game_core.player.render(&mut context_2d, &mut game_core.resources);
+            game_core.player.render(&mut context_2d, &mut game_core.resources, dt);
         }
 
         // Render the hud

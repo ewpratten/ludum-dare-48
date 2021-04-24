@@ -1,13 +1,8 @@
 use raylib::prelude::*;
 
-use crate::{
-    gamecore::{GameCore, GameProgress},
-    items::ShopItems,
-    lib::utils::triangles::rotate_vector,
-    pallette::{TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96},
-    resources::GlobalResources,
-    world::World,
-};
+use crate::{gamecore::{GameCore, GameProgress}, items::ShopItems, lib::utils::{calculate_linear_slide, triangles::rotate_vector}, pallette::{TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96}, resources::GlobalResources, world::World};
+
+const AOE_RING_MAX_RADIUS: f32 = 40.0;
 
 #[derive(Debug, Default)]
 pub struct Player {
@@ -74,7 +69,7 @@ impl Player {
 
     /// Try to attack with the stun gun
     pub fn begin_attack(&mut self) {
-        if self.inventory.contains(&ShopItems::StunGun) && self.stun_timer == 0.0 {
+        if true || self.inventory.contains(&ShopItems::StunGun) && self.stun_timer == 0.0 {
             self.stun_timer = 2.0;
         }
     }
@@ -99,9 +94,10 @@ impl Player {
 
     /// Render the player
     pub fn render(
-        &self,
+        &mut self,
         context_2d: &mut RaylibMode2D<RaylibDrawHandle>,
         resources: &mut GlobalResources,
+        dt: f64
     ) {
         // Convert the player direction to a rotation
         let player_rotation = Vector2::zero().angle_to(self.direction);
@@ -129,16 +125,14 @@ impl Player {
         );
 
         // Calculate AOE ring
-        let aoe_ring;
-        if self.attacking_timer <= 0.25 {
-            aoe_ring = self.attacking_timer;
-        }
+        let aoe_ring = calculate_linear_slide(self.attacking_timer) as f32;
+        self.stun_timer = (self.stun_timer - dt).max(0.0);
 
         // Render attack AOE
         context_2d.draw_circle_lines(
             self.position.x as i32,
             self.position.y as i32,
-            boost_ring_max_radius * self.boost_percent,
+            AOE_RING_MAX_RADIUS * aoe_ring,
             TRANSLUCENT_WHITE_64,
         );
 
