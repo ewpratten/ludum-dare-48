@@ -44,13 +44,16 @@ impl InGameScreen {
         normalized_movement_direction.normalize();
 
         let tau: f32 =  PI as f32 * 2.0;
+        // get angles as floats
         let mut player_angle: f32 = Vector2::zero().angle_to(game_core.player.direction);
         let mut desired_angle: f32 = Vector2::zero().angle_to(normalized_movement_direction);
 
+        // make angle positive
         if desired_angle < 0.0 {
             desired_angle += tau;
         }
 
+        // turn towards mouse at turn speed
         if player_angle % tau > desired_angle {
             if (player_angle % tau) - desired_angle > PI as f32 {
                 player_angle += TURN_SPEED;
@@ -65,6 +68,7 @@ impl InGameScreen {
             }
         }
 
+        // snap to mouse if close enough
         if f32::abs(player_angle - desired_angle) < (TURN_SPEED * 1.1) {
             player_angle = desired_angle;
         }
@@ -75,7 +79,7 @@ impl InGameScreen {
             player_angle += tau;
         }
 
-
+        // set angle 
         game_core.player.direction = Vector2::new(f32::cos(player_angle), f32::sin(player_angle));
     
         // In the case the player is in "null", just jump the camera to them
