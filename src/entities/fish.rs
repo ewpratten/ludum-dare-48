@@ -1,7 +1,7 @@
 use rand::{Rng, prelude::ThreadRng};
 use raylib::prelude::*;
 
-use crate::{gamecore::GameCore, lib::utils::triangles::rotate_vector, player::Player};
+use crate::{gamecore::GameCore, lib::utils::triangles::rotate_vector, player::Player, world::World};
 
 const FISH_FOLLOW_PLAYER_DISTANCE: f32 = 30.0;
 const FISH_FOLLOW_PLAYER_SPEED: f32 = 1.8;
@@ -36,7 +36,7 @@ impl FishEntity {
         return output;
     }
 
-    pub fn handle_follow_player(&mut self, player: &Player, dt: f64) {
+    pub fn handle_follow_player(&mut self, player: &Player, dt: f64, other_fish: &Vec<FishEntity>) {
         // Distance and direction to player
         let dist_to_player = player.position - self.position;
         let dist_to_player_lin = self.position.distance_to(player.position);
@@ -86,9 +86,9 @@ impl FishEntity {
         self.direction = direction_to_player;
     }
 
-    pub fn update_position(&mut self, player: &mut Player, dt: f64) {
+    pub fn update_position(&mut self, player: &mut Player, dt: f64, other_fish: &Vec<FishEntity>) {
         if self.following_player {
-            self.handle_follow_player(player, dt);
+            self.handle_follow_player(player, dt, other_fish);
         } else {
             self.handle_free_movement(player, dt);
         }
