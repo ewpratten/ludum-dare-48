@@ -142,9 +142,16 @@ pub fn update_player_movement(
         draw_handle.get_world_to_screen2D(game_core.player.position, game_core.master_camera);
 
     // Camera only moves if you get close to the edge of the screen
-    if player_screen_position.distance_to(window_center).abs() > (window_center.y - 40.0) {
+    if player_screen_position.distance_to(window_center).abs() > 100.0 {
         game_core.master_camera.target += player_real_movement;
     }
+
+    // // Clamp camera target y to 0
+    // if game_core.master_camera.target.y < -100.0 {
+    //     game_core.master_camera.target.y = -100.0;
+    // }
+
+
 }
 
 pub fn render_player(context_2d: &mut RaylibMode2D<RaylibDrawHandle>, game_core: &mut GameCore) {

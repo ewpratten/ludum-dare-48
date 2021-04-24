@@ -36,7 +36,7 @@ impl InGameScreen {
             height: game_core.resources.cave_mid_layer.height as f32,
         };
         let world_bounds = Rectangle {
-            x: -100.0,
+            x: -200.0,
             y: -100.0,
             width: game_core.resources.cave_mid_layer.width as f32,
             height: game_core.resources.cave_mid_layer.height as f32,
@@ -49,7 +49,10 @@ impl InGameScreen {
         context_2d.draw_texture_rec(
             &game_core.resources.cave_mid_layer,
             source_bounds,
-            Vector2::zero(),
+            Vector2 {
+                x: world_bounds.x,
+                y: world_bounds.y
+            },
             Color::WHITE,
         );
     }
