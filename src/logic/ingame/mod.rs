@@ -4,6 +4,7 @@ mod playerlogic;
 use raylib::prelude::*;
 
 use crate::{
+    entities::enemy::base::EnemyBase,
     gamecore::{GameCore, GameState},
     lib::wrappers::audio::player::AudioPlayer,
     pallette::{SKY, WATER},
@@ -31,6 +32,7 @@ impl InGameScreen {
         &mut self,
         context_2d: &mut RaylibMode2D<RaylibDrawHandle>,
         game_core: &mut GameCore,
+        dt: f64
     ) {
         // Build source bounds
         let source_bounds = Rectangle {
@@ -48,6 +50,13 @@ impl InGameScreen {
 
         // Clear the background
         context_2d.draw_rectangle_rec(world_bounds, WATER);
+
+        // Render fish
+        let fish_clone = game_core.world.fish.clone();
+        for fish in game_core.world.fish.iter_mut() {
+            fish.update_position(&mut game_core.player, dt, &fish_clone);
+            fish.render(context_2d);
+        }
 
         // Render the world texture
         context_2d.draw_texture_rec(
@@ -68,11 +77,7 @@ impl InGameScreen {
     ) {
         // Render every collider
         for collider in game_core.world.colliders.iter() {
-            context_2d.draw_rectangle_lines_ex(
-                collider,
-                1,
-                Color::RED,
-            );
+            context_2d.draw_rectangle_lines_ex(collider, 1, Color::RED);
         }
     }
 }
@@ -110,23 +115,24 @@ impl Screen for InGameScreen {
 
         // Open a 2D context
         {
-            let mut context_2d = draw_handle.begin_mode2D(game_core.master_camera);
+            let mut context_2d = draw_handle.begin_mode2D(game_core.master_camera);            
 
             // Render the world
-            self.render_world(&mut context_2d, game_core);
-            if game_core.show_simple_debug_info{
+            self.render_world(&mut context_2d, game_core, dt);
+            if game_core.show_simple_debug_info {
                 self.render_colliders(&mut context_2d, game_core);
             }
 
             // Render entities
-            let fish_clone = game_core.world.fish.clone();
-            for fish in game_core.world.fish.iter_mut() {
-                fish.update_position(&mut game_core.player, dt, &fish_clone);
-                fish.render(&mut context_2d);
+            for jellyfish in game_core.world.jellyfish.iter_mut() {
+                jellyfish.handle_logic(&mut game_core.player, dt);
+                jellyfish.render(&mut context_2d, &mut game_core.resources, dt);
             }
 
             // Render Player
-            playerlogic::render_player(&mut context_2d, game_core);
+            game_core
+                .player
+                .render(&mut context_2d, &mut game_core.resources, dt);
         }
 
         // Render the hud

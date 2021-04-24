@@ -6,7 +6,11 @@ use raylib::{
     camera::Camera2D, math::Vector2, prelude::RaylibDrawHandle, RaylibHandle, RaylibThread,
 };
 
-use crate::{items::ShopItems, player::Player, resources::GlobalResources, world::World};
+use crate::{
+    player::{Player, PlayerInventory},
+    resources::GlobalResources,
+    world::World,
+};
 
 use failure::Error;
 use log::debug;
@@ -31,10 +35,10 @@ impl fmt::Display for GameState {
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct GameProgress {
-    coins: u32,
-    max_depth: f32,
-    fastest_time: Option<f64>,
-    inventory: Vec<ShopItems>,
+    pub coins: u32,
+    pub max_depth: f32,
+    pub fastest_time: Option<f64>,
+    pub inventory: PlayerInventory,
 }
 
 impl GameProgress {

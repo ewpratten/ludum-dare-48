@@ -34,3 +34,10 @@ pub const WATER: Color = Color {
     b: 143,
     a: 255
 };
+
+pub const TRANSLUCENT_RED_64: Color = Color {
+    r: 230,
+    g: 41,
+    b: 55,
+    a: 64,
+};
