@@ -5,13 +5,13 @@ use crate::{
     pallette::{TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96},
 };
 
-const NORMAL_PLAYER_SPEED: i32 = 3;
+const NORMAL_PLAYER_SPEED: i32 = 1;
 const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
 const CAMERA_FOLLOW_SPEED: f32 = 0.7;
 const TURN_SPEED: f32 = 0.15;
 const BOOST_DECREASE_PER_SECOND: f32 = 0.65;
 const BOOST_REGEN_PER_SECOND: f32 = 0.25;
-const BREATH_DECREASE_PER_SECOND: f32 = 0.01;
+const BREATH_DECREASE_PER_SECOND: f32 = 0.02;
 
 pub fn update_player_movement(
     draw_handle: &mut RaylibDrawHandle,
@@ -127,25 +127,36 @@ pub fn update_player_movement(
         (game_core.player.breath_percent - BREATH_DECREASE_PER_SECOND * dt as f32).clamp(0.0, 1.0);
 
     // Only do this if the mouse is far enough away
-    let player_real_movement = game_core.player.direction * speed_multiplier;
+    let mut player_real_movement = game_core.player.direction * speed_multiplier;
     if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0 {
-        game_core.player.is_moving = true;
-        game_core.player.position += player_real_movement;
 
-        // Check for any collisions
-        for collider in game_core.world.colliders.iter() {
-            if game_core.player.collides_with_rec(collider) {
-                game_core.player.is_moving = false;
-                break;
+        if game_core.player.is_moving {
+            // move in x
+            game_core.player.position.x += player_real_movement.x;
+
+            // Check for any collisions
+            for collider in game_core.world.colliders.iter() {
+                if game_core.player.collides_with_rec(collider) {
+                    
+                    game_core.player.position.x -= player_real_movement.x;
+                    player_real_movement.x = 0.0;
+                    break;
+                }
+            }
+            
+            // move in y
+            game_core.player.position.y += player_real_movement.y;
+
+            // Check for any collisions
+            for collider in game_core.world.colliders.iter() {
+                if game_core.player.collides_with_rec(collider) {
+                    game_core.player.position.y -= player_real_movement.y;
+                    player_real_movement.y = 0.0;
+                    break;
+                }
             }
         }
-
-        if !game_core.player.is_moving {
-            game_core.player.position -= player_real_movement;
-        }
-    } else {
-        game_core.player.is_moving = false;
-    }
+    } 
 
     // Move the camera to follow the player
     let direction_from_cam_to_player =
