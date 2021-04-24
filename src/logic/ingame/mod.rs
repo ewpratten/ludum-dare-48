@@ -9,7 +9,7 @@ use super::screen::Screen;
 
 const NORMAL_PLAYER_SPEED: i32 = 4;
 const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
-const CAMERA_FOLLOW_SPEED: f32 = 3.0;
+const CAMERA_FOLLOW_SPEED: f32 = 1.0;
 
 pub enum InGameState {
     BUYING,
@@ -32,6 +32,7 @@ impl InGameScreen {
         &mut self,
         draw_handle: &mut RaylibDrawHandle,
         game_core: &mut GameCore,
+        window_center: Vector2
     ) {
         let player_screen_position =
             draw_handle.get_screen_to_world2D(game_core.player.position, game_core.master_camera);
@@ -56,9 +57,9 @@ impl InGameScreen {
         game_core.player.position += game_core.player.direction * speed_multiplier;
 
         // Move the camera to follow the player
-        let direction_from_cam_to_player = player_screen_position;
+        let direction_from_cam_to_player = (game_core.player.position - window_center) - game_core.master_camera.target;
         // game_core.master_camera.offset -= direction_from_cam_to_player * CAMERA_FOLLOW_SPEED;
-        game_core.master_camera.target = game_core.player.position + 0;
+        game_core.master_camera.target += direction_from_cam_to_player * CAMERA_FOLLOW_SPEED;
         
     }
 
@@ -106,7 +107,7 @@ impl Screen for InGameScreen {
         };
 
         // Update player movement
-        self.update_player_movement(draw_handle, game_core);
+        self.update_player_movement(draw_handle, game_core, window_center);
 
         // Open a 2D context
         {
