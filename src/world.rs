@@ -5,9 +5,17 @@ use serde::{Deserialize, Serialize};
 use std::io::Read;
 use failure::Error;
 
+use crate::entities::fish::FishEntity;
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct World {
-    pub end_position: Vector2
+    pub end_position: Vector2,
+
+    #[serde(rename = "fish")]
+    pub fish_positions: Vec<Vector2>,
+
+    #[serde(skip)]
+    pub fish: Vec<FishEntity>
 }
 
 impl World {
@@ -17,6 +25,11 @@ impl World {
         let reader = BufReader::new(file);
 
         // Deserialize
-        Ok(serde_json::from_reader(reader)?)
+        let mut result: World = serde_json::from_reader(reader)?;
+
+        // Init all fish
+        result.fish = FishEntity::new_from_positions(&result.fish_positions);
+
+        Ok(result)
     }
 }

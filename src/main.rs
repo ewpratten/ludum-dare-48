@@ -5,6 +5,7 @@ mod resources;
 mod player;
 mod world;
 mod pallette;
+mod entities;
 mod items;
 
 use gamecore::{GameCore, GameProgress, GameState};

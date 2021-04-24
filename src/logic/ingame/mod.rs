@@ -1,5 +1,5 @@
-mod playerlogic;
 mod hud;
+mod playerlogic;
 
 use raylib::prelude::*;
 
@@ -33,8 +33,6 @@ impl InGameScreen {
     ) {
         context_2d.draw_circle(0, 0, 10.0, Color::BLACK);
     }
-
-    
 }
 
 impl Screen for InGameScreen {
@@ -45,6 +43,9 @@ impl Screen for InGameScreen {
         audio_system: &mut AudioPlayer,
         game_core: &mut GameCore,
     ) -> Option<GameState> {
+        // Calculate DT
+        let dt = draw_handle.get_time() - game_core.last_frame_time;
+
         // Clear frame
         draw_handle.clear_background(Color::BLUE);
 
@@ -70,6 +71,13 @@ impl Screen for InGameScreen {
 
             // Render the world
             self.render_world(&mut context_2d, game_core);
+
+            // Render entities
+            let mut fish = &mut game_core.world.fish;
+            for fish in fish.iter_mut() {
+                fish.update_position(&game_core.player, dt);
+                fish.render(&mut context_2d);
+            }
 
             // Render Player
             playerlogic::render_player(&mut context_2d, game_core);
