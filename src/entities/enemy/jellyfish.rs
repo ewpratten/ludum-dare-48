@@ -6,6 +6,9 @@ use crate::{
 use raylib::prelude::*;
 use serde::{Deserialize, Serialize};
 
+const JELLYFISH_STUN_DURATION: f64 = 0.75;
+const JELLYFISH_STUN_REACH: f32 = 20.0;
+
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 pub struct JellyFish {
     pub position: Vector2,
@@ -26,9 +29,9 @@ impl EnemyBase for JellyFish {
         &mut self,
         context_2d: &mut raylib::prelude::RaylibMode2D<raylib::prelude::RaylibDrawHandle>,
         resources: &mut GlobalResources,
-        dt: f64
+        dt: f64,
     ) {
-        let is_jelly_stunned = self.stunned_timer != 0.0;
+        let is_jelly_stunned = self.stunned_timer > 0.0;
 
         // Simple sine position
         let v_trans = if is_jelly_stunned {
@@ -43,12 +46,12 @@ impl EnemyBase for JellyFish {
 
         // Render the stun ring
         if self.max_stunned_time > 0.0 && self.stunned_timer > 0.0 {
-            let stun_ring_radius =
+            let stun_ring_alpha =
                 calculate_linear_slide(self.stunned_timer / self.max_stunned_time);
             context_2d.draw_circle_v(
                 trans_pose,
-                stun_ring_radius as f32 * 20.0,
-                TRANSLUCENT_RED_64,
+                JELLYFISH_STUN_REACH,
+                TRANSLUCENT_RED_64.fade(0.55 * stun_ring_alpha as f32),
             );
             self.stunned_timer -= dt;
         }
@@ -75,11 +78,14 @@ impl EnemyBase for JellyFish {
 
     fn handle_logic(&mut self, player: &mut Player, dt: f64) {
         // Handle stunning the player
-        if self.do_stun_player {}
+        if self.do_stun_player {
+            if self.position.distance_to(player.position).abs() <= JELLYFISH_STUN_REACH {
+                player.set_stun_seconds(JELLYFISH_STUN_DURATION);
+            }
+        }
     }
 
     fn handle_getting_attacked(&mut self, stun_duration: f64) {
-        println!("Attack");
         self.stunned_timer = stun_duration;
         self.max_stunned_time = stun_duration;
     }
