@@ -121,7 +121,7 @@ impl Screen for InGameScreen {
                 fish.render(&mut context_2d);
             }
             for jellyfish in game_core.world.jellyfish.iter() {
-                jellyfish.render(&mut context_2d);
+                jellyfish.render(&mut context_2d, &mut game_core.resources);
             }
 
             // Render Player

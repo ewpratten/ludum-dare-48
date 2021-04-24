@@ -18,7 +18,10 @@ pub struct GlobalResources {
     pub player_animation_boost: FrameAnimationWrapper,
 
     // Cave
-    pub cave_mid_layer: Texture2D
+    pub cave_mid_layer: Texture2D,
+
+    // Enemies
+    pub jellyfish_animation_regular: FrameAnimationWrapper
 }
 
 impl GlobalResources {
@@ -63,6 +66,15 @@ impl GlobalResources {
                 &thread,
                 &Image::load_image("./assets/img/map/cave.png")?,
             )?,
+            jellyfish_animation_regular: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/jelly.png")?,
+                )?,
+                Vector2 { x: 10.0, y: 10.0 },
+                6,
+                4,
+            ),
         })
     }
 }
