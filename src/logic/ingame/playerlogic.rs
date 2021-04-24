@@ -129,8 +129,20 @@ pub fn update_player_movement(
     // Only do this if the mouse is far enough away
     let player_real_movement = game_core.player.direction * speed_multiplier;
     if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0 {
-        game_core.player.position += player_real_movement;
         game_core.player.is_moving = true;
+        game_core.player.position += player_real_movement;
+
+        // Check for any collisions
+        for collider in game_core.world.colliders.iter() {
+            if game_core.player.collides_with_rec(collider) {
+                game_core.player.is_moving = false;
+                break;
+            }
+        }
+
+        if !game_core.player.is_moving {
+            game_core.player.position -= player_real_movement;
+        }
     } else {
         game_core.player.is_moving = false;
     }
@@ -142,65 +154,18 @@ pub fn update_player_movement(
         draw_handle.get_world_to_screen2D(game_core.player.position, game_core.master_camera);
 
     // Camera only moves if you get close to the edge of the screen
-    if player_screen_position.distance_to(window_center).abs() > (window_center.y - 40.0) {
+    if player_screen_position.distance_to(window_center).abs() > 100.0 {
         game_core.master_camera.target += player_real_movement;
     }
-}
 
-pub fn render_player(context_2d: &mut RaylibMode2D<RaylibDrawHandle>, game_core: &mut GameCore) {
-    // Get the player
-    let player = &game_core.player;
-
-    // Convert the player direction to a rotation
-    let player_rotation = Vector2::zero().angle_to(player.direction);
-
-    // Render the player's boost ring
-    // This functions both as a breath meter, and as a boost meter
-    let boost_ring_max_radius = player.size.x + 5.0;
-    context_2d.draw_circle(
-        player.position.x as i32,
-        player.position.y as i32,
-        boost_ring_max_radius * player.boost_percent,
-        TRANSLUCENT_WHITE_64,
-    );
-    context_2d.draw_ring(
-        Vector2 {
-            x: player.position.x as i32 as f32,
-            y: player.position.y as i32 as f32,
-        },
-        boost_ring_max_radius,
-        boost_ring_max_radius + 1.0,
-        0,
-        (360.0 * player.breath_percent) as i32,
-        0,
-        TRANSLUCENT_WHITE_96,
-    );
-
-    // Render the player based on what is happening
-    if player.is_boost_charging {
-        game_core.resources.player_animation_boost_charge.draw(
-            context_2d,
-            player.position,
-            player_rotation.to_degrees() - 90.0,
-        );
-    } else if player.is_boosting {
-        game_core.resources.player_animation_boost.draw(
-            context_2d,
-            player.position,
-            player_rotation.to_degrees() - 90.0,
-        );
-    } else if player.is_moving {
-        game_core.resources.player_animation_regular.draw(
-            context_2d,
-            player.position,
-            player_rotation.to_degrees() - 90.0,
-        );
-    } else {
-        game_core.resources.player_animation_regular.draw_frame(
-            context_2d,
-            player.position,
-            player_rotation.to_degrees() - 90.0,
-            0,
-        );
+    // If the player is not on screen, snap the camera to them
+    if player_screen_position.distance_to(window_center).abs() > window_center.y {
+        game_core.master_camera.target = game_core.player.position - (window_center / 2.0);
     }
+
+    // // Clamp camera target y to 0
+    // if game_core.master_camera.target.y < -100.0 {
+    //     game_core.master_camera.target.y = -100.0;
+    // }
 }
+

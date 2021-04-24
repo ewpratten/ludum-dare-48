@@ -16,6 +16,9 @@ pub struct GlobalResources {
     pub player_animation_regular: FrameAnimationWrapper,
     pub player_animation_boost_charge: FrameAnimationWrapper,
     pub player_animation_boost: FrameAnimationWrapper,
+
+    // Cave
+    pub cave_mid_layer: Texture2D
 }
 
 impl GlobalResources {
@@ -56,6 +59,10 @@ impl GlobalResources {
                 21,
                 30,
             ),
+            cave_mid_layer: raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/map/cave.png")?,
+            )?,
         })
     }
 }

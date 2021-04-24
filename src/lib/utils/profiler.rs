@@ -1,3 +1,4 @@
+use raylib::math::Vector2;
 use serde_json::json;
 use serialstudio::{
     data::{DataGroup, DataSet, TelemetryFrame},
@@ -21,7 +22,8 @@ pub struct ProfilerData {
     // Player 
     pub player_coins: u32,
     pub player_boost_percent: f32,
-    pub player_breath_percent: f32
+    pub player_breath_percent: f32,
+    pub player_pose: Vector2
 }
 
 /// The development profiler
@@ -145,6 +147,20 @@ impl GameProfiler {
                             value: json!(self.data.player_breath_percent),
                             graph: Some(false),
                             unit: Some("%".to_string()),
+                            w_type: None,
+                        },
+                        DataSet {
+                            title: Some("X".to_string()),
+                            value: json!(self.data.player_pose.x),
+                            graph: Some(false),
+                            unit: Some("pixels".to_string()),
+                            w_type: None,
+                        },
+                        DataSet {
+                            title: Some("Y".to_string()),
+                            value: json!(self.data.player_pose.y),
+                            graph: Some(false),
+                            unit: Some("pixels".to_string()),
                             w_type: None,
                         },
                     ],
