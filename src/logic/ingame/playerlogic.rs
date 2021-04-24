@@ -1,6 +1,9 @@
 use raylib::prelude::*;
 
-use crate::{gamecore::GameCore, pallette::{TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96}};
+use crate::{
+    gamecore::GameCore,
+    pallette::{TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96},
+};
 
 const NORMAL_PLAYER_SPEED: i32 = 4;
 const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
@@ -47,12 +50,16 @@ pub fn update_player_movement(
         speed_multiplier = NORMAL_PLAYER_SPEED as f32;
 
         // Handle boost regen
-        game_core.player.boost_percent =
-            (game_core.player.boost_percent + BOOST_REGEN_PER_SECOND * dt as f32).clamp(0.0, 1.0);
+        if !user_request_boost {
+            game_core.player.boost_percent = (game_core.player.boost_percent
+                + BOOST_REGEN_PER_SECOND * dt as f32)
+                .clamp(0.0, 1.0);
+        }
     }
 
     // Update the player's breath
-    game_core.player.breath_percent = (game_core.player.breath_percent - BREATH_DECREASE_PER_SECOND * dt as f32).clamp(0.0, 1.0);
+    game_core.player.breath_percent =
+        (game_core.player.breath_percent - BREATH_DECREASE_PER_SECOND * dt as f32).clamp(0.0, 1.0);
 
     // Only do this if the mouse is far enough away
     let player_real_movement = game_core.player.direction * speed_multiplier;

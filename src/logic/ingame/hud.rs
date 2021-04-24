@@ -1,6 +1,6 @@
 use raylib::prelude::*;
 
-use crate::gamecore::GameCore;
+use crate::{gamecore::GameCore, pallette::TRANSLUCENT_WHITE_96};
 
 pub fn render_hud(
     draw_handle: &mut RaylibDrawHandle,
@@ -8,35 +8,94 @@ pub fn render_hud(
     window_center: Vector2,
 ) {
     // Get the relevant data
-    let breath = game_core.player.breath_percent;
     let dist_from_player_to_end = game_core
         .player
         .position
         .distance_to(game_core.world.end_position);
     let dist_from_start_to_end = Vector2::zero().distance_to(game_core.world.end_position);
-    let progress = (dist_from_start_to_end - dist_from_player_to_end) / dist_from_start_to_end;
+    let progress = ((dist_from_start_to_end - dist_from_player_to_end) / dist_from_start_to_end)
+        .clamp(0.0, 1.0);
 
-    // Render the base of the progress bar
-    // let progress_bar_rect = Rectangle {
-    //     x: 20.0,
-    //     y: (window_center.y * 2.0) - 20.0 - 40.0,
-    //     width: (window_center.x * 2.0) - 40.0,
-    //     height: 40.0,
-    // };
-    // draw_handle.draw_rectangle_rec(progress_bar_rect, Color::BLUE);
-    // draw_handle.draw_rectangle_lines_ex(progress_bar_rect, 6, Color::WHITE);
+    // Determine the progress slider position
+    let slider_bound_height = 20.0;
+    let progress_slider_position = Vector2 {
+        x: window_center.x * 2.0,
+        y: (((window_center.y * 2.0) - (slider_bound_height * 2.0)) * progress)
+            + slider_bound_height,
+    };
 
-    // // Render the slider of the progress bar
-    // let progress_bar_slider = Rectangle {
-    //     x: (((window_center.x * 2.0) - 40.0) * progress.abs().clamp(0.0, 1.0)) + 10.0,
-    //     y: (window_center.y * 2.0) - 20.0 - 50.0,
-    //     width: 40.0,
-    //     height: 60.0,
-    // };
-    // draw_handle.draw_rectangle_rec(progress_bar_slider, Color::BLUE);
-    // //TODO: This causes a render bug
-    // draw_handle.draw_rectangle_lines_ex(progress_bar_slider, 6, Color::WHITE);
+    // Render the base of the slider
+    draw_handle.draw_rectangle(
+        (progress_slider_position.x - slider_bound_height) as i32,
+        (progress_slider_position.y - slider_bound_height / 2.0) as i32,
+        slider_bound_height as i32,
+        slider_bound_height as i32,
+        TRANSLUCENT_WHITE_96,
+    );
+    draw_handle.draw_triangle(
+        Vector2 {
+            x: (progress_slider_position.x - slider_bound_height),
+            y: (progress_slider_position.y - slider_bound_height / 2.0),
+        },
+        Vector2 {
+            x: (progress_slider_position.x - slider_bound_height - (slider_bound_height / 2.0)),
+            y: progress_slider_position.y,
+        },
+        Vector2 {
+            x: (progress_slider_position.x - slider_bound_height),
+            y: (progress_slider_position.y + slider_bound_height / 2.0),
+        },
+        TRANSLUCENT_WHITE_96,
+    );
 
-    // TODO: Breath bar
-    // TODO: Boost bar
+    // Render the outline of the slider
+    draw_handle.draw_line_ex(
+        Vector2 {
+            x: (progress_slider_position.x - slider_bound_height),
+            y: (progress_slider_position.y - slider_bound_height / 2.0),
+        },
+        Vector2 {
+            x: progress_slider_position.x,
+            y: (progress_slider_position.y - slider_bound_height / 2.0),
+        },
+        3.0,
+        Color::BLACK,
+    );
+    draw_handle.draw_line_ex(
+        Vector2 {
+            x: (progress_slider_position.x - slider_bound_height),
+            y: (progress_slider_position.y + slider_bound_height / 2.0),
+        },
+        Vector2 {
+            x: progress_slider_position.x,
+            y: (progress_slider_position.y + slider_bound_height / 2.0),
+        },
+        3.0,
+        Color::BLACK,
+    );
+    draw_handle.draw_line_ex(
+        Vector2 {
+            x: (progress_slider_position.x - slider_bound_height),
+            y: (progress_slider_position.y - slider_bound_height / 2.0),
+        },
+        Vector2 {
+            x: (progress_slider_position.x - slider_bound_height - (slider_bound_height / 2.0)),
+            y: progress_slider_position.y,
+        },
+        3.0,
+        Color::BLACK,
+    );
+    draw_handle.draw_line_ex(
+        Vector2 {
+            x: (progress_slider_position.x - slider_bound_height),
+            y: (progress_slider_position.y + slider_bound_height / 2.0),
+        },
+        Vector2 {
+            x: (progress_slider_position.x - slider_bound_height - (slider_bound_height / 2.0)),
+            y: progress_slider_position.y,
+        },
+        3.0,
+        Color::BLACK,
+    );
+
 }
