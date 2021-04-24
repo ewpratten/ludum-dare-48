@@ -5,8 +5,9 @@ mod resources;
 mod player;
 mod world;
 mod pallette;
+mod items;
 
-use gamecore::{GameCore, GameState};
+use gamecore::{GameCore, GameProgress, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
 use log::info;
 use logic::{gameend::GameEndScreen, ingame::InGameScreen, loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen, screen::Screen};
@@ -41,8 +42,11 @@ fn main() {
     // Load the world
     let world = World::load_from_json("./assets/worlds/mainworld.json".to_string()).expect("Failed to load main world JSON");
 
+    // Load the game progress
+    let game_progress = GameProgress::try_from_file("./assets/savestate.json".to_string());
+
     // Set up the game's core state
-    let mut game_core = GameCore::new(&mut raylib, &raylib_thread, world);
+    let mut game_core = GameCore::new(&mut raylib, &raylib_thread, world, game_progress);
 
     // Set up the game's profiler
     let mut profiler = GameProfiler::new();
