@@ -1,19 +1,22 @@
 use raylib::prelude::*;
 
-use crate::{
-    gamecore::GameCore,
-    pallette::{TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64},
-};
+use crate::{gamecore::GameCore, pallette::{TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96}};
 
 const NORMAL_PLAYER_SPEED: i32 = 4;
 const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
 const CAMERA_FOLLOW_SPEED: f32 = 0.7;
+const BOOST_DECREASE_PER_SECOND: f32 = 0.75;
+const BOOST_REGEN_PER_SECOND: f32 = 0.25;
+const BREATH_DECREASE_PER_SECOND: f32 = 0.01;
 
 pub fn update_player_movement(
     draw_handle: &mut RaylibDrawHandle,
     game_core: &mut GameCore,
     window_center: Vector2,
 ) {
+    // Calculate DT
+    let dt = draw_handle.get_time() - game_core.last_frame_time;
+
     // Handle player movement
     let mouse_pose = draw_handle.get_mouse_position();
     let mouse_world_pose = draw_handle.get_screen_to_world2D(mouse_pose, game_core.master_camera);
@@ -32,10 +35,21 @@ pub fn update_player_movement(
     let user_request_action = draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_RIGHT_BUTTON);
 
     // Move the player in their direction
-    let speed_multiplier = match user_request_boost && game_core.player.boost_percent >= 0.0 {
-        true => BOOST_PLAYER_SPEED as f32,
-        false => NORMAL_PLAYER_SPEED as f32,
-    };
+    let speed_multiplier;
+    if user_request_boost && game_core.player.boost_percent >= 0.0 {
+        // Set the speed multiplier
+        speed_multiplier = BOOST_PLAYER_SPEED as f32;
+
+        // Decrease the boost
+        game_core.player.boost_percent -= BOOST_DECREASE_PER_SECOND * dt as f32;
+    } else {
+        // Set the speed multiplier
+        speed_multiplier = NORMAL_PLAYER_SPEED as f32;
+
+        // Handle boost regen
+        game_core.player.boost_percent =
+            (game_core.player.boost_percent + BOOST_REGEN_PER_SECOND * dt as f32).clamp(0.0, 1.0);
+    }
 
     // Only do this if the mouse is far enough away
     let player_real_movement = game_core.player.direction * speed_multiplier;
@@ -78,7 +92,7 @@ pub fn render_player(context_2d: &mut RaylibMode2D<RaylibDrawHandle>, game_core:
         0,
         (360.0 * player.breath_percent) as i32,
         0,
-        TRANSLUCENT_WHITE_128,
+        TRANSLUCENT_WHITE_96,
     );
 
     // TODO: tmp rect

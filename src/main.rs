@@ -149,6 +149,9 @@ fn main() {
 
         // Set the first frame flag
         game_core.has_rendered_first_frame = true;
+
+        // Update the frame time
+        game_core.last_frame_time = draw_handle.get_time();
     }
 
     // Cleanup
