@@ -18,6 +18,7 @@ pub struct Player {
     pub position: Vector2,
     pub direction: Vector2,
     pub size: Vector2,
+    pub radius: f32,
     pub coins: u32,
     pub boost_percent: f32,
     pub breath_percent: f32,
@@ -35,6 +36,8 @@ impl Player {
             boost_percent: 1.0,
             size: Vector2 { x: 11.0, y: 21.0 },
             breath_percent: 1.0,
+            is_moving: true,
+            radius: 4.5,
             position: spawn.clone(),
             ..Default::default()
         }
@@ -68,7 +71,7 @@ impl Player {
         //     || rectangle.check_collision_point_rec(top_right_corner)
         //     || rectangle.check_collision_point_rec(bottom_left_corner);
 
-        return rectangle.check_collision_circle_rec(self.position, (self.size.y * 0.5) / 2.0);
+        return rectangle.check_collision_circle_rec(self.position, self.radius);
     }
 
     /// Stun the player
