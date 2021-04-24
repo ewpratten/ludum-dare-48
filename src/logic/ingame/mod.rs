@@ -63,7 +63,7 @@ impl Screen for InGameScreen {
 		}
 		
 
-
+		// Only render shop in shop period, otherwise allow player movement
 		if draw_handle.get_time() - game_core.last_state_change_time >= 0.05 
 			&& self.current_state == InGameState::BUYING{
 				
