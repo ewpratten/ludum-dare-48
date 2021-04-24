@@ -122,9 +122,9 @@ impl Screen for InGameScreen {
             self.render_colliders(&mut context_2d, game_core);
 
             // Render entities
-            let mut fish = &mut game_core.world.fish;
-            for fish in fish.iter_mut() {
-                fish.update_position(&mut game_core.player, dt);
+            let fish_clone = game_core.world.fish.clone();
+            for fish in game_core.world.fish.iter_mut() {
+                fish.update_position(&mut game_core.player, dt, &fish_clone);
                 fish.render(&mut context_2d);
             }
 
