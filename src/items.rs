@@ -10,13 +10,13 @@ impl StunGun {
     pub fn lvl1() -> Self {
         Self {
             range: 30.0,
-            duration: 0.5,
+            duration: 0.75,
         }
     }
     pub fn lvl2() -> Self {
         Self {
             range: 60.0,
-            duration: 0.75,
+            duration: 1.25,
         }
     }
 }

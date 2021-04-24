@@ -1,6 +1,14 @@
+use crate::{
+    entities::enemy::base::EnemyBase,
+    gamecore::{GameCore, GameProgress},
+    items::{AirBag, Flashlight, Flippers, StunGun},
+    lib::utils::calculate_linear_slide,
+    pallette::{TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96},
+    resources::GlobalResources,
+    world::World,
+};
 use raylib::prelude::*;
-use serde::{Serialize, Deserialize};
-use crate::{entities::enemy::base::EnemyBase, gamecore::{GameCore, GameProgress}, items::{AirBag, Flashlight, Flippers, StunGun}, lib::utils::{calculate_linear_slide}, pallette::{TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96}, resources::GlobalResources, world::World};
+use serde::{Deserialize, Serialize};
 
 const AOE_RING_MAX_RADIUS: f32 = 60.0;
 const STUN_ATTACK_TIME: f64 = 0.75;
@@ -10,7 +18,16 @@ pub struct PlayerInventory {
     pub stun_gun: Option<StunGun>,
     pub air_bag: Option<AirBag>,
     pub flashlight: Option<Flashlight>,
-    pub flippers: Option<Flippers>
+    pub flippers: Option<Flippers>,
+}
+
+impl PlayerInventory {
+    pub fn new() -> Self {
+        Self {
+            stun_gun: Some(StunGun::lvl1()), //TMP
+            ..Default::default()
+        }
+    }
 }
 
 #[derive(Debug, Default)]
@@ -39,6 +56,7 @@ impl Player {
             is_moving: true,
             radius: 4.5,
             position: spawn.clone(),
+            inventory: PlayerInventory::new(),
             ..Default::default()
         }
     }
@@ -84,12 +102,12 @@ impl Player {
         if self.inventory.stun_gun.is_some() && self.stun_timer == 0.0 {
             self.attacking_timer = self.inventory.stun_gun.as_ref().unwrap().duration;
 
-            // Stun everything in reach 
+            // Stun everything in reach
             let stun_reach = self.inventory.stun_gun.as_ref().unwrap().range;
 
             for jellyfish in world.jellyfish.iter_mut() {
                 if jellyfish.position.distance_to(self.position).abs() <= stun_reach {
-                    jellyfish.handle_getting_attacked();
+                    jellyfish.handle_getting_attacked(self.attacking_timer);
                 }
             }
         }
@@ -151,7 +169,9 @@ impl Player {
 
         // Calculate AOE ring
         if self.is_stun_gun_active() {
-            let aoe_ring = calculate_linear_slide( self.attacking_timer / self.inventory.stun_gun.as_ref().unwrap().duration) as f32;
+            let aoe_ring = calculate_linear_slide(
+                self.attacking_timer / self.inventory.stun_gun.as_ref().unwrap().duration,
+            ) as f32;
             self.attacking_timer = (self.attacking_timer - dt).max(0.0);
 
             // Render attack AOE

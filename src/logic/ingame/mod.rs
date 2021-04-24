@@ -3,7 +3,12 @@ mod playerlogic;
 
 use raylib::prelude::*;
 
-use crate::{entities::enemy::base::EnemyBase, gamecore::{GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer, pallette::{SKY, WATER}};
+use crate::{
+    entities::enemy::base::EnemyBase,
+    gamecore::{GameCore, GameState},
+    lib::wrappers::audio::player::AudioPlayer,
+    pallette::{SKY, WATER},
+};
 
 use super::screen::Screen;
 
@@ -64,11 +69,7 @@ impl InGameScreen {
     ) {
         // Render every collider
         for collider in game_core.world.colliders.iter() {
-            context_2d.draw_rectangle_lines_ex(
-                collider,
-                1,
-                Color::RED,
-            );
+            context_2d.draw_rectangle_lines_ex(collider, 1, Color::RED);
         }
     }
 }
@@ -110,7 +111,7 @@ impl Screen for InGameScreen {
 
             // Render the world
             self.render_world(&mut context_2d, game_core);
-            if game_core.show_simple_debug_info{
+            if game_core.show_simple_debug_info {
                 self.render_colliders(&mut context_2d, game_core);
             }
 
@@ -121,11 +122,13 @@ impl Screen for InGameScreen {
                 fish.render(&mut context_2d);
             }
             for jellyfish in game_core.world.jellyfish.iter_mut() {
-                jellyfish.render(&mut context_2d, &mut game_core.resources);
+                jellyfish.render(&mut context_2d, &mut game_core.resources, dt);
             }
 
             // Render Player
-            game_core.player.render(&mut context_2d, &mut game_core.resources, dt);
+            game_core
+                .player
+                .render(&mut context_2d, &mut game_core.resources, dt);
         }
 
         // Render the hud
