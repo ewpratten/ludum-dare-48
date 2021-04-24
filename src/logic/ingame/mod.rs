@@ -7,6 +7,10 @@ use crate::{
 
 use super::screen::Screen;
 
+const NORMAL_PLAYER_SPEED: i32 = 4;
+const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
+const CAMERA_FOLLOW_SPEED: f32 = 3.0;
+
 pub enum InGameState {
     BUYING,
     SWIMMING,
@@ -40,9 +44,22 @@ impl InGameScreen {
 
         // Handle action buttons
         let user_request_boost =
-            draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON);
+            draw_handle.is_mouse_button_down(MouseButton::MOUSE_LEFT_BUTTON);
         let user_request_action =
             draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_RIGHT_BUTTON);
+
+        // Move the player in their direction
+        let speed_multiplier = match user_request_boost && game_core.player.boost_percent >= 0.0 {
+            true => BOOST_PLAYER_SPEED as f32,
+            false => NORMAL_PLAYER_SPEED as f32
+        };
+        game_core.player.position += game_core.player.direction * speed_multiplier;
+
+        // Move the camera to follow the player
+        let direction_from_cam_to_player = player_screen_position;
+        // game_core.master_camera.offset -= direction_from_cam_to_player * CAMERA_FOLLOW_SPEED;
+        game_core.master_camera.target = game_core.player.position + 0;
+        
     }
 
     fn render_player(
