@@ -47,7 +47,7 @@ impl Screen for InGameScreen {
         game_core: &mut GameCore,
     ) -> Option<GameState> {
         // Clear frame
-        draw_handle.clear_background(Color::RAYWHITE);
+        draw_handle.clear_background(Color::BLUE);
 
         // Handle the pause menu being opened
         if draw_handle.is_key_pressed(KeyboardKey::KEY_ESCAPE) {

@@ -1,6 +1,9 @@
 use raylib::prelude::*;
 
-use crate::gamecore::GameCore;
+use crate::{
+    gamecore::GameCore,
+    pallette::{TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64},
+};
 
 const NORMAL_PLAYER_SPEED: i32 = 4;
 const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
@@ -58,6 +61,25 @@ pub fn render_player(context_2d: &mut RaylibMode2D<RaylibDrawHandle>, game_core:
 
     // Convert the player direction to a rotation
     let player_rotation = Vector2::zero().angle_to(player.direction);
+
+    // Render the player's boost ring
+    // This functions both as a breath meter, and as a boost meter
+    let boost_ring_max_radius = player.size.x + 5.0;
+    context_2d.draw_circle(
+        player.position.x as i32,
+        player.position.y as i32,
+        boost_ring_max_radius * player.boost_percent,
+        TRANSLUCENT_WHITE_64,
+    );
+    context_2d.draw_ring(
+        player.position,
+        boost_ring_max_radius - 2.0,
+        boost_ring_max_radius + 2.0,
+        0,
+        (360.0 * player.breath_percent) as i32,
+        0,
+        TRANSLUCENT_WHITE_128,
+    );
 
     // TODO: tmp rect
     context_2d.draw_rectangle_pro(

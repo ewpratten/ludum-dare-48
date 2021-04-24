@@ -4,6 +4,7 @@ mod logic;
 mod resources;
 mod player;
 mod world;
+mod pallette;
 
 use gamecore::{GameCore, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
