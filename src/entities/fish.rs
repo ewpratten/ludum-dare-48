@@ -3,8 +3,8 @@ use raylib::prelude::*;
 
 use crate::{gamecore::GameCore, lib::utils::triangles::rotate_vector, player::Player};
 
-const FISH_FOLLOW_PLAYER_DISTANCE: f32 = 80.0;
-const FISH_FOLLOW_PLAYER_SPEED: f32 = 2.0;
+const FISH_FOLLOW_PLAYER_DISTANCE: f32 = 30.0;
+const FISH_FOLLOW_PLAYER_SPEED: f32 = 1.8;
 const FISH_FOLLOW_PLAYER_SPEED_FAST: f32 = FISH_FOLLOW_PLAYER_SPEED * 3.0;
 const FISH_ATTACH_RADIUS: f32 = 20.0;
 
@@ -74,7 +74,7 @@ impl FishEntity {
         direction_to_player.normalize();
 
         // Handle player picking up fish
-        if player.position.distance_to(self.position).abs() <= player.size.y * 1.2 {
+        if player.position.distance_to(self.position).abs() <= player.size.y * 2.2 {
             self.following_player = true;
         }
 
