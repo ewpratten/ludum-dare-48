@@ -101,11 +101,21 @@ pub fn render_shop(
 			mouse_position.y <= item.y_pose as f32 + item.width as f32{
 			draw_handle.draw_rectangle(item.x_pose, item.y_pose, item.width, item.height, Color::BLACK);
 				
-			if draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON) && game_core.player.coins >= item.cost as u32{
+			// MAKE SURE TO CHECK VALUE!!!!!!!!!!!!!!!!!!!!!!!!!!
+			if draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON) {// && game_core.player.coins >= item.cost as u32
 
 				game_core.world.spend_coins(item.cost.into());
 				game_core.player.coins -= item.cost as u32;
 				
+				let x = match &(item.name)[..] {
+					"Stun Gun" => ("stunny"),
+					"Air Bag" => ("Airy"),
+					"Flash Light" => ("Flashy"),
+					"Flippers" => ("Flippy"),
+					_ => ("Among us irl")
+				};
+
+				println!("{}", x);
 
 			}
 
