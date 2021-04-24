@@ -9,10 +9,10 @@ set -e
 # Make a uni-bundle
 echo "Creating a fat bundle for all platforms"
 rm -rf ./bundle/release
-rm -rf ./bundle/ludum-dare-48.zip
+rm -rf ./bundle/one-breath.zip
 mkdir -p ./bundle/release
 cp -r ./assets ./bundle/release
-cp ./bundle/linux/release/ludum-dare-48 ./bundle/release/ludum-dare-48
-cp ./bundle/windows/release/ludum-dare-48.exe ./bundle/release/ludum-dare-48.exe
+cp ./bundle/linux/release/one-breath ./bundle/release/one-breath
+cp ./bundle/windows/release/one-breath.exe ./bundle/release/one-breath.exe
 cd ./bundle/release
-zip -r ../ludum-dare-48.zip ./
+zip -r ../one-breath.zip ./
