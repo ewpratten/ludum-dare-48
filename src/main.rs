@@ -13,7 +13,7 @@ use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
 use log::info;
 use logic::{gameend::GameEndScreen, ingame::InGameScreen, loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen, screen::Screen};
 use raylib::prelude::*;
-use world::World;
+use world::{World, load_world_colliders};
 
 // Game Launch Configuration
 const DEFAULT_WINDOW_DIMENSIONS: Vector2 = Vector2 {
@@ -32,7 +32,7 @@ fn main() {
         .size(
             DEFAULT_WINDOW_DIMENSIONS.x as i32,
             DEFAULT_WINDOW_DIMENSIONS.y as i32,
-        )
+        ).msaa_4x()
         .title(WINDOW_TITLE)
         .build();
     raylib.set_target_fps(MAX_FPS);
@@ -41,7 +41,8 @@ fn main() {
     raylib.set_exit_key(None);
 
     // Load the world
-    let world = World::load_from_json("./assets/worlds/mainworld.json".to_string()).expect("Failed to load main world JSON");
+    let world_colliders = load_world_colliders("./assets/img/map/cave.json".to_string()).expect("Failed to load world colliders");
+    let world = World::load_from_json("./assets/worlds/mainworld.json".to_string(), world_colliders).expect("Failed to load main world JSON");
 
     // Load the game progress
     let game_progress = GameProgress::try_from_file("./assets/savestate.json".to_string());
