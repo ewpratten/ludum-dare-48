@@ -1,6 +1,6 @@
 use raylib::prelude::*;
 use serde::{Serialize, Deserialize};
-use crate::{gamecore::{GameCore, GameProgress}, items::{AirBag, Flashlight, Flippers, StunGun}, lib::utils::{calculate_linear_slide}, pallette::{TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96}, resources::GlobalResources, world::World};
+use crate::{entities::enemy::base::EnemyBase, gamecore::{GameCore, GameProgress}, items::{AirBag, Flashlight, Flippers, StunGun}, lib::utils::{calculate_linear_slide}, pallette::{TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96}, resources::GlobalResources, world::World};
 
 const AOE_RING_MAX_RADIUS: f32 = 60.0;
 const STUN_ATTACK_TIME: f64 = 0.75;
@@ -77,9 +77,18 @@ impl Player {
     }
 
     /// Try to attack with the stun gun
-    pub fn begin_attack(&mut self) {
+    pub fn begin_attack(&mut self, world: &mut World) {
         if self.inventory.stun_gun.is_some() && self.stun_timer == 0.0 {
             self.attacking_timer = self.inventory.stun_gun.as_ref().unwrap().duration;
+
+            // Stun everything in reach 
+            let stun_reach = self.inventory.stun_gun.as_ref().unwrap().range;
+
+            for jellyfish in world.jellyfish.iter_mut() {
+                if jellyfish.position.distance_to(self.position).abs() <= stun_reach {
+                    jellyfish.handle_getting_attacked();
+                }
+            }
         }
     }
 
