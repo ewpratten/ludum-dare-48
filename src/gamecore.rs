@@ -107,6 +107,7 @@ impl GameCore {
         world: World,
         progress: GameProgress,
     ) -> Self {
+        let player = Player::new(&world.player_spawn);
         Self {
             state: GameState::Loading,
             last_state: GameState::Loading,
@@ -117,13 +118,13 @@ impl GameCore {
                 .expect("Failed to load game assets. Can not launch!"),
             master_camera: Camera2D {
                 offset: Vector2::zero(),
-                target: Vector2::zero(),
+                target: world.player_spawn,
                 rotation: 0.0,
                 zoom: 2.0,
             },
             show_simple_debug_info: false,
             world: world,
-            player: Player::new(),
+            player,
             progress: progress,
         }
     }

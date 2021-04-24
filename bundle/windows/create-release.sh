@@ -11,7 +11,7 @@ rm -rf ./bundle/windows/release-x86_64-pc-windows-gnu.zip
 mkdir -p ./bundle/windows/release
 
 echo "Copying binary"
-cp ./target/x86_64-pc-windows-gnu/release/ludum-dare-48.exe ./bundle/windows/release
+cp ./target/x86_64-pc-windows-gnu/release/one-breath.exe ./bundle/windows/release
 
 echo "Copying assets"
 cp -r ./assets ./bundle/windows/release

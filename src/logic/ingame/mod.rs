@@ -6,6 +6,7 @@ use raylib::prelude::*;
 use crate::{
     gamecore::{GameCore, GameState},
     lib::wrappers::audio::player::AudioPlayer,
+    pallette::{SKY, WATER},
 };
 
 use super::screen::Screen;
@@ -31,7 +32,48 @@ impl InGameScreen {
         context_2d: &mut RaylibMode2D<RaylibDrawHandle>,
         game_core: &mut GameCore,
     ) {
-        context_2d.draw_circle(0, 0, 10.0, Color::BLACK);
+        // Build source bounds
+        let source_bounds = Rectangle {
+            x: 0.0,
+            y: 0.0,
+            width: game_core.resources.cave_mid_layer.width as f32,
+            height: game_core.resources.cave_mid_layer.height as f32,
+        };
+        let world_bounds = Rectangle {
+            x: 0.0,
+            y: 0.0,
+            width: game_core.resources.cave_mid_layer.width as f32,
+            height: game_core.resources.cave_mid_layer.height as f32,
+        };
+
+        // Clear the background
+        context_2d.draw_rectangle_rec(world_bounds, WATER);
+
+        // Render the world texture
+        context_2d.draw_texture_rec(
+            &game_core.resources.cave_mid_layer,
+            source_bounds,
+            Vector2 {
+                x: world_bounds.x,
+                y: world_bounds.y,
+            },
+            Color::WHITE,
+        );
+    }
+
+    fn render_colliders(
+        &mut self,
+        context_2d: &mut RaylibMode2D<RaylibDrawHandle>,
+        game_core: &mut GameCore,
+    ) {
+        // Render every collider
+        for collider in game_core.world.colliders.iter() {
+            context_2d.draw_rectangle_lines_ex(
+                collider,
+                1,
+                Color::RED,
+            );
+        }
     }
 }
 
@@ -47,7 +89,7 @@ impl Screen for InGameScreen {
         let dt = draw_handle.get_time() - game_core.last_frame_time;
 
         // Clear frame
-        draw_handle.clear_background(Color::BLUE);
+        draw_handle.clear_background(Color::BLACK);
 
         // Handle the pause menu being opened
         if draw_handle.is_key_pressed(KeyboardKey::KEY_ESCAPE) {
@@ -72,11 +114,14 @@ impl Screen for InGameScreen {
 
             // Render the world
             self.render_world(&mut context_2d, game_core);
+            if game_core.show_simple_debug_info{
+                self.render_colliders(&mut context_2d, game_core);
+            }
 
             // Render entities
-            let mut fish = &mut game_core.world.fish;
-            for fish in fish.iter_mut() {
-                fish.update_position(&mut game_core.player, dt);
+            let fish_clone = game_core.world.fish.clone();
+            for fish in game_core.world.fish.iter_mut() {
+                fish.update_position(&mut game_core.player, dt, &fish_clone);
                 fish.render(&mut context_2d);
             }
 
