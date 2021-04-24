@@ -1,3 +1,4 @@
+use nalgebra::distance;
 use raylib::prelude::*;
 
 use crate::{
@@ -35,6 +36,7 @@ impl InGameScreen {
     ) {
         let player_screen_position =
             draw_handle.get_screen_to_world2D(game_core.player.position, game_core.master_camera);
+		
 
         // Handle player movement
         let mouse_pose = draw_handle.get_mouse_position();
@@ -53,12 +55,18 @@ impl InGameScreen {
             true => BOOST_PLAYER_SPEED as f32,
             false => NORMAL_PLAYER_SPEED as f32
         };
-        game_core.player.position += game_core.player.direction * speed_multiplier;
+        
 
         // Move the camera to follow the player
         let direction_from_cam_to_player = player_screen_position;
+
+		if game_core.player.position.distance_to(mouse_pose) <= 20.0{
+			return;
+		}
+
+		game_core.player.position += game_core.player.direction * speed_multiplier;
         // game_core.master_camera.offset -= direction_from_cam_to_player * CAMERA_FOLLOW_SPEED;
-        game_core.master_camera.target = game_core.player.position + 0;
+        //game_core.master_camera.target = game_core.player.position + 0;
         
     }
 
