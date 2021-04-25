@@ -21,7 +21,7 @@ impl ShopItemUi {
     }
 
     pub fn render(
-        &self,
+        &mut self,
         draw_handle: &mut RaylibDrawHandle,
         bounds: Rectangle,
         can_be_bought: bool,
@@ -58,5 +58,6 @@ impl ShopItemUi {
             true,
         );
         buy_button.render(draw_handle);
+        self.buy_button_hovered = buy_button.is_hovered(draw_handle);
     }
 }

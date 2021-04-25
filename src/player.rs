@@ -24,8 +24,8 @@ pub struct PlayerInventory {
 impl PlayerInventory {
     pub fn new() -> Self {
         Self {
-            stun_gun: Some(StunGun::lvl1()), //TMP
-            flashlight: Some(Flashlight::lvl1()), //TMP
+            // stun_gun: Some(StunGun::lvl1()), //TMP
+            // flashlight: Some(Flashlight::lvl1()), //TMP
             ..Default::default()
         }
     }
@@ -58,6 +58,7 @@ impl Player {
             radius: 4.5,
             position: spawn.clone(),
             inventory: PlayerInventory::new(),
+            coins: 50, //TMP
             ..Default::default()
         }
     }

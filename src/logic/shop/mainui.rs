@@ -33,7 +33,7 @@ pub fn render_shop(
     };
 
     // Create items
-    let stun_gun_buy_ui = ShopItemWrapper::new(
+    let mut stun_gun_buy_ui = ShopItemWrapper::new(
         match &game_core.player.inventory.stun_gun {
             Some(x) => match x.get_level() {
                 1 => StunGun::lvl2(),
@@ -45,7 +45,7 @@ pub fn render_shop(
         first_bounds,
         0,
     );
-    let air_bag_buy_ui = ShopItemWrapper::new(
+    let mut air_bag_buy_ui = ShopItemWrapper::new(
         match &game_core.player.inventory.air_bag {
             Some(x) => match x.get_level() {
                 1 => AirBag::lvl2(),
@@ -57,7 +57,7 @@ pub fn render_shop(
         first_bounds,
         1,
     );
-    let flashlight_buy_ui = ShopItemWrapper::new(
+    let mut flashlight_buy_ui = ShopItemWrapper::new(
         match &game_core.player.inventory.flashlight {
             Some(x) => match x.get_level() {
                 1 => Flashlight::lvl2(),
@@ -69,7 +69,7 @@ pub fn render_shop(
         first_bounds,
         2,
     );
-    let flippers_buy_ui = ShopItemWrapper::new(
+    let mut flippers_buy_ui = ShopItemWrapper::new(
         match &game_core.player.inventory.flippers {
             Some(x) => match x.get_level() {
                 1 => Flippers::lvl2(),
@@ -90,7 +90,20 @@ pub fn render_shop(
 
     // Handle buying items
     if stun_gun_buy_ui.can_player_afford(&game_core.player) && stun_gun_buy_ui.user_clicked_buy(draw_handle) {
-        stun_gun_buy_ui.purchase(&mut game_core.player);
+        let item = stun_gun_buy_ui.purchase(&mut game_core.player);
+        game_core.player.inventory.stun_gun = Some(item);
+    }
+    if air_bag_buy_ui.can_player_afford(&game_core.player) && air_bag_buy_ui.user_clicked_buy(draw_handle) {
+        let item = air_bag_buy_ui.purchase(&mut game_core.player);
+        game_core.player.inventory.air_bag = Some(item);
+    }
+    if flashlight_buy_ui.can_player_afford(&game_core.player) && flashlight_buy_ui.user_clicked_buy(draw_handle) {
+        let item = flashlight_buy_ui.purchase(&mut game_core.player);
+        game_core.player.inventory.flashlight = Some(item);
+    }
+    if flippers_buy_ui.can_player_afford(&game_core.player) && flippers_buy_ui.user_clicked_buy(draw_handle) {
+        let item = flippers_buy_ui.purchase(&mut game_core.player);
+        game_core.player.inventory.flippers = Some(item);
     }
 
 

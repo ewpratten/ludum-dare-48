@@ -62,7 +62,7 @@ impl<T: ItemBase + Clone> ShopItemWrapper<T> {
         return self.ui.buy_button_hovered && draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON);
     }
 
-    pub fn render(&self, draw_handle: &mut RaylibDrawHandle, player: &Player) {
+    pub fn render(&mut self, draw_handle: &mut RaylibDrawHandle, player: &Player) {
         self.ui.render(draw_handle, self.bounds, self.can_player_afford(player));
     }
 }
