@@ -11,10 +11,7 @@ mod world;
 use gamecore::{GameCore, GameProgress, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
 use log::info;
-use logic::{
-    gameend::GameEndScreen, ingame::InGameScreen, loadingscreen::LoadingScreen,
-    mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen, screen::Screen, shop::ShopScreen,
-};
+use logic::{gameend::GameEndScreen, ingame::InGameScreen, loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen, screen::Screen, shop::ShopScreen, winscreen::{self, WinScreen}};
 use raylib::prelude::*;
 use world::{load_world_colliders, World};
 
@@ -54,7 +51,7 @@ fn main() {
     .expect("Failed to load main world JSON");
 
     // Load the game progress
-    let game_progress = GameProgress::try_from_file("./assets/savestate.json".to_string());
+    let game_progress = GameProgress::try_from_file("./savestate.json".to_string());
 
     // Set up the game's core state
     let mut game_core = GameCore::new(&mut raylib, &raylib_thread, world, game_progress);
@@ -75,6 +72,7 @@ fn main() {
     let mut ingame_screen = InGameScreen::new();
     let mut game_end_screen = GameEndScreen::new();
     let mut shop_screen = ShopScreen::new();
+	let mut win_screen = WinScreen::new();
 
     // Main rendering loop
     while !raylib.window_should_close() {
@@ -119,6 +117,12 @@ fn main() {
                 &mut audio_system,
                 &mut game_core,
             ),
+			GameState::WinGame => win_screen.render(
+                &mut draw_handle,
+                &raylib_thread,
+                &mut audio_system,
+                &mut game_core,
+            )
         };
 
         // If needed, update the global state

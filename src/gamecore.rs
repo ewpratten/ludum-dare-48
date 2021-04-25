@@ -25,7 +25,8 @@ pub enum GameState {
     GameQuit,
     InGame,
     GameEnd,
-    InShop
+    InShop,
+	WinGame
 }
 
 impl fmt::Display for GameState {
@@ -87,7 +88,7 @@ impl GameProgress {
         // self.fastest_time = self.fastest_time.min(new_progress.fastest_time);
 
         // Write to file
-        let result = self.to_file("./assets/savestate.json".to_string());
+        let result = self.to_file("./savestate.json".to_string());
         if result.is_err() {
             println!("Could not save game state. Holding in RAM");
         }

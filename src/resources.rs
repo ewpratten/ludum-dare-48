@@ -1,9 +1,5 @@
 use failure::Error;
-use raylib::{
-    math::Vector2,
-    texture::{Image, Texture2D},
-    RaylibHandle, RaylibThread,
-};
+use raylib::{RaylibHandle, RaylibThread, math::Vector2, shaders::Shader, texture::{Image, RenderTexture2D, Texture2D}};
 
 use crate::lib::wrappers::animation::FrameAnimationWrapper;
 
@@ -24,10 +20,14 @@ pub struct GlobalResources {
 
     // Cave
     pub cave_mid_layer: Texture2D,
+    pub pixel_shader: Shader,
+    pub shader_texture: RenderTexture2D,
 
     // Enemies
     pub jellyfish_animation_regular: FrameAnimationWrapper,
     pub jellyfish_animation_attack: FrameAnimationWrapper,
+    pub octopus_animation_regular: FrameAnimationWrapper,
+    pub octopus_animation_attack: FrameAnimationWrapper,
 
     // Darkness layer
     pub darkness_overlay: Texture2D,
@@ -125,6 +125,8 @@ impl GlobalResources {
                 &thread,
                 &Image::load_image("./assets/img/map/cave.png")?,
             )?,
+            pixel_shader: raylib.load_shader(&thread, None, Some("./assets/shaders/pixel.fs"))?,
+            shader_texture: raylib.load_render_texture(&thread, raylib.get_screen_width() as u32, raylib.get_screen_height() as u32)?,
             jellyfish_animation_regular: FrameAnimationWrapper::new(
                 raylib.load_texture_from_image(
                     &thread,
@@ -141,6 +143,24 @@ impl GlobalResources {
                 )?,
                 Vector2 { x: 20.0, y: 20.0 },
                 15,
+                4,
+            ),
+            octopus_animation_regular: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/octopus.png")?,
+                )?,
+                Vector2 { x: 20.0, y: 20.0 },
+                6,
+                4,
+            ),
+            octopus_animation_attack: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/octopusSuck.png")?,
+                )?,
+                Vector2 { x: 30.0, y: 20.0 },
+                4,
                 4,
             ),
             darkness_overlay: raylib.load_texture_from_image(

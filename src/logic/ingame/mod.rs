@@ -154,9 +154,6 @@ impl Screen for InGameScreen {
         // Calculate DT
         let dt = draw_handle.get_time() - game_core.last_frame_time;
 
-        // Clear frame
-        draw_handle.clear_background(Color::BLACK);
-
         // Handle the pause menu being opened
         if draw_handle.is_key_pressed(KeyboardKey::KEY_ESCAPE) {
             return Some(GameState::PauseMenu);
@@ -176,38 +173,68 @@ impl Screen for InGameScreen {
 
         // Open a 2D context
         {
-            let mut context_2d = draw_handle.begin_mode2D(game_core.master_camera);
-
-            // Render the world
-            self.render_world(&mut context_2d, game_core, dt);
-            if game_core.show_simple_debug_info {
-                self.render_colliders(&mut context_2d, game_core);
+            unsafe {
+                raylib::ffi::BeginTextureMode(*game_core.resources.shader_texture);
             }
+            {
+                let mut context_2d = draw_handle.begin_mode2D(game_core.master_camera);
 
-            // Render entities
-            for jellyfish in game_core.world.jellyfish.iter_mut() {
-                jellyfish.handle_logic(&mut game_core.player, dt);
-                jellyfish.render(
-                    &mut context_2d,
-                    &mut game_core.player,
-                    &mut game_core.resources,
-                    dt,
-                );
-            }
-            for octopus in game_core.world.octopus.iter_mut() {
-                octopus.handle_logic(&mut game_core.player, dt);
-                octopus.render(
-                    &mut context_2d,
-                    &mut game_core.player,
-                    &mut game_core.resources,
-                    dt,
-                );
-            }
+                // Clear frame
+                context_2d.clear_background(Color::BLACK);
 
-            // Render Player
-            game_core
-                .player
-                .render(&mut context_2d, &mut game_core.resources, dt);
+                // Render the world
+                self.render_world(&mut context_2d, game_core, dt);
+                if game_core.show_simple_debug_info {
+                    self.render_colliders(&mut context_2d, game_core);
+                }
+
+                // Render entities
+                for jellyfish in game_core.world.jellyfish.iter_mut() {
+                    jellyfish.handle_logic(&mut game_core.player, dt);
+                    jellyfish.render(
+                        &mut context_2d,
+                        &mut game_core.player,
+                        &mut game_core.resources,
+                        dt,
+                    );
+                }
+                for octopus in game_core.world.octopus.iter_mut() {
+                    octopus.handle_logic(&mut game_core.player, dt);
+                    octopus.render(
+                        &mut context_2d,
+                        &mut game_core.player,
+                        &mut game_core.resources,
+                        dt,
+                    );
+                }
+
+                // Render Player
+                game_core
+                    .player
+                    .render(&mut context_2d, &mut game_core.resources, dt);
+            }
+            unsafe {
+                raylib::ffi::EndTextureMode();
+            }
+        }
+
+        // Render the 2D context via the ripple shader
+        {
+            let mut shader_context =
+                draw_handle.begin_shader_mode(&game_core.resources.pixel_shader);
+
+            // Blit the texture
+            shader_context.draw_texture_rec(
+                &game_core.resources.shader_texture,
+                Rectangle {
+                    x: 0.0,
+                    y: 0.0,
+                    width: game_core.resources.shader_texture.width() as f32,
+                    height: (game_core.resources.shader_texture.height() as f32) * -1.0,
+                },
+                Vector2::zero(),
+                Color::WHITE,
+            );
         }
 
         // Render the darkness layer
@@ -216,11 +243,14 @@ impl Screen for InGameScreen {
         // Render the hud
         hud::render_hud(draw_handle, game_core, window_center);
 
-
         // Handle player out of breath
         if game_core.player.breath_percent == 0.0 {
             return Some(GameState::GameEnd);
         }
+
+		if game_core.world.end_position.distance_to(game_core.player.position) <= 70.0{
+			return Some(GameState::WinGame);
+		}
 
         return None;
     }
