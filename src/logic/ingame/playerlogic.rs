@@ -142,11 +142,18 @@ pub fn update_player_movement(
 
     // Update the player's breath
     game_core.player.breath_percent =
-        (game_core.player.breath_percent - BREATH_DECREASE_PER_SECOND * dt as f32).clamp(0.0, 1.0);
+        (game_core.player.breath_percent - BREATH_DECREASE_PER_SECOND * dt as f32).max(0.0);
 
     // Only do this if the mouse is far enough away
     let player_stunned = game_core.player.stun_timer > 0.0;
     let mut player_real_movement = game_core.player.direction * speed_multiplier;
+
+    // Handle the player wearing flippers
+    if game_core.player.inventory.flippers.is_some() {
+        player_real_movement *= game_core.player.inventory.flippers.as_ref().unwrap().speed_increase;
+    }
+
+    // Handle movement and collisions
     if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0
         && !game_core.player.is_stunned()
     {
