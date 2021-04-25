@@ -25,7 +25,6 @@ impl Screen for GameEndScreen {
         audio_system: &mut AudioPlayer,
         game_core: &mut GameCore,
     ) -> Option<GameState> {
-        let mouse_position = draw_handle.get_mouse_position();
         draw_handle.clear_background(Color::GRAY);
         // TODO: Maybe we can stick some art here?
 
@@ -68,7 +67,7 @@ impl Screen for GameEndScreen {
             Color::BLACK,
         );
 
-        // Render button
+        // Creates
         let go_to_menu_button = OnScreenButton::new(
             String::from("Return to shop"),
             Rectangle {
@@ -85,8 +84,10 @@ impl Screen for GameEndScreen {
             true,
         );
 
+		// render button
         go_to_menu_button.render(draw_handle);
 
+		// If the player clicks on the button send them to shop
 		if go_to_menu_button.is_hovered(draw_handle) && draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON){
 
 			game_core.switch_state(GameState::InShop, Some(draw_handle));
