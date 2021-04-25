@@ -55,10 +55,20 @@ pub struct Flashlight {
     pub radius: f32
 }
 
-impl Flashlight {
+impl Flashlight{
     pub fn lvl1() -> Self {
         Self {
-            radius: 0.25
+            radius: 0.25,
+        }
+    }
+    pub fn lvl2() -> Self {
+        Self {
+            radius: 0.5,
+        }
+    }
+	pub fn lvl3() -> Self {
+        Self {
+            radius: 1.0,
         }
     }
 }
