@@ -1,4 +1,8 @@
-use crate::{lib::utils::calculate_linear_slide, pallette::{TRANSLUCENT_RED_64, TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64}, player::Player};
+use crate::{
+    lib::utils::calculate_linear_slide,
+    pallette::{TRANSLUCENT_RED_64, TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64},
+    player::Player,
+};
 
 use super::base::EnemyBase;
 use rand::{prelude::ThreadRng, Rng};
@@ -71,7 +75,8 @@ impl EnemyBase for Octopus {
 
         // Every once in a while, start sucking air
         if (context_2d.get_time() % OCTOPUS_SUCK_AIR_DELAY) < 0.1
-            && self.suck_air_time_remaining == 0.0 && !is_octopus_stunned
+            && self.suck_air_time_remaining == 0.0
+            && !is_octopus_stunned
         {
             self.suck_air_time_remaining = OCTOPUS_SUCK_AIR_DURATION;
             self.has_taken_air_from_player = false;
@@ -107,15 +112,22 @@ impl EnemyBase for Octopus {
             self.suck_air_bubbles.clear();
         }
 
-        // TODO: TMP
-        context_2d.draw_circle_v(self.current_position, 10.0, Color::RED);
+        // Render animation
+        if self.suck_air_time_remaining > 0.0 {
+            resources
+                .octopus_animation_attack
+                .draw(context_2d, self.current_position, 0.0);
+        } else {
+            resources
+                .octopus_animation_regular
+                .draw(context_2d, self.current_position, 0.0);
+        }
     }
 
     fn handle_logic(&mut self, player: &mut crate::player::Player, dt: f64) {
         if self.suck_air_time_remaining > 0.0 && !self.has_taken_air_from_player {
             if player.position.distance_to(self.current_position).abs() <= OCTOPUS_SUCK_AIR_RANGE {
                 // Take air from the player
-                println!("Stealing");
                 player.breath_percent -= OCTOPUS_SUCK_AIR_AMOUNT;
 
                 // Set the flag
