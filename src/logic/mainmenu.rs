@@ -1,6 +1,10 @@
 use raylib::prelude::*;
 
-use crate::{gamecore::{GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer, pallette::WATER_DARK};
+use crate::{
+    gamecore::{GameCore, GameState},
+    lib::wrappers::audio::player::AudioPlayer,
+    pallette::WATER_DARK,
+};
 
 use super::screen::Screen;
 
@@ -38,10 +42,12 @@ impl Screen for MainMenuScreen {
 
         // Get mouse position data
         let mouse_position = draw_handle.get_mouse_position();
-        let hovering_play_button = mouse_position.y > (win_width as f32 / 4.0) 
+        let hovering_play_button = mouse_position.y > (win_width as f32 / 4.0)
             && mouse_position.y < (win_width as f32 / 4.0) + 60.0;
-        let hovering_quit_button = mouse_position.y > (win_width as f32 / 4.0) + 100.0
+        let hovering_shop_button = mouse_position.y > (win_width as f32 / 4.0) + 100.0
             && mouse_position.y < (win_width as f32 / 4.0) + 160.0;
+        let hovering_quit_button = mouse_position.y > (win_width as f32 / 4.0) + 200.0
+            && mouse_position.y < (win_width as f32 / 4.0) + 260.0;
 
         // Play and quit
         draw_handle.draw_text(
@@ -55,9 +61,19 @@ impl Screen for MainMenuScreen {
             },
         );
         draw_handle.draw_text(
+            "Shop",
+            (win_height / 2) + 120,
+            (win_width / 4) + 100,
+            60,
+            match hovering_shop_button {
+                true => Color::GREEN,
+                false => Color::BLACK,
+            },
+        );
+        draw_handle.draw_text(
             "Quit",
             (win_height / 2) + 130,
-            (win_width / 4) + 100,
+            (win_width / 4) + 200,
             60,
             match hovering_quit_button {
                 true => Color::GREEN,
@@ -71,8 +87,14 @@ impl Screen for MainMenuScreen {
         // Check clicks
         if mouse_clicked {
             if hovering_play_button {
+                // Reset the world
+                game_core.world.reset(&mut game_core.player);
+
+                // Start playing
                 return Some(GameState::InGame);
-            } else if hovering_quit_button {
+            } else if hovering_shop_button {
+                return Some(GameState::InShop);
+            }else if hovering_quit_button {
                 return Some(GameState::GameQuit);
             }
         }
