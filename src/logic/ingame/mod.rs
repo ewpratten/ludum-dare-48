@@ -216,6 +216,7 @@ impl Screen for InGameScreen {
         // Render the hud
         hud::render_hud(draw_handle, game_core, window_center);
 
+
         // Handle player out of breath
         if game_core.player.breath_percent == 0.0 {
             return Some(GameState::GameEnd);
