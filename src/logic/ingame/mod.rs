@@ -87,6 +87,46 @@ impl InGameScreen {
             context_2d.draw_rectangle_lines_ex(collider, 1, Color::RED);
         }
     }
+
+    fn render_darkness(&mut self, draw_handle: &mut RaylibDrawHandle, game_core: &mut GameCore) {
+        // Calculate the min view radius based on the current flashlight
+        let mut min_radius = 0.0;
+        if game_core.player.inventory.flashlight.is_some() {
+            min_radius = game_core
+                .player
+                .inventory
+                .flashlight
+                .as_ref()
+                .unwrap()
+                .radius;
+        }
+
+        // Get the window center
+        let win_height = draw_handle.get_screen_height();
+        let win_width = draw_handle.get_screen_width();
+        let window_center = Vector2 {
+            x: (win_width as f32 / 2.0),
+            y: (win_height as f32 / 2.0),
+        };
+
+        // Calculate the occusion radius based on depth
+        let radius = (win_width as f32
+            * (1.0
+                - (game_core.player.calculate_depth_percent(&game_core.world) * 1.3)
+                    .clamp(0.0, 1.0)))
+        .max(min_radius);
+
+        // Render the overlay
+        draw_handle.draw_ring(
+            window_center,
+            radius,
+            win_width as f32,
+            0,
+            360,
+            128,
+            Color::BLACK,
+        );
+    }
 }
 
 impl Screen for InGameScreen {
@@ -155,6 +195,9 @@ impl Screen for InGameScreen {
                 .player
                 .render(&mut context_2d, &mut game_core.resources, dt);
         }
+
+        // Render the darkness layer
+        self.render_darkness(draw_handle, game_core);
 
         // Render the hud
         hud::render_hud(draw_handle, game_core, window_center);
