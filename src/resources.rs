@@ -17,6 +17,10 @@ pub struct GlobalResources {
     pub player_animation_boost_charge: FrameAnimationWrapper,
     pub player_animation_boost: FrameAnimationWrapper,
     pub player_animation_stunned: FrameAnimationWrapper,
+    
+    // Fish
+    pub fish_animation_idle: FrameAnimationWrapper,
+    pub fish_animation_swim: FrameAnimationWrapper,
 
     // Cave
     pub cave_mid_layer: Texture2D,
@@ -79,6 +83,24 @@ impl GlobalResources {
                 Vector2 { x: 12.0, y: 22.0 },
                 4,
                 100 / 8,
+            ),
+            fish_animation_idle: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/map/fishStill.png")?,
+                )?,
+                Vector2 { x: 13.0, y: 9.0 },
+                14,
+                30,
+            ),
+            fish_animation_swim: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/map/fish.png")?,
+                )?,
+                Vector2 { x: 13.0, y: 9.0 },
+                63,
+                30,
             ),
             cave_mid_layer: raylib.load_texture_from_image(
                 &thread,

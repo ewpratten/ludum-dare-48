@@ -62,7 +62,7 @@ impl InGameScreen {
         let fish_clone = game_core.world.fish.clone();
         for fish in game_core.world.fish.iter_mut() {
             fish.update_position(&mut game_core.player, dt, &fish_clone);
-            fish.render(context_2d);
+            fish.render(context_2d, &mut game_core.resources);
         }
 
         // Render the world texture
