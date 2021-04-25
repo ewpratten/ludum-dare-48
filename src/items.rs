@@ -32,7 +32,7 @@ pub struct Flashlight {
 impl Flashlight {
     pub fn lvl1() -> Self {
         Self {
-            radius: 120.0
+            radius: 0.25
         }
     }
 }
