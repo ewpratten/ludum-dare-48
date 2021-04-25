@@ -92,7 +92,7 @@ impl Screen for ShopScreen {
             x: win_width as f32 - (win_width as f32 / 2.0) - 130.0,
             y: 10.0,
             width: 120.0,
-            height: 120.0,
+            height: 30.0,
         };
 
         // Render the shop UI

@@ -27,7 +27,7 @@ pub fn render_shop(
         Color::BLACK,
     );
 
-    // Items
+    // Stun Gun
     let stun_gun_buy_ui = ShopItemUi::new(
         "Stun Gun".to_string(),
         match &game_core.player.inventory.stun_gun {
@@ -46,6 +46,69 @@ pub fn render_shop(
             height: 50.0,
         },
         game_core.player.coins >= stun_gun_buy_ui.cost,
+    );
+
+    // Flippers
+    let flippers_buy_ui = ShopItemUi::new(
+        "Flippers".to_string(),
+        match &game_core.player.inventory.flippers {
+            Some(x) => x.level,
+            None => 0,
+        },
+        3,
+        10,
+    );
+    flippers_buy_ui.render(
+        draw_handle,
+        Rectangle {
+            x: bounds.x + 5.0,
+            y: bounds.y + 160.0,
+            width: bounds.width - 10.0,
+            height: 50.0,
+        },
+        game_core.player.coins >= flippers_buy_ui.cost,
+    );
+
+    // Flashlight
+    let flashlight_buy_ui = ShopItemUi::new(
+        "Flashlight".to_string(),
+        match &game_core.player.inventory.flashlight {
+            Some(x) => x.level,
+            None => 0,
+        },
+        3,
+        10,
+    );
+    flashlight_buy_ui.render(
+        draw_handle,
+        Rectangle {
+            x: bounds.x + 5.0,
+            y: bounds.y + 220.0,
+            width: bounds.width - 10.0,
+            height: 50.0,
+        },
+        game_core.player.coins >= flashlight_buy_ui.cost,
+    );
+
+    // Air Bag
+    let air_bag_buy_ui = ShopItemUi::new(
+        "Bag of Air".to_string(),
+        match &game_core.player.inventory.air_bag {
+            Some(x) => x.level,
+            None => 0,
+        },
+        3,
+        10,
+    );
+    air_bag_buy_ui.render(
+        draw_handle,
+        Rectangle {
+            x: bounds.x + 5.0,
+            y: bounds.y + 280.0,
+            width: bounds.width - 10.0,
+            height: 50.0,
+        },
+        game_core.player.coins >= air_bag_buy_ui.cost,
     );
 
     return None;
