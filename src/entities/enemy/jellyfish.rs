@@ -28,7 +28,7 @@ impl EnemyBase for JellyFish {
     fn render(
         &mut self,
         context_2d: &mut raylib::prelude::RaylibMode2D<raylib::prelude::RaylibDrawHandle>,
-        player: &mut Player,
+        _player: &mut Player,
         resources: &mut GlobalResources,
         dt: f64,
     ) {
@@ -77,7 +77,7 @@ impl EnemyBase for JellyFish {
             && !is_jelly_stunned;
     }
 
-    fn handle_logic(&mut self, player: &mut Player, dt: f64) {
+    fn handle_logic(&mut self, player: &mut Player, _dt: f64) {
         // Handle stunning the player
         if self.do_stun_player {
             if self.position.distance_to(player.position).abs() <= JELLYFISH_STUN_REACH {
@@ -86,7 +86,7 @@ impl EnemyBase for JellyFish {
         }
     }
 
-    fn handle_getting_attacked(&mut self, stun_duration: f64, current_time: f64) {
+    fn handle_getting_attacked(&mut self, stun_duration: f64, _current_time: f64) {
         self.stunned_timer = stun_duration;
         self.max_stunned_time = stun_duration;
     }
