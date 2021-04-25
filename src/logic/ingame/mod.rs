@@ -116,16 +116,46 @@ impl InGameScreen {
                     .clamp(0.0, 1.0)))
         .max(min_radius);
 
+        // Determine width and height scales
+        let width_scale = 5.0;
+        let height_scale = 5.0;
+
+        // Get the base sizes of everything
+        let texture_width = game_core.resources.darkness_overlay.width as f32;
+        let texture_height = game_core.resources.darkness_overlay.height as f32;
+        let texture_width_scaled = texture_width * width_scale;
+        let texture_height_scaled = texture_height * height_scale;
+
         // Render the overlay
-        draw_handle.draw_ring(
-            window_center,
-            radius,
-            win_width as f32,
-            0,
-            360,
-            128,
-            Color::BLACK,
+        draw_handle.draw_texture_pro(
+            &game_core.resources.darkness_overlay,
+            Rectangle {
+                x: 0.0,
+                y: 0.0,
+                width:texture_width,
+                height: texture_height,
+            },
+            Rectangle {
+                x: (win_width as f32 - texture_width_scaled) / 2.0,
+                y: (win_height as f32 - texture_height_scaled) / 2.0,
+                width: texture_width_scaled,
+                height: texture_height_scaled,
+            },
+            Vector2 { x: 0.0, y: 0.0 },
+            0.0,
+            Color::WHITE,
         );
+
+        // Render the overlay
+        // draw_handle.draw_ring(
+        //     window_center,
+        //     radius,
+        //     win_width as f32,
+        //     0,
+        //     360,
+        //     128,
+        //     Color::BLACK,
+        // );
     }
 }
 
