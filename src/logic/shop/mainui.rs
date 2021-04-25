@@ -87,31 +87,31 @@ pub fn render_shop(
     );
 
     // Render items
-    stun_gun_buy_ui.render(draw_handle, &game_core.player);
-    air_bag_buy_ui.render(draw_handle, &game_core.player);
-    flashlight_buy_ui.render(draw_handle, &game_core.player);
-    flippers_buy_ui.render(draw_handle, &game_core.player);
+    stun_gun_buy_ui.render(draw_handle, &game_core.player, &game_core.player.inventory.stun_gun);
+    air_bag_buy_ui.render(draw_handle, &game_core.player, &game_core.player.inventory.air_bag);
+    flashlight_buy_ui.render(draw_handle, &game_core.player, &game_core.player.inventory.flashlight);
+    flippers_buy_ui.render(draw_handle, &game_core.player, &game_core.player.inventory.flippers);
 
     // Handle buying items
-    if stun_gun_buy_ui.can_player_afford(&game_core.player)
+    if stun_gun_buy_ui.can_player_afford(&game_core.player, &game_core.player.inventory.stun_gun)
         && stun_gun_buy_ui.user_clicked_buy(draw_handle)
     {
         let item = stun_gun_buy_ui.purchase(&mut game_core.player);
         game_core.player.inventory.stun_gun = Some(item);
     }
-    if air_bag_buy_ui.can_player_afford(&game_core.player)
+    if air_bag_buy_ui.can_player_afford(&game_core.player, &game_core.player.inventory.air_bag)
         && air_bag_buy_ui.user_clicked_buy(draw_handle)
     {
         let item = air_bag_buy_ui.purchase(&mut game_core.player);
         game_core.player.inventory.air_bag = Some(item);
     }
-    if flashlight_buy_ui.can_player_afford(&game_core.player)
+    if flashlight_buy_ui.can_player_afford(&game_core.player, &game_core.player.inventory.flashlight)
         && flashlight_buy_ui.user_clicked_buy(draw_handle)
     {
         let item = flashlight_buy_ui.purchase(&mut game_core.player);
         game_core.player.inventory.flashlight = Some(item);
     }
-    if flippers_buy_ui.can_player_afford(&game_core.player)
+    if flippers_buy_ui.can_player_afford(&game_core.player, &game_core.player.inventory.flippers)
         && flippers_buy_ui.user_clicked_buy(draw_handle)
     {
         let item = flippers_buy_ui.purchase(&mut game_core.player);
@@ -243,7 +243,7 @@ pub fn render_stats(
 
     // Coins
     draw_handle.draw_text(
-        &format!("Fish: {}", game_core.player.coins.min(99)),
+        &format!("Fish: {}", game_core.player.coins.min(999)),
         bounds.x as i32 + 5,
         bounds.y as i32 + 5,
         20,

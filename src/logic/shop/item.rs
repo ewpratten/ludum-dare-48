@@ -46,8 +46,8 @@ impl<T: ItemBase + Clone> ShopItemWrapper<T> {
         &self.item
     }
 
-    pub fn can_player_afford(&self, player: &Player) -> bool {
-        return player.coins >= self.item.get_cost();
+    pub fn can_player_afford(&self, player: &Player, players_item: &Option<T>) -> bool {
+        return player.coins >= self.item.get_cost() && ((players_item.is_some() && players_item.as_ref().unwrap().get_level() < 3) || players_item.is_none());
     }
 
     pub fn purchase(&self, player: &mut Player) -> T {
@@ -66,7 +66,7 @@ impl<T: ItemBase + Clone> ShopItemWrapper<T> {
         return self.bounds.check_collision_point_rec(draw_handle.get_mouse_position());
     }
 
-    pub fn render(&mut self, draw_handle: &mut RaylibDrawHandle, player: &Player) {
-        self.ui.render(draw_handle, self.bounds, self.can_player_afford(player));
+    pub fn render(&mut self, draw_handle: &mut RaylibDrawHandle, player: &Player, players_item: &Option<T>) {
+        self.ui.render(draw_handle, self.bounds, self.can_player_afford(player, players_item));
     }
 }
