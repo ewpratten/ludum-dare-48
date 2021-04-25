@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 pub trait ItemBase {
     fn get_cost(&self) -> u32;
+    fn get_level(&self) -> u8;
     fn get_name(&self) -> String;
     fn get_description(&self) -> String;
     fn get_texture(&self) -> &Texture2D;
@@ -59,6 +60,9 @@ impl ItemBase for StunGun {
     fn get_texture(&self) -> &Texture2D {
         todo!()
     }
+    fn get_level(&self) -> u8 {
+        self.level
+    }
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
@@ -107,6 +111,9 @@ impl ItemBase for AirBag {
 
     fn get_texture(&self) -> &Texture2D {
         todo!()
+    }
+    fn get_level(&self) -> u8 {
+        self.level
     }
 }
 
@@ -157,6 +164,9 @@ impl ItemBase for Flashlight {
     fn get_texture(&self) -> &Texture2D {
         todo!()
     }
+    fn get_level(&self) -> u8 {
+        self.level
+    }
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
@@ -205,5 +215,8 @@ impl ItemBase for Flippers {
 
     fn get_texture(&self) -> &Texture2D {
         todo!()
+    }
+    fn get_level(&self) -> u8 {
+        self.level
     }
 }

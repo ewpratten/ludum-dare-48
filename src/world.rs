@@ -52,11 +52,11 @@ impl World {
         Ok(result)
     }
 
-    pub fn spend_coins(&mut self, count: usize) {
-        for _ in 0..count {
-            self.fish.pop();
-        }
-    }
+    // pub fn spend_coins(&mut self, count: usize) {
+    //     for _ in 0..count {
+    //         self.fish.pop();
+    //     }
+    // }
 
     pub fn reset(&mut self) {
         for fish in self.fish.iter_mut() {
