@@ -1,0 +1,26 @@
+{ "frames": {
+   "fish 62.aseprite": {
+    "frame": { "x": 806, "y": 0, "w": 13, "h": 9 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 13, "h": 9 },
+    "sourceSize": { "w": 13, "h": 9 },
+    "duration": 50
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.27-x64",
+  "image": "fish.png",
+  "format": "RGBA8888",
+  "size": { "w": 819, "h": 9 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

@@ -66,6 +66,11 @@ impl Player {
         self.position = position;
         self.breath_percent = 1.0;
         self.boost_percent = 1.0;
+
+        // Handle an air bag being used
+        if self.inventory.air_bag.is_some() {
+            self.breath_percent += self.inventory.air_bag.as_ref().unwrap().extra_oxygen;
+        }
     }
 
     pub fn collides_with_rec(&self, rectangle: &Rectangle) -> bool {

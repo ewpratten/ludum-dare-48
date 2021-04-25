@@ -54,7 +54,7 @@ impl ItemBase for StunGun {
     }
 
     fn get_description(&self) -> String {
-        return "Stun your enemies! Just don't point it at yourself.".to_string();
+        return "Stun your enemies!\nJust don't point it at yourself.".to_string();
     }
 
     fn get_texture(&self) -> &Texture2D {
@@ -67,7 +67,7 @@ impl ItemBase for StunGun {
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct AirBag {
-    extra_oxygen: u32,
+    pub extra_oxygen: f32,
     pub level: u8,
     cost: u32,
 }
@@ -75,21 +75,21 @@ pub struct AirBag {
 impl AirBag {
     pub fn lvl1() -> Self {
         Self {
-            extra_oxygen: 15,
+            extra_oxygen: 0.15,
             level: 1,
             cost: 30,
         }
     }
     pub fn lvl2() -> Self {
         Self {
-            extra_oxygen: 30,
+            extra_oxygen: 0.30,
             level: 2,
             cost: 40,
         }
     }
     pub fn lvl3() -> Self {
         Self {
-            extra_oxygen: 45,
+            extra_oxygen: 0.45,
             level: 3,
             cost: 50,
         }
@@ -106,7 +106,7 @@ impl ItemBase for AirBag {
     }
 
     fn get_description(&self) -> String {
-        return "Its.. a bag. Filled with air. Duh".to_string();
+        return "Its.. a bag.\nFilled with air. Duh".to_string();
     }
 
     fn get_texture(&self) -> &Texture2D {
@@ -210,7 +210,7 @@ impl ItemBase for Flippers {
     }
 
     fn get_description(&self) -> String {
-        return "Swim faster, and look stupid at the same time!".to_string();
+        return "Swim faster, and look stupid\nat the same time!".to_string();
     }
 
     fn get_texture(&self) -> &Texture2D {
