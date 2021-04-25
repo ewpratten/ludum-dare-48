@@ -25,6 +25,7 @@ pub enum GameState {
     GameQuit,
     InGame,
     GameEnd,
+    InShop
 }
 
 impl fmt::Display for GameState {
@@ -75,6 +76,22 @@ impl GameProgress {
         std::fs::write(file, json)?;
 
         Ok(())
+    }
+
+    pub fn update(&mut self, new_progress: &GameProgress) {
+
+        // Bring in new data
+        self.coins = new_progress.coins;
+        self.inventory = new_progress.inventory.clone();
+        self.max_depth = self.max_depth.max(new_progress.max_depth);
+        // self.fastest_time = self.fastest_time.min(new_progress.fastest_time);
+
+        // Write to file
+        let result = self.to_file("./assets/savestate.json".to_string());
+        if result.is_err() {
+            println!("Could not save game state. Holding in RAM");
+        }
+
     }
 }
 

@@ -1,5 +1,6 @@
 pub mod profiler;
 pub mod triangles;
+pub mod button;
 
 pub fn calculate_linear_slide(playthrough_percent: f64) -> f64 {
     if playthrough_percent < 0.25 {

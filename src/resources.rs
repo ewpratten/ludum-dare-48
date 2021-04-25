@@ -30,7 +30,11 @@ pub struct GlobalResources {
     pub jellyfish_animation_attack: FrameAnimationWrapper,
 
     // Darkness layer
-    pub darkness_overlay: Texture2D
+    pub darkness_overlay: Texture2D,
+
+    // Shop & items
+    pub shop_background: Texture2D,
+
 }
 
 impl GlobalResources {
@@ -123,6 +127,10 @@ impl GlobalResources {
             darkness_overlay: raylib.load_texture_from_image(
                 &thread,
                 &Image::load_image("./assets/img/map/darkness.png")?,
+            )?,
+            shop_background: raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/map/shopHighRes.png")?,
             )?,
         })
     }

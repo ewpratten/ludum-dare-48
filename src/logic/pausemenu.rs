@@ -2,7 +2,7 @@ use raylib::prelude::*;
 
 use crate::{
     gamecore::{GameCore, GameState},
-    lib::wrappers::audio::player::AudioPlayer,
+    lib::{utils::button::OnScreenButton, wrappers::audio::player::AudioPlayer},
 };
 
 use super::screen::Screen;
@@ -127,7 +127,8 @@ impl Screen for PauseMenuScreen {
             Color::BLACK,
         );
 
-        // Close and quit buttons
+        // Bottom buttons
+
         let bottom_left_button_dimensions = Rectangle {
             x: (win_width as f32 / 2.0) - (SCREEN_PANEL_SIZE.x / 2.0) + 5.0,
             y: (win_height as f32 / 2.0) + (SCREEN_PANEL_SIZE.y / 2.0) - 50.0,
@@ -141,49 +142,34 @@ impl Screen for PauseMenuScreen {
             height: bottom_left_button_dimensions.height,
         };
 
-        // Check if the mouse is over either button
-        let mouse_over_bottom_left_button =
-            bottom_left_button_dimensions.check_collision_point_rec(mouse_position);
-        let mouse_over_bottom_right_button =
-            bottom_right_button_dimensions.check_collision_point_rec(mouse_position);
-
-        // Render buttons
-        draw_handle.draw_rectangle_lines_ex(
+        let menu_button = OnScreenButton::new(
+            "Menu".to_string(),
             bottom_left_button_dimensions,
-            3,
-            match mouse_over_bottom_left_button {
-                true => Color::GRAY,
-                false => Color::BLACK,
-            },
-        );
-        draw_handle.draw_text(
-            "Quit",
-            bottom_left_button_dimensions.x as i32 + 15,
-            bottom_left_button_dimensions.y as i32 + 5,
-            30,
+            Color::WHITE,
             Color::BLACK,
+            Color::GRAY,
+            30,
+            true,
         );
-        draw_handle.draw_rectangle_lines_ex(
+        let close_button = OnScreenButton::new(
+            "Close".to_string(),
             bottom_right_button_dimensions,
-            3,
-            match mouse_over_bottom_right_button {
-                true => Color::GRAY,
-                false => Color::BLACK,
-            },
-        );
-        draw_handle.draw_text(
-            "Close",
-            bottom_right_button_dimensions.x as i32 + 15,
-            bottom_right_button_dimensions.y as i32 + 5,
-            30,
+            Color::WHITE,
             Color::BLACK,
+            Color::GRAY,
+            30,
+            true,
         );
+
+        // Render both
+        menu_button.render(draw_handle);
+        close_button.render(draw_handle);
 
         // Handle click actions on the buttons
         if draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON) {
-            if mouse_over_bottom_left_button {
-                return Some(GameState::GameQuit);
-            } else if mouse_over_bottom_right_button {
+            if menu_button.is_hovered(draw_handle) {
+                return Some(GameState::MainMenu);
+            } else if close_button.is_hovered(draw_handle) {
                 return Some(game_core.last_state);
             }
         }
