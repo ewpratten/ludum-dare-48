@@ -63,6 +63,12 @@ impl Player {
         }
     }
 
+    pub fn reset(&mut self, position: Vector2) {
+        self.position = position;
+        self.breath_percent = 1.0;
+        self.boost_percent = 1.0;
+    }
+
     pub fn collides_with_rec(&self, rectangle: &Rectangle) -> bool {
         // // Build a bounding box of the player by their corners
         // let top_left_corner = self.position - (self.size / 2.0);

@@ -146,9 +146,20 @@ pub fn render_shop(
 
     // Handle click actions on the buttons
     if draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON) {
+
+        // Handle saving core state
+        if menu_button.is_hovered(draw_handle)  || play_button.is_hovered(draw_handle) {
+            let new_progress = game_core.player.create_statistics(game_core, draw_handle.get_time());
+            game_core.progress.update(&new_progress);
+        }
+
         if menu_button.is_hovered(draw_handle) {
             return Some(GameState::MainMenu);
         } else if play_button.is_hovered(draw_handle) {
+            // Reset the world
+            game_core.world.reset(&mut game_core.player);
+
+            // Start playing
             return Some(GameState::InGame);
         }
     }

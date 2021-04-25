@@ -87,6 +87,10 @@ impl Screen for MainMenuScreen {
         // Check clicks
         if mouse_clicked {
             if hovering_play_button {
+                // Reset the world
+                game_core.world.reset(&mut game_core.player);
+
+                // Start playing
                 return Some(GameState::InGame);
             } else if hovering_shop_button {
                 return Some(GameState::InShop);

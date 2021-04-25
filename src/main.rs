@@ -58,6 +58,8 @@ fn main() {
 
     // Set up the game's core state
     let mut game_core = GameCore::new(&mut raylib, &raylib_thread, world, game_progress);
+    game_core.player.inventory = game_core.progress.inventory.clone();
+    game_core.player.coins = game_core.progress.coins;
 
     // Set up the game's profiler
     let mut profiler = GameProfiler::new();
@@ -125,6 +127,12 @@ fn main() {
 
             // Handle game quit
             if new_state == GameState::GameQuit {
+                // Save the game state
+                let new_progress = game_core
+                    .player
+                    .create_statistics(&game_core, draw_handle.get_time());
+                game_core.progress.update(&new_progress);
+
                 // For now, just quit
                 // This also throws a SEGFAULT.. yay for unsafe code..
                 info!("User quit game");
@@ -180,6 +188,12 @@ fn main() {
         // Update the frame time
         game_core.last_frame_time = draw_handle.get_time();
     }
+
+    // Save the game state
+    let new_progress = game_core
+        .player
+        .create_statistics(&game_core, raylib.get_time());
+    game_core.progress.update(&new_progress);
 
     // Cleanup
     profiler.stop();
