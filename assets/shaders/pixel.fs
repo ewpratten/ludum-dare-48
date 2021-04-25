@@ -31,8 +31,8 @@ void main()
     vec2 baseUV = fragTexCoord;
     
     // Use a wave function to translate the pixel UV
-    float X = baseUV.x*5.+time;
-    float Y = baseUV.y*5.+time;
+    float X = baseUV.x*0.5+time;
+    float Y = baseUV.y*0.5+time;
     baseUV.y += cos(X+Y)*0.01*cos(Y);
     baseUV.x += sin(X-Y)*0.01*sin(Y);
 
