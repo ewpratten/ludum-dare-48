@@ -1,7 +1,13 @@
 use rand::{prelude::ThreadRng, Rng};
 use raylib::prelude::*;
 
-use crate::{gamecore::{self, GameCore}, lib::utils::triangles::rotate_vector, player::Player, resources::GlobalResources, world::World};
+use crate::{
+    gamecore::{self, GameCore},
+    lib::utils::triangles::rotate_vector,
+    player::Player,
+    resources::GlobalResources,
+    world::World,
+};
 
 const FISH_FOLLOW_PLAYER_DISTANCE: f32 = 30.0;
 const FISH_FOLLOW_PLAYER_SPEED: f32 = 1.8;
@@ -35,7 +41,10 @@ impl FishEntity {
         let mut rng = rand::thread_rng();
         Self {
             position: position,
-            direction: Vector2::zero(),
+            direction: Vector2 {
+                x: rng.gen_range(0.0..1.0),
+                y: rng.gen_range(0.0..1.0),
+            },
             velocity: Vector2::zero(),
             following_player: false,
             animation_counter: 0,
@@ -156,25 +165,30 @@ impl FishEntity {
         }
     }
 
-    pub fn render(&mut self, context_2d: &mut RaylibMode2D<RaylibDrawHandle>, resources: &mut GlobalResources) {
+    pub fn render(
+        &mut self,
+        context_2d: &mut RaylibMode2D<RaylibDrawHandle>,
+        resources: &mut GlobalResources,
+    ) {
         // Direction
-        let direction =
-            (Vector2::zero().angle_to(self.direction.normalized())).to_degrees();
+        let direction = (Vector2::zero().angle_to(self.direction.normalized())).to_degrees();
 
         self.animation_counter += 1;
 
         // swimming
-        if !self.following_player {
+        if self.following_player {
             if self.animation_counter % 3 == 0 {
                 self.current_frame += 1;
                 if self.current_frame == 8 {
                     self.current_frame = 0;
                 }
             }
-            resources.fish_animation_swim.draw_frame(context_2d,
+            resources.fish_animation_swim.draw_frame(
+                context_2d,
                 self.position,
                 direction,
-                (self.current_frame + self.color * 9) as u32);
+                (self.current_frame + self.color * 9) as u32,
+            );
         // idle
         } else {
             if self.animation_counter % 10 == 0 {
@@ -184,10 +198,12 @@ impl FishEntity {
                     self.current_frame = 0;
                 }
             }
-            resources.fish_animation_idle.draw_frame(context_2d,
+            resources.fish_animation_idle.draw_frame(
+                context_2d,
                 self.position,
                 direction,
-                (self.current_frame + self.color * 2) as u32);
+                (self.current_frame + self.color * 2) as u32,
+            );
         }
     }
 }
