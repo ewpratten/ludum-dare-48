@@ -1,6 +1,6 @@
 use raylib::prelude::*;
 
-use crate::{gamecore::{GameCore, GameState}, items::{AirBag, Flashlight, Flippers, ItemBase, StunGun}, lib::wrappers::audio::player::AudioPlayer};
+use crate::{gamecore::{GameCore, GameState}, items::{AirBag, Flashlight, Flippers, ItemBase, StunGun}, lib::{utils::button::OnScreenButton, wrappers::audio::player::AudioPlayer}};
 
 use super::{item::ShopItemWrapper, itemui::ShopItemUi};
 
@@ -88,6 +88,52 @@ pub fn render_shop(
     flashlight_buy_ui.render(draw_handle, &game_core.player);
     flippers_buy_ui.render(draw_handle, &game_core.player);
 
+
+    // Handle exit buttons
+    let bottom_left_button_dimensions = Rectangle {
+        x: bounds.x + 5.0,
+        y: bounds.y + bounds.height - 50.0,
+        width: (bounds.width / 2.0) - 15.0,
+        height: 40.0,
+    };
+    let bottom_right_button_dimensions = Rectangle {
+        x: (bounds.x + bottom_left_button_dimensions.width ) + 15.0,
+        y: bottom_left_button_dimensions.y,
+        width: bottom_left_button_dimensions.width,
+        height: bottom_left_button_dimensions.height,
+    };
+
+    let menu_button = OnScreenButton::new(
+        "Menu".to_string(),
+        bottom_left_button_dimensions,
+        Color::WHITE,
+        Color::BLACK,
+        Color::GRAY,
+        30,
+        true,
+    );
+    let play_button = OnScreenButton::new(
+        "Play".to_string(),
+        bottom_right_button_dimensions,
+        Color::WHITE,
+        Color::BLACK,
+        Color::GRAY,
+        30,
+        true,
+    );
+
+    // Render both
+    menu_button.render(draw_handle);
+    play_button.render(draw_handle);
+
+    // Handle click actions on the buttons
+    if draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON) {
+        if menu_button.is_hovered(draw_handle) {
+            return Some(GameState::MainMenu);
+        } else if play_button.is_hovered(draw_handle) {
+            return Some(GameState::InGame);
+        }
+    }
 
     return None;
 }
