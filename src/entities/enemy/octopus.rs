@@ -1,8 +1,4 @@
-use crate::{
-    lib::utils::calculate_linear_slide,
-    pallette::{TRANSLUCENT_RED_64, TRANSLUCENT_WHITE_64},
-    player::Player,
-};
+use crate::{lib::utils::calculate_linear_slide, pallette::{TRANSLUCENT_RED_64, TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64}, player::Player};
 
 use super::base::EnemyBase;
 use rand::{prelude::ThreadRng, Rng};
@@ -12,6 +8,7 @@ use serde::{Deserialize, Serialize};
 const OCTOPUS_SUCK_AIR_DELAY: f64 = 3.5;
 const OCTOPUS_SUCK_AIR_RANGE: f32 = 70.0;
 const OCTOPUS_SUCK_AIR_DURATION: f64 = 1.0;
+const OCTOPUS_SUCK_AIR_AMOUNT: f32 = 0.1;
 // const RNG: ThreadRng = rand::thread_rng();
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
@@ -37,6 +34,8 @@ pub struct Octopus {
     pub suck_air_time_remaining: f64,
     #[serde(skip)]
     suck_air_bubbles: Vec<OctopusAirBubble>,
+    #[serde(skip)]
+    has_taken_air_from_player: bool,
 }
 
 impl Octopus {}
@@ -71,12 +70,15 @@ impl EnemyBase for Octopus {
         }
 
         // Every once in a while, start sucking air
-        if (context_2d.get_time() % OCTOPUS_SUCK_AIR_DELAY) < 0.1 {
+        if (context_2d.get_time() % OCTOPUS_SUCK_AIR_DELAY) < 0.1
+            && self.suck_air_time_remaining == 0.0 && !is_octopus_stunned
+        {
             self.suck_air_time_remaining = OCTOPUS_SUCK_AIR_DURATION;
+            self.has_taken_air_from_player = false;
 
             // Spawn a few air bubbles if the player is in range
             if player.position.distance_to(self.current_position).abs() <= OCTOPUS_SUCK_AIR_RANGE {
-                for _ in 0..3 {
+                for _ in 0..5 {
                     self.suck_air_bubbles.push(OctopusAirBubble {
                         position: player.position,
                         speed: rand::thread_rng().gen_range(0.8..1.3),
@@ -93,14 +95,14 @@ impl EnemyBase for Octopus {
                 let direction = (self.current_position - bubble.position).normalized();
 
                 // Render the bubble
-                context_2d.draw_circle_v(bubble.position, 2.0, TRANSLUCENT_WHITE_64);
+                context_2d.draw_circle_v(bubble.position, 2.0, TRANSLUCENT_WHITE_128);
 
                 // Move the bubble
                 bubble.position += direction * bubble.speed;
             }
 
             // Reduce time
-            self.suck_air_time_remaining -= dt;
+            self.suck_air_time_remaining = (self.suck_air_time_remaining - dt).max(0.0);
         } else {
             self.suck_air_bubbles.clear();
         }
@@ -110,7 +112,16 @@ impl EnemyBase for Octopus {
     }
 
     fn handle_logic(&mut self, player: &mut crate::player::Player, dt: f64) {
-        if self.suck_air_time_remaining > 0.0 {}
+        if self.suck_air_time_remaining > 0.0 && !self.has_taken_air_from_player {
+            if player.position.distance_to(self.current_position).abs() <= OCTOPUS_SUCK_AIR_RANGE {
+                // Take air from the player
+                println!("Stealing");
+                player.breath_percent -= OCTOPUS_SUCK_AIR_AMOUNT;
+
+                // Set the flag
+                self.has_taken_air_from_player = true;
+            }
+        }
     }
 
     fn handle_getting_attacked(&mut self, stun_duration: f64, current_time: f64) {
