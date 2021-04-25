@@ -142,7 +142,7 @@ pub fn update_player_movement(
 
     // Update the player's breath
     game_core.player.breath_percent =
-        (game_core.player.breath_percent - BREATH_DECREASE_PER_SECOND * dt as f32).clamp(0.0, 1.0);
+        (game_core.player.breath_percent - BREATH_DECREASE_PER_SECOND * dt as f32).max(0.0);
 
     // Only do this if the mouse is far enough away
     let player_stunned = game_core.player.stun_timer > 0.0;
