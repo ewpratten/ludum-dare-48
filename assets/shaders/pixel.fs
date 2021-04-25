@@ -32,9 +32,9 @@ void main()
     
     // Use a wave function to translate the pixel UV
     float X = baseUV.x*0.5+time;
-    float Y = baseUV.y*0.5+time;
-    baseUV.y += cos(X+Y)*0.01*cos(Y);
-    baseUV.x += sin(X-Y)*0.01*sin(Y);
+    float Y = baseUV.y*0.25+time;
+    baseUV.y += cos(X+Y)*0.0025*cos(Y);
+    baseUV.x += sin(X-Y)*0.012*sin(Y);
 
     // Calculate a UV for this new blocky pixel
     vec2 pixelatedUV = vec2(dx * floor(baseUV.x / dx), dy * floor(baseUV.y / dy));
