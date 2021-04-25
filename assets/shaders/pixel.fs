@@ -8,46 +8,43 @@ in vec4 fragColor;
 uniform sampler2D texture0;
 uniform vec4 colDiffuse;
 
+// Time fed from CPU
+uniform float time = 0.0;
+
 // Output fragment color
 out vec4 finalColor;
 
 // Viewport dimensions
 const vec2 viewport = vec2(1080.0, 720.0);
-// const float renderWidth = 1080;
-// const float renderHeight = 720;
 
 // Pixel scaling
-uniform float pixelWidth = 2.0;
-uniform float pixelHeight = 2.0;
-
-// Time value, fed from CPU
-uniform float time = 0.0;
+const vec2 pixelScale = vec2(2.0, 2.0);
 
 void main()
 {
 
-    // Calculate the pixel to a UV
-    vec2 uv = fragTexCoord.xy / viewport.xy;
+    // Calculate the distance to merge pixels
+    float dx = pixelScale.x * (1.0 / viewport.x);
+    float dy = pixelScale.y * (1.0 / viewport.y);
 
-    float X = uv.x * 25.0 + time;
-    float Y = uv.y * 25. + time;
-    uv.y += cos(X + Y) * 0.01 * cos(Y);
-    uv.x += sin(X-Y) * 0.01 * sin(Y); 
+    // Get the base UV coordinate of the pixel
+    vec2 baseUV = fragTexCoord;
+    
+    // Use a wave function to translate the pixel UV
+    float X = baseUV.x*5.+time;
+    float Y = baseUV.y*5.+time;
+    baseUV.y += cos(X+Y)*0.01*cos(Y);
+    baseUV.x += sin(X-Y)*0.01*sin(Y);
 
-    // Calculate the pixel merge distance
-    float dx = pixelWidth * (1.0 / viewport.x);
-    float dy = pixelHeight * (1.0 / viewport.y);
+    // Calculate a UV for this new blocky pixel
+    vec2 pixelatedUV = vec2(dx * floor(baseUV.x / dx), dy * floor(baseUV.y / dy));
 
-    // Use UV to make wavy
-    // vec4 tc = texture(texture0, uv);
+    // Rebuild the texture with the new UVs
+    vec3 tc = texture(texture0, pixelatedUV).rgb;
 
-    // Use UV to pixelate image
-    vec2 coord = vec2(dx * floor(fragTexCoord.x / dx), dy * floor(fragTexCoord.y / dy));
-    vec3 tc = texture(texture0, coord + uv).rgb;
-
-    // Shift the hue to look like underwater
+    // Apply a color filter
     tc = tc + vec3(0, 0.05, 0.15);
 
+    // Build the final pixel
     finalColor = vec4(tc, 1.0);
-    // finalColor = tc;
 }
