@@ -26,8 +26,11 @@ impl Screen for GameEndScreen {
         game_core: &mut GameCore,
     ) -> Option<GameState> {
         let mouse_position = draw_handle.get_mouse_position();
-        draw_handle.clear_background(Color::GRAY);
-        // TODO: Maybe we can stick some art here?
+        // draw_handle.clear_background(Color::GRAY);
+        // // TODO: Maybe we can stick some art here?
+
+        // Render the background
+        draw_handle.draw_texture(&game_core.resources.shop_background, 0, 0, Color::WHITE);
 
         // Window dimensions
         let win_height = draw_handle.get_screen_height();

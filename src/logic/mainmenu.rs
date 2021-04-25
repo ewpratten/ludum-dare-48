@@ -28,8 +28,10 @@ impl Screen for MainMenuScreen {
         let win_height = draw_handle.get_screen_height();
         let win_width = draw_handle.get_screen_width();
 
-        // Clear frame
-        draw_handle.clear_background(Color::BLUE);
+        // // Clear frame
+        // draw_handle.clear_background(Color::BLUE);
+        // Render the background
+        draw_handle.draw_texture(&game_core.resources.shop_background, 0, 0, Color::WHITE);
 
         // Render title
         draw_handle.draw_text(
@@ -56,7 +58,7 @@ impl Screen for MainMenuScreen {
             (win_width / 4),
             60,
             match hovering_play_button {
-                true => Color::GREEN,
+                true => Color::BLUE,
                 false => Color::BLACK,
             },
         );
@@ -66,7 +68,7 @@ impl Screen for MainMenuScreen {
             (win_width / 4) + 100,
             60,
             match hovering_shop_button {
-                true => Color::GREEN,
+                true => Color::BLUE,
                 false => Color::BLACK,
             },
         );
@@ -76,7 +78,7 @@ impl Screen for MainMenuScreen {
             (win_width / 4) + 200,
             60,
             match hovering_quit_button {
-                true => Color::GREEN,
+                true => Color::RED,
                 false => Color::BLACK,
             },
         );
