@@ -89,10 +89,10 @@ impl LoadingScreen {
         let mask = self.get_logo_mask(playthrough_percent);
 
         // Create modified colors
-        let alpha_orange = Color {
-            r: RUST_ORANGE.r,
-            g: RUST_ORANGE.g,
-            b: RUST_ORANGE.b,
+        let alpha_black = Color {
+            r: 0,
+            g: 0,
+            b: 0,
             a: mask.a,
         };
 
@@ -102,7 +102,7 @@ impl LoadingScreen {
             win_height / 2 - 128,
             256,
             256,
-            alpha_orange,
+            alpha_black,
         );
         draw_handle.draw_rectangle(
             win_width / 2 - 112,
@@ -111,19 +111,19 @@ impl LoadingScreen {
             224,
             Color::WHITE,
         );
-        draw_handle.draw_text(
-            "rust",
-            win_width / 2 - 69,
-            win_height / 2 + 18,
-            50,
-            alpha_orange,
-        );
+        // draw_handle.draw_text(
+        //     "rust",
+        //     win_width / 2 - 69,
+        //     win_height / 2 + 18,
+        //     50,
+        //     alpha_orange,
+        // );
         draw_handle.draw_text(
             "raylib",
             win_width / 2 - 44,
             win_height / 2 + 48,
             50,
-            alpha_orange,
+            alpha_black,
         );
 
         // Move on to next logo if needed

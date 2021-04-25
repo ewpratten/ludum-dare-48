@@ -2,7 +2,7 @@ use raylib::prelude::*;
 
 use crate::{
     gamecore::{GameCore, GameState},
-    lib::wrappers::audio::player::AudioPlayer,
+    lib::{utils::button::OnScreenButton, wrappers::audio::player::AudioPlayer},
 };
 
 use super::screen::Screen;
@@ -26,9 +26,11 @@ impl Screen for GameEndScreen {
         game_core: &mut GameCore,
     ) -> Option<GameState> {
         let mouse_position = draw_handle.get_mouse_position();
-        draw_handle.clear_background(Color::GRAY);
-        // TODO: Maybe we can stick some art here?
+        // draw_handle.clear_background(Color::GRAY);
+        // // TODO: Maybe we can stick some art here?
 
+        // Render the background
+        draw_handle.draw_texture(&game_core.resources.shop_background, 0, 0, Color::WHITE);
 
         // Window dimensions
         let win_height = draw_handle.get_screen_height();
@@ -53,14 +55,48 @@ impl Screen for GameEndScreen {
         // Render heading text
         draw_handle.draw_text(
             "OUT OF BREATH",
-            (win_width / 2) - 80,
+            (win_width / 2) - ((SCREEN_PANEL_SIZE.x as i32 + 6) / 2) + 25,
             (win_height / 2) - (SCREEN_PANEL_SIZE.y as i32 / 2) + 10,
-            40,
+            30,
             Color::BLACK,
         );
 
-        // TODO: Save game progress
+        // Render message
+        draw_handle.draw_text(
+            "Your clone can now buy items ",
+            ((win_width / 2) - ((SCREEN_PANEL_SIZE.x as i32 + 6) / 2))
+                + (0.15 * SCREEN_PANEL_SIZE.x) as i32,
+            (win_height / 2) - (SCREEN_PANEL_SIZE.y as i32 / 2) + 50,
+            15,
+            Color::BLACK,
+        );
 
+        // Render button
+        let go_to_menu_button = OnScreenButton::new(
+            String::from("Return to shop"),
+            Rectangle {
+                x: (((win_width / 2) - ((SCREEN_PANEL_SIZE.x as i32 + 6) / 2) + 5)
+                + (0.15 * SCREEN_PANEL_SIZE.x) as i32) as f32,
+                y: (((win_height / 2) - (SCREEN_PANEL_SIZE.y as i32 / 2) + 90) as f32) + 100.0,
+                width: 210.0,
+                height: 50.0,
+            },
+            Color::WHITE,
+            Color::BLACK,
+            Color::GRAY,
+            25,
+            true,
+        );
+
+        go_to_menu_button.render(draw_handle);
+
+		if go_to_menu_button.is_hovered(draw_handle) && draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON){
+
+			game_core.switch_state(GameState::InShop, Some(draw_handle));
+
+		}
+
+        // TODO: Save game progress
 
         // // Close and quit buttons
         // let bottom_left_button_dimensions = Rectangle {
