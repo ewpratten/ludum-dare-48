@@ -98,7 +98,7 @@ impl Player {
     }
 
     /// Try to attack with the stun gun
-    pub fn begin_attack(&mut self, world: &mut World) {
+    pub fn begin_attack(&mut self, world: &mut World, current_time: f64) {
         if self.inventory.stun_gun.is_some() && !self.is_stunned() {
             self.attacking_timer = self.inventory.stun_gun.as_ref().unwrap().duration;
 
@@ -107,7 +107,12 @@ impl Player {
 
             for jellyfish in world.jellyfish.iter_mut() {
                 if jellyfish.position.distance_to(self.position).abs() <= stun_reach {
-                    jellyfish.handle_getting_attacked(self.attacking_timer);
+                    jellyfish.handle_getting_attacked(self.attacking_timer, current_time);
+                }
+            }
+            for octopus in world.octopus.iter_mut() {
+                if octopus.current_position.distance_to(self.position).abs() <= stun_reach {
+                    octopus.handle_getting_attacked(self.attacking_timer, current_time);
                 }
             }
         }
