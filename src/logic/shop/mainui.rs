@@ -151,15 +151,18 @@ pub fn render_shop(
         draw_handle.draw_rectangle_rec(box_bounds, Color::WHITE);
         draw_handle.draw_rectangle_lines_ex(box_bounds, 3, Color::BLACK);
 
-        // TODO: draw item sprite
-        draw_handle.draw_rectangle_v(
-            Vector2 {
+			
+		hovered_item.get_texture(
+            draw_handle,
+            &game_core.resources,
+            Rectangle {
                 x: box_bounds.x + (box_bounds.width / 2.0) - 40.0,
                 y: box_bounds.y + 10.0,
-            },
-            Vector2 { x: 80.0, y: 80.0 },
-            Color::BLACK,
+                width: (80.0),
+                height: (80.0),
+            }
         );
+		
 
         // Render item description
         draw_handle.draw_text(
