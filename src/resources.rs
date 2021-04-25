@@ -83,11 +83,11 @@ impl GlobalResources {
             fish_animation_idle: FrameAnimationWrapper::new(
                 raylib.load_texture_from_image(
                     &thread,
-                    &Image::load_image("./assets/img/map/fishIdle.png")?,
+                    &Image::load_image("./assets/img/map/fishStill.png")?,
                 )?,
                 Vector2 { x: 13.0, y: 9.0 },
                 14,
-                4,
+                30,
             ),
             fish_animation_swim: FrameAnimationWrapper::new(
                 raylib.load_texture_from_image(

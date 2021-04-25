@@ -159,13 +159,14 @@ impl FishEntity {
     pub fn render(&mut self, context_2d: &mut RaylibMode2D<RaylibDrawHandle>, resources: &mut GlobalResources) {
         // Direction
         let direction =
-            Vector2::zero().angle_to(self.direction.normalized()) + (90.0 as f32).to_radians();
+            (Vector2::zero().angle_to(self.direction.normalized())).to_degrees();
 
         self.animation_counter += 1;
 
         // swimming
-        if self.following_player {
+        if !self.following_player {
             if self.animation_counter % 3 == 0 {
+                self.current_frame += 1;
                 if self.current_frame == 8 {
                     self.current_frame = 0;
                 }
