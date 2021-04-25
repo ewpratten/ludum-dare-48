@@ -51,7 +51,7 @@ fn main() {
     .expect("Failed to load main world JSON");
 
     // Load the game progress
-    let game_progress = GameProgress::try_from_file("./assets/savestate.json".to_string());
+    let game_progress = GameProgress::try_from_file("./savestate.json".to_string());
 
     // Set up the game's core state
     let mut game_core = GameCore::new(&mut raylib, &raylib_thread, world, game_progress);

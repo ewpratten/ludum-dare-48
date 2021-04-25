@@ -16,3 +16,4 @@ Cargo.lock
 /target
 
 .project
+savestate.json
