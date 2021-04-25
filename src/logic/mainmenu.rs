@@ -3,7 +3,6 @@ use raylib::prelude::*;
 use crate::{
     gamecore::{GameCore, GameState},
     lib::wrappers::audio::player::AudioPlayer,
-    pallette::WATER_DARK,
 };
 
 use super::screen::Screen;
@@ -20,8 +19,8 @@ impl Screen for MainMenuScreen {
     fn render(
         &mut self,
         draw_handle: &mut RaylibDrawHandle,
-        thread: &RaylibThread,
-        audio_system: &mut AudioPlayer,
+        _thread: &RaylibThread,
+        _audio_system: &mut AudioPlayer,
         game_core: &mut GameCore,
     ) -> Option<GameState> {
         // Window dimensions
@@ -55,7 +54,7 @@ impl Screen for MainMenuScreen {
         draw_handle.draw_text(
             "Play",
             (win_height / 2) + 120,
-            (win_width / 4),
+            win_width / 4,
             60,
             match hovering_play_button {
                 true => Color::BLUE,
@@ -96,7 +95,7 @@ impl Screen for MainMenuScreen {
                 return Some(GameState::InGame);
             } else if hovering_shop_button {
                 return Some(GameState::InShop);
-            }else if hovering_quit_button {
+            } else if hovering_quit_button {
                 return Some(GameState::GameQuit);
             }
         }

@@ -12,14 +12,9 @@ use gamecore::{GameCore, GameProgress, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
 use log::info;
 use logic::{
-    gameend::GameEndScreen,
-    ingame::InGameScreen,
-    loadingscreen::LoadingScreen,
-    mainmenu::MainMenuScreen,
-    pausemenu::PauseMenuScreen,
-    screen::Screen,
-    shop::ShopScreen,
-    winscreen::{self, WinScreen},
+    gameend::GameEndScreen, ingame::InGameScreen, loadingscreen::LoadingScreen,
+    mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen, screen::Screen, shop::ShopScreen,
+    winscreen::WinScreen,
 };
 use raylib::prelude::*;
 use world::{load_world_colliders, World};

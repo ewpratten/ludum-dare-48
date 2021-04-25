@@ -1,11 +1,16 @@
 use std::{fs::File, io::BufReader};
 
+use failure::Error;
 use raylib::math::{Rectangle, Vector2};
 use serde::{Deserialize, Serialize};
-use std::io::Read;
-use failure::Error;
 
-use crate::{entities::{enemy::{jellyfish::JellyFish, octopus::Octopus}, fish::FishEntity}, player::Player};
+use crate::{
+    entities::{
+        enemy::{jellyfish::JellyFish, octopus::Octopus},
+        fish::FishEntity,
+    },
+    player::Player,
+};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct World {
@@ -23,7 +28,6 @@ pub struct World {
 
     pub jellyfish: Vec<JellyFish>,
     pub octopus: Vec<Octopus>,
-    
 }
 
 impl World {
@@ -40,7 +44,7 @@ impl World {
 
         // Init colliders
         result.colliders = Vec::new();
-        for collider in colliders.iter(){
+        for collider in colliders.iter() {
             result.colliders.push(Rectangle {
                 x: collider.x - (collider.width / 2.0),
                 y: collider.y - (collider.height / 2.0),
@@ -66,7 +70,6 @@ impl World {
         player.reset(self.player_spawn);
     }
 }
-
 
 pub fn load_world_colliders(file: String) -> Result<Vec<Rectangle>, Error> {
     // Load the file
