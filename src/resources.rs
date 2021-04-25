@@ -26,6 +26,8 @@ pub struct GlobalResources {
     // Enemies
     pub jellyfish_animation_regular: FrameAnimationWrapper,
     pub jellyfish_animation_attack: FrameAnimationWrapper,
+    pub octopus_animation_regular: FrameAnimationWrapper,
+    pub octopus_animation_attack: FrameAnimationWrapper,
 
     // Darkness layer
     pub darkness_overlay: Texture2D,
@@ -122,6 +124,24 @@ impl GlobalResources {
                 )?,
                 Vector2 { x: 20.0, y: 20.0 },
                 15,
+                4,
+            ),
+            octopus_animation_regular: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/octopus.png")?,
+                )?,
+                Vector2 { x: 20.0, y: 20.0 },
+                6,
+                4,
+            ),
+            octopus_animation_attack: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/octopusSuck.png")?,
+                )?,
+                Vector2 { x: 30.0, y: 20.0 },
+                4,
                 4,
             ),
             darkness_overlay: raylib.load_texture_from_image(
