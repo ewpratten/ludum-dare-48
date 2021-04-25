@@ -1,6 +1,10 @@
 use raylib::prelude::*;
 
-use crate::{gamecore::{GameCore, GameState}, items::{AirBag, Flashlight, Flippers, ItemBase, StunGun}, lib::{utils::button::OnScreenButton, wrappers::audio::player::AudioPlayer}};
+use crate::{
+    gamecore::{GameCore, GameState},
+    items::{AirBag, Flashlight, Flippers, ItemBase, StunGun},
+    lib::{utils::button::OnScreenButton, wrappers::audio::player::AudioPlayer},
+};
 
 use super::{item::ShopItemWrapper, itemui::ShopItemUi};
 
@@ -89,23 +93,65 @@ pub fn render_shop(
     flippers_buy_ui.render(draw_handle, &game_core.player);
 
     // Handle buying items
-    if stun_gun_buy_ui.can_player_afford(&game_core.player) && stun_gun_buy_ui.user_clicked_buy(draw_handle) {
+    if stun_gun_buy_ui.can_player_afford(&game_core.player)
+        && stun_gun_buy_ui.user_clicked_buy(draw_handle)
+    {
         let item = stun_gun_buy_ui.purchase(&mut game_core.player);
         game_core.player.inventory.stun_gun = Some(item);
     }
-    if air_bag_buy_ui.can_player_afford(&game_core.player) && air_bag_buy_ui.user_clicked_buy(draw_handle) {
+    if air_bag_buy_ui.can_player_afford(&game_core.player)
+        && air_bag_buy_ui.user_clicked_buy(draw_handle)
+    {
         let item = air_bag_buy_ui.purchase(&mut game_core.player);
         game_core.player.inventory.air_bag = Some(item);
     }
-    if flashlight_buy_ui.can_player_afford(&game_core.player) && flashlight_buy_ui.user_clicked_buy(draw_handle) {
+    if flashlight_buy_ui.can_player_afford(&game_core.player)
+        && flashlight_buy_ui.user_clicked_buy(draw_handle)
+    {
         let item = flashlight_buy_ui.purchase(&mut game_core.player);
         game_core.player.inventory.flashlight = Some(item);
     }
-    if flippers_buy_ui.can_player_afford(&game_core.player) && flippers_buy_ui.user_clicked_buy(draw_handle) {
+    if flippers_buy_ui.can_player_afford(&game_core.player)
+        && flippers_buy_ui.user_clicked_buy(draw_handle)
+    {
         let item = flippers_buy_ui.purchase(&mut game_core.player);
         game_core.player.inventory.flippers = Some(item);
     }
 
+    // Render the tooltip box
+    let hovering_stun_gun = stun_gun_buy_ui.user_hovering_row(draw_handle);
+    let hovering_air_bag = air_bag_buy_ui.user_hovering_row(draw_handle);
+    let hovering_flashlight = flashlight_buy_ui.user_hovering_row(draw_handle);
+    let hovering_flippers = flippers_buy_ui.user_hovering_row(draw_handle);
+    let should_show_tooltip =
+        hovering_stun_gun || hovering_air_bag || hovering_flashlight || hovering_flippers;
+
+    if should_show_tooltip {
+        // Create bounds
+        let box_bounds = Rectangle {
+            x: bounds.x + 5.0,
+            y: bounds.y + 350.0,
+            width: bounds.width - 10.0,
+            height: 250.0,
+        };
+
+        // Draw background box
+        draw_handle.draw_rectangle_rec(box_bounds, Color::WHITE);
+        draw_handle.draw_rectangle_lines_ex(box_bounds, 3, Color::BLACK);
+
+        // TODO: draw item sprite
+        draw_handle.draw_rectangle_v(
+            Vector2 {
+                x: box_bounds.x + (box_bounds.width / 2.0) - 40.0,
+                y: box_bounds.y + 10.0,
+            },
+            Vector2 {
+                x: 80.0,
+                y: 80.0
+            },
+            Color::BLACK,
+        );
+    }
 
     // Handle exit buttons
     let bottom_left_button_dimensions = Rectangle {
@@ -115,7 +161,7 @@ pub fn render_shop(
         height: 40.0,
     };
     let bottom_right_button_dimensions = Rectangle {
-        x: (bounds.x + bottom_left_button_dimensions.width ) + 15.0,
+        x: (bounds.x + bottom_left_button_dimensions.width) + 15.0,
         y: bottom_left_button_dimensions.y,
         width: bottom_left_button_dimensions.width,
         height: bottom_left_button_dimensions.height,
@@ -146,10 +192,11 @@ pub fn render_shop(
 
     // Handle click actions on the buttons
     if draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON) {
-
         // Handle saving core state
-        if menu_button.is_hovered(draw_handle)  || play_button.is_hovered(draw_handle) {
-            let new_progress = game_core.player.create_statistics(game_core, draw_handle.get_time());
+        if menu_button.is_hovered(draw_handle) || play_button.is_hovered(draw_handle) {
+            let new_progress = game_core
+                .player
+                .create_statistics(game_core, draw_handle.get_time());
             game_core.progress.update(&new_progress);
         }
 
