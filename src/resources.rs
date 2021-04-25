@@ -24,6 +24,9 @@ pub struct GlobalResources {
     // Enemies
     pub jellyfish_animation_regular: FrameAnimationWrapper,
     pub jellyfish_animation_attack: FrameAnimationWrapper,
+
+    // Darkness layer
+    pub darkness_overlay: Texture2D
 }
 
 impl GlobalResources {
@@ -95,6 +98,10 @@ impl GlobalResources {
                 15,
                 4,
             ),
+            darkness_overlay: raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/map/darkness.png")?,
+            )?,
         })
     }
 }

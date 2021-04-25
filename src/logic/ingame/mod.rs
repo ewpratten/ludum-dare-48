@@ -104,27 +104,41 @@ impl InGameScreen {
         // Get the window center
         let win_height = draw_handle.get_screen_height();
         let win_width = draw_handle.get_screen_width();
-        let window_center = Vector2 {
-            x: (win_width as f32 / 2.0),
-            y: (win_height as f32 / 2.0),
-        };
 
         // Calculate the occusion radius based on depth
-        let radius = (win_width as f32
-            * (1.0
-                - (game_core.player.calculate_depth_percent(&game_core.world) * 1.3)
-                    .clamp(0.0, 1.0)))
+        let radius = (1.0
+            - (game_core.player.calculate_depth_percent(&game_core.world) * 1.3).clamp(0.0, 1.0))
         .max(min_radius);
 
+        // Determine width and height scales
+        // This is clamped to make the rendering logic below easier by removing the need to overdraw
+        let width_scale = (5.0 * radius).max(0.5);
+        let height_scale = (5.0 * radius).max(0.5);
+
+        // Get the base sizes of everything
+        let texture_width = game_core.resources.darkness_overlay.width as f32;
+        let texture_height = game_core.resources.darkness_overlay.height as f32;
+        let texture_width_scaled = texture_width * width_scale;
+        let texture_height_scaled = texture_height * height_scale;
+
         // Render the overlay
-        draw_handle.draw_ring(
-            window_center,
-            radius,
-            win_width as f32,
-            0,
-            360,
-            128,
-            Color::BLACK,
+        draw_handle.draw_texture_pro(
+            &game_core.resources.darkness_overlay,
+            Rectangle {
+                x: 0.0,
+                y: 0.0,
+                width: texture_width,
+                height: texture_height,
+            },
+            Rectangle {
+                x: (win_width as f32 - texture_width_scaled) / 2.0,
+                y: (win_height as f32 - texture_height_scaled) / 2.0,
+                width: texture_width_scaled,
+                height: texture_height_scaled,
+            },
+            Vector2 { x: 0.0, y: 0.0 },
+            0.0,
+            Color::WHITE,
         );
     }
 }
