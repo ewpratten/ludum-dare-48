@@ -2,22 +2,16 @@ mod item;
 mod itemui;
 mod mainui;
 
-use raylib::prelude::*;
-
+use self::mainui::{render_shop, render_stats};
+use super::screen::Screen;
 use crate::{
     gamecore::{GameCore, GameState},
     lib::wrappers::audio::player::AudioPlayer,
 };
-
-use self::mainui::{render_shop, render_stats};
-
-use super::screen::Screen;
-
-const SCREEN_PANEL_SIZE: Vector2 = Vector2 { x: 300.0, y: 380.0 };
+use raylib::prelude::*;
 
 #[derive(Debug, Default)]
 pub struct ShopScreen {
-    // shop_items: Vec<Item>,
 }
 
 impl ShopScreen {
@@ -36,8 +30,6 @@ impl Screen for ShopScreen {
         audio_system: &mut AudioPlayer,
         game_core: &mut GameCore,
     ) -> Option<GameState> {
-        let mouse_position = draw_handle.get_mouse_position();
-
         // Render the background
         draw_handle.draw_texture(&game_core.resources.shop_background, 0, 0, Color::WHITE);
 
