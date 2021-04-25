@@ -10,7 +10,6 @@ mod world;
 
 use gamecore::{GameCore, GameProgress, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
-use log::info;
 use logic::{
     gameend::GameEndScreen, ingame::InGameScreen, loadingscreen::LoadingScreen,
     mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen, screen::Screen, shop::ShopScreen,
@@ -28,9 +27,6 @@ const WINDOW_TITLE: &str = r"One Breath";
 const MAX_FPS: u32 = 60;
 
 fn main() {
-    // Configure the logger
-    env_logger::init();
-
     // Configure a window
     let (mut raylib, raylib_thread) = raylib::init()
         .size(
@@ -146,7 +142,6 @@ fn main() {
 
                 // For now, just quit
                 // This also throws a SEGFAULT.. yay for unsafe code..
-                info!("User quit game");
                 unsafe {
                     raylib::ffi::CloseWindow();
                 }
