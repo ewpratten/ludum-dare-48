@@ -58,7 +58,6 @@ impl Player {
             radius: 4.5,
             position: spawn.clone(),
             inventory: PlayerInventory::new(),
-            coins: 50, //TMP
             ..Default::default()
         }
     }
