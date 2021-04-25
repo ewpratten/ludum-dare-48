@@ -1,9 +1,7 @@
 use rand::{prelude::ThreadRng, Rng};
 use raylib::prelude::*;
 
-use crate::{
-    gamecore::GameCore, lib::utils::triangles::rotate_vector, player::Player, world::World,
-};
+use crate::{gamecore::{self, GameCore}, lib::utils::triangles::rotate_vector, player::Player, resources::GlobalResources, world::World};
 
 const FISH_FOLLOW_PLAYER_DISTANCE: f32 = 30.0;
 const FISH_FOLLOW_PLAYER_SPEED: f32 = 1.8;
@@ -25,9 +23,11 @@ pub struct FishEntity {
     direction: Vector2,
     velocity: Vector2,
     pub following_player: bool,
+    current_frame: u8,
+    animation_counter: u32,
     size: Vector2,
+    color: u8,
     rng: ThreadRng,
-    color: Color,
 }
 
 impl FishEntity {
@@ -38,13 +38,10 @@ impl FishEntity {
             direction: Vector2::zero(),
             velocity: Vector2::zero(),
             following_player: false,
+            animation_counter: 0,
+            current_frame: 0,
             size: Vector2 { x: 5.0, y: 8.0 },
-            color: Color {
-                r: rng.gen_range(128..225),
-                g: rng.gen_range(128..225),
-                b: rng.gen_range(128..225),
-                a: 140,
-            },
+            color: rng.gen_range(0..6),
             rng,
         }
     }
@@ -138,21 +135,17 @@ impl FishEntity {
         // Distance and direction to player
         let dist_to_player = player.position - self.position;
         let dist_to_player_lin = self.position.distance_to(player.position);
-        let mut direction_to_player = dist_to_player;
-        direction_to_player.normalize();
 
         // Handle player picking up fish
         if player.position.distance_to(self.position).abs() <= player.size.y * 2.2 {
             self.following_player = true;
             self.velocity = self.direction.normalized();
+            self.current_frame = 0;
+            self.animation_counter = 0;
 
             // Add currency to the player
             player.coins += 1;
         }
-
-        // Look at the player;
-        self.position = self.position;
-        self.direction = direction_to_player;
     }
 
     pub fn update_position(&mut self, player: &mut Player, dt: f64, other_fish: &Vec<FishEntity>) {
@@ -163,40 +156,37 @@ impl FishEntity {
         }
     }
 
-    pub fn render(&self, context_2d: &mut RaylibMode2D<RaylibDrawHandle>) {
+    pub fn render(&mut self, context_2d: &mut RaylibMode2D<RaylibDrawHandle>, resources: &mut GlobalResources) {
         // Direction
         let direction =
             Vector2::zero().angle_to(self.direction.normalized()) + (90.0 as f32).to_radians();
 
-        // Get the corners of the fish
-        let fish_front = rotate_vector(
-            Vector2 {
-                x: 0.0,
-                y: (self.size.y / 2.0) * -1.0,
-            },
-            direction,
-        );
-        let fish_bl = rotate_vector(
-            Vector2 {
-                x: (self.size.x / 2.0) * -1.0,
-                y: (self.size.y / 2.0),
-            },
-            direction,
-        );
-        let fish_br = rotate_vector(
-            Vector2 {
-                x: (self.size.x / 2.0),
-                y: (self.size.y / 2.0),
-            },
-            direction,
-        );
+        self.animation_counter += 1;
 
-        // Draw the fish as a triangle with rotation
-        context_2d.draw_triangle(
-            self.position + fish_front,
-            self.position + fish_bl,
-            self.position + fish_br,
-            self.color,
-        );
+        // swimming
+        if self.following_player {
+            if self.animation_counter % 3 == 0 {
+                if self.current_frame == 8 {
+                    self.current_frame = 0;
+                }
+            }
+            resources.fish_animation_swim.draw_frame(context_2d,
+                self.position,
+                direction,
+                (self.current_frame + self.color * 9) as u32);
+        // idle
+        } else {
+            if self.animation_counter % 10 == 0 {
+                if self.current_frame == 0 {
+                    self.current_frame = 1;
+                } else {
+                    self.current_frame = 0;
+                }
+            }
+            resources.fish_animation_idle.draw_frame(context_2d,
+                self.position,
+                direction,
+                (self.current_frame + self.color * 2) as u32);
+        }
     }
 }
