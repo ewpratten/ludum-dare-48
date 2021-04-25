@@ -49,13 +49,39 @@ impl InGameScreen {
         };
 
         // Clear the background
-        context_2d.draw_rectangle_gradient_v(
-            world_bounds.x as i32,
-            world_bounds.y as i32,
-            world_bounds.width as i32,
-            world_bounds.height as i32,
-            WATER,
-            WATER_DARK,
+        // context_2d.draw_rectangle_gradient_v(
+        //     world_bounds.x as i32,
+        //     world_bounds.y as i32,
+        //     world_bounds.width as i32,
+        //     world_bounds.height as i32,
+        //     WATER,
+        //     WATER_DARK,
+        // );
+        context_2d.draw_texture_pro(
+            &game_core.resources.background_back,
+            Rectangle {
+                x: 0.0,
+                y: 0.0,
+                width: game_core.resources.background_back.width as f32,
+                height: game_core.resources.background_back.height as f32,
+            },
+            Rectangle::new(0.0,0.0, (game_core.resources.background_back.width * 2) as f32, (game_core.resources.background_back.height * 2) as f32),
+            Vector2 { x: 0.0, y: 0.0 },
+            0.0,
+            Color::WHITE,
+        );
+        context_2d.draw_texture_pro(
+            &game_core.resources.background_front,
+            Rectangle {
+                x: 0.0,
+                y: 0.0,
+                width: game_core.resources.background_front.width as f32,
+                height: game_core.resources.background_front.height as f32,
+            },
+            Rectangle::new(0.0 ,0.0, (game_core.resources.background_front.width * 2) as f32,(game_core.resources.background_front.height * 2) as f32),
+            Vector2 { x: 0.0, y: 0.0 },
+            0.0,
+            Color::WHITE,
         );
 
         // Render fish

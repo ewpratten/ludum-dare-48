@@ -28,5 +28,7 @@ void main()
 
     vec3 tc = texture(texture0, coord).rgb;
 
+    tc = tc + vec3(0, 0.05, 0.15);
+
     finalColor = vec4(tc, 1.0);
 }
