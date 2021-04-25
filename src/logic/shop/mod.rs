@@ -1,9 +1,14 @@
+mod mainui;
+mod itemui;
+
 use raylib::prelude::*;
 
 use crate::{
     gamecore::{GameCore, GameState},
     lib::wrappers::audio::player::AudioPlayer,
 };
+
+use self::mainui::{render_shop, render_stats};
 
 use super::screen::Screen;
 
@@ -19,50 +24,6 @@ impl ShopScreen {
         Self {
             ..Default::default()
         }
-    }
-
-    fn render_shop(
-        &mut self,
-        draw_handle: &mut RaylibDrawHandle,
-        _thread: &RaylibThread,
-        audio_system: &mut AudioPlayer,
-        game_core: &mut GameCore,
-        bounds: Rectangle,
-    ) -> Option<GameState> {
-        // Render background
-        draw_handle.draw_rectangle_rec(bounds, Color::WHITE);
-        draw_handle.draw_rectangle_lines_ex(bounds, 3, Color::BLACK);
-
-        // Title
-        draw_handle.draw_text(
-            "SHOP",
-            bounds.x as i32 + (bounds.width / 2.0) as i32 - 50,
-            bounds.y as i32 + 20,
-            40,
-            Color::BLACK,
-        );
-
-        return None;
-    }
-
-    fn render_stats(
-        &mut self,
-        draw_handle: &mut RaylibDrawHandle,
-        game_core: &mut GameCore,
-        bounds: Rectangle,
-    ) {
-        // Render background
-        draw_handle.draw_rectangle_rec(bounds, Color::WHITE);
-        draw_handle.draw_rectangle_lines_ex(bounds, 3, Color::BLACK);
-
-        // Coins
-        draw_handle.draw_text(
-            &format!("Fish: {}", game_core.player.coins.min(99)),
-            bounds.x as i32 + 5,
-            bounds.y as i32 + 5,
-            20,
-            Color::BLACK,
-        );
     }
 
     // // Creates all the items
@@ -134,10 +95,10 @@ impl Screen for ShopScreen {
 
         // Render the shop UI
         let next_state =
-            self.render_shop(draw_handle, thread, audio_system, game_core, shop_ui_bounds);
+            render_shop(draw_handle, thread, audio_system, game_core, shop_ui_bounds);
 
         // Render the stats UI
-        self.render_stats(draw_handle, game_core, stats_ui_bounds);
+        render_stats(draw_handle, game_core, stats_ui_bounds);
 
         return next_state;
     }

@@ -62,7 +62,7 @@ impl OnScreenButton {
             self.bounds.x as i32 + 10,
             self.bounds.y as i32 + ((self.bounds.height as i32 - self.font_px) / 2),
             self.font_px,
-            match is_being_hovered {
+            match is_being_hovered && !self.draw_border {
                 true => self.border_hover,
                 false => self.border,
             },
