@@ -6,7 +6,7 @@ pub struct ShopItemUi {
     current_level: u8,
     max_level: u8,
     pub cost: u32,
-    buy_button_hovered: bool,
+    pub buy_button_hovered: bool,
 }
 
 impl ShopItemUi {

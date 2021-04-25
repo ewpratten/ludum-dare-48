@@ -88,6 +88,11 @@ pub fn render_shop(
     flashlight_buy_ui.render(draw_handle, &game_core.player);
     flippers_buy_ui.render(draw_handle, &game_core.player);
 
+    // Handle buying items
+    if stun_gun_buy_ui.can_player_afford(&game_core.player) && stun_gun_buy_ui.user_clicked_buy(draw_handle) {
+        stun_gun_buy_ui.purchase(&mut game_core.player);
+    }
+
 
     // Handle exit buttons
     let bottom_left_button_dimensions = Rectangle {
