@@ -22,7 +22,27 @@ impl StunGun {
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-pub struct AirBag;
+pub struct AirBag{
+	extra_oxygen: u32,
+}
+
+impl AirBag {
+    pub fn lvl1() -> Self {
+        Self {
+            extra_oxygen: 15,
+        }
+    }
+    pub fn lvl2() -> Self {
+        Self {
+            extra_oxygen: 30,
+        }
+    }
+	pub fn lvl3() -> Self {
+        Self {
+            extra_oxygen: 45,
+        }
+    }
+}
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Flashlight {
