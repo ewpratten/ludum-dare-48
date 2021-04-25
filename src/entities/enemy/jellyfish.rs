@@ -28,6 +28,7 @@ impl EnemyBase for JellyFish {
     fn render(
         &mut self,
         context_2d: &mut raylib::prelude::RaylibMode2D<raylib::prelude::RaylibDrawHandle>,
+        player: &mut Player,
         resources: &mut GlobalResources,
         dt: f64,
     ) {
@@ -85,7 +86,7 @@ impl EnemyBase for JellyFish {
         }
     }
 
-    fn handle_getting_attacked(&mut self, stun_duration: f64) {
+    fn handle_getting_attacked(&mut self, stun_duration: f64, current_time: f64) {
         self.stunned_timer = stun_duration;
         self.max_stunned_time = stun_duration;
     }

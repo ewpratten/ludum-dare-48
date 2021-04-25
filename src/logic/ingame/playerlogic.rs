@@ -79,7 +79,7 @@ pub fn update_player_movement(
     let user_request_action = draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_RIGHT_BUTTON);
 
     if user_request_action {
-        game_core.player.begin_attack(&mut game_core.world);
+        game_core.player.begin_attack(&mut game_core.world, draw_handle.get_time());
     }
 
     // Move the player in their direction
