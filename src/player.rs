@@ -25,6 +25,7 @@ impl PlayerInventory {
     pub fn new() -> Self {
         Self {
             stun_gun: Some(StunGun::lvl1()), //TMP
+            flashlight: Some(Flashlight::lvl1()), //TMP
             ..Default::default()
         }
     }

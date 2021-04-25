@@ -25,7 +25,17 @@ impl StunGun {
 pub struct AirBag;
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-pub struct Flashlight;
+pub struct Flashlight {
+    pub radius: f32
+}
+
+impl Flashlight {
+    pub fn lvl1() -> Self {
+        Self {
+            radius: 120.0
+        }
+    }
+}
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Flippers {
