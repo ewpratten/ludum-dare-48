@@ -24,8 +24,8 @@ pub struct PlayerInventory {
 impl PlayerInventory {
     pub fn new() -> Self {
         Self {
-            stun_gun: Some(StunGun::lvl1()), //TMP
-            flashlight: Some(Flashlight::lvl1()), //TMP
+            // stun_gun: Some(StunGun::lvl1()), //TMP
+            // flashlight: Some(Flashlight::lvl1()), //TMP
             ..Default::default()
         }
     }
@@ -60,6 +60,12 @@ impl Player {
             inventory: PlayerInventory::new(),
             ..Default::default()
         }
+    }
+
+    pub fn reset(&mut self, position: Vector2) {
+        self.position = position;
+        self.breath_percent = 1.0;
+        self.boost_percent = 1.0;
     }
 
     pub fn collides_with_rec(&self, rectangle: &Rectangle) -> bool {

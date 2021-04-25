@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::io::Read;
 use failure::Error;
 
-use crate::entities::{enemy::{jellyfish::JellyFish, octopus::Octopus}, fish::FishEntity};
+use crate::{entities::{enemy::{jellyfish::JellyFish, octopus::Octopus}, fish::FishEntity}, player::Player};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct World {
@@ -52,16 +52,18 @@ impl World {
         Ok(result)
     }
 
-    pub fn spend_coins(&mut self, count: usize) {
-        for _ in 0..count {
-            self.fish.pop();
-        }
-    }
+    // pub fn spend_coins(&mut self, count: usize) {
+    //     for _ in 0..count {
+    //         self.fish.pop();
+    //     }
+    // }
 
-    pub fn reset(&mut self) {
-        for fish in self.fish.iter_mut() {
-            fish.following_player = false;
-        }
+    pub fn reset(&mut self, player: &mut Player) {
+        // Init all fish
+        self.fish = FishEntity::new_from_positions(&self.fish_positions);
+
+        // Reset the player
+        player.reset(self.player_spawn);
     }
 }
 
