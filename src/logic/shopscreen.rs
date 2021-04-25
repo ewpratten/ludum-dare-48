@@ -33,6 +33,15 @@ impl ShopScreen {
         draw_handle.draw_rectangle_rec(bounds, Color::WHITE);
         draw_handle.draw_rectangle_lines_ex(bounds, 3, Color::BLACK);
 
+        // Title
+        draw_handle.draw_text(
+            "SHOP",
+            bounds.x as i32 + 30,
+            bounds.y as i32 + 20,
+            40,
+            Color::BLACK,
+        );
+
         return None;
     }
 
@@ -111,15 +120,15 @@ impl Screen for ShopScreen {
 
         // Build a rect for the shop UI to sit inside
         let shop_ui_bounds = Rectangle {
-            x: win_width as f32 - (win_width as f32 / 5.0),
-            y: 0.0,
-            width: win_width as f32 / 5.0,
-            height: win_height as f32,
+            x: win_width as f32 - (win_width as f32 / 2.0),
+            y: 10.0,
+            width: (win_width as f32 / 2.0) - 10.0,
+            height: win_height as f32 - 20.0,
         };
         let stats_ui_bounds = Rectangle {
-            x: win_width as f32 - (win_width as f32 / 5.0) - 100.0,
+            x: win_width as f32 - (win_width as f32 / 2.0) - 130.0,
             y: 10.0,
-            width: 90.0,
+            width: 120.0,
             height: 120.0,
         };
 
