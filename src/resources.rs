@@ -35,6 +35,25 @@ pub struct GlobalResources {
     // Shop & items
     pub shop_background: Texture2D,
 
+	pub flashlight_one: Texture2D,
+	pub flashlight_two: Texture2D,
+	pub flashlight_three: Texture2D,
+
+	pub stun_gun_one: Texture2D,
+	pub stun_gun_two: Texture2D,
+	pub stun_gun_three: Texture2D,
+
+	pub air_one: Texture2D,
+	pub air_two: Texture2D,
+	pub air_three: Texture2D,
+
+	pub flippers_one: Texture2D,
+	pub flippers_two: Texture2D,
+	pub flippers_three: Texture2D,
+
+	// Treasure
+	pub transponder: FrameAnimationWrapper,
+	
 }
 
 impl GlobalResources {
@@ -152,6 +171,64 @@ impl GlobalResources {
                 &thread,
                 &Image::load_image("./assets/img/map/shopHighRes.png")?,
             )?,
+            flashlight_one: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/items/flashlight1.png")?,
+            )?),
+            flashlight_two: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/items/flashlight2.png")?,
+            )?),
+            flashlight_three: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/items/flashlight3.png")?,
+            )?),
+            stun_gun_one: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/items/stun1.png")?,
+            )?),
+            stun_gun_two: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/items/stun2.png")?,
+            )?),
+            stun_gun_three: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/items/stun3.png")?,
+            )?),
+            air_one: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/items/air1.png")?,
+            )?),
+            air_two: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/items/air2.png")?,
+            )?),
+            air_three: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/items/air3.png")?,
+            )?),
+            flippers_one: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/items/flippers1.png")?,
+            )?),
+            flippers_two: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/items/flippers2.png")?,
+            )?),
+            flippers_three: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/items/flippers3.png")?,
+            )?),
+            transponder: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/map/transponder.png")?,
+                )?,
+                Vector2 { x: 10.0, y: 20.0 },
+                6,
+                1,
+            ),
+			
         })
     }
 }

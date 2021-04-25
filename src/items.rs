@@ -1,4 +1,9 @@
-use raylib::{math::Rectangle, prelude::RaylibDrawHandle, texture::Texture2D};
+use raylib::{
+    color::Color,
+    math::{Rectangle, Vector2},
+    prelude::{RaylibDraw, RaylibDrawHandle},
+    texture::Texture2D,
+};
 use serde::{Deserialize, Serialize};
 
 use crate::resources::GlobalResources;
@@ -8,7 +13,12 @@ pub trait ItemBase {
     fn get_level(&self) -> u8;
     fn get_name(&self) -> String;
     fn get_description(&self) -> String;
-    fn get_texture(&self, draw_handle: &RaylibDrawHandle, resources: &GlobalResources, dest: Rectangle);
+    fn get_texture(
+        &self,
+        draw_handle: &mut RaylibDrawHandle,
+        resources: &GlobalResources,
+        dest: Rectangle,
+    );
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
@@ -59,8 +69,31 @@ impl ItemBase for StunGun {
         return "Stun your enemies!\nJust don't point it at yourself.".to_string();
     }
 
-    fn get_texture(&self, draw_handle: &RaylibDrawHandle, resources: &GlobalResources, dest: Rectangle) {
-        todo!()
+    fn get_texture(
+        &self,
+        draw_handle: &mut RaylibDrawHandle,
+        resources: &GlobalResources,
+        dest: Rectangle,
+    ) {
+        let texture = match self.get_level() {
+            1 => (&resources.stun_gun_one),
+            2 => (&resources.stun_gun_two),
+            3 | _ => (&resources.stun_gun_three),
+        };
+
+        draw_handle.draw_texture_pro(
+            texture,
+            Rectangle {
+                x: 0.0,
+                y: 0.0,
+                width: texture.width as f32,
+                height: texture.height as f32,
+            },
+            dest,
+            Vector2 { x: 0.0, y: 0.0 },
+            0.0,
+            Color::WHITE,
+        );
     }
     fn get_level(&self) -> u8 {
         self.level
@@ -111,8 +144,31 @@ impl ItemBase for AirBag {
         return "Its.. a bag.\nFilled with air. Duh".to_string();
     }
 
-    fn get_texture(&self, draw_handle: &RaylibDrawHandle, resources: &GlobalResources, dest: Rectangle) {
-        todo!()
+    fn get_texture(
+        &self,
+        draw_handle: &mut RaylibDrawHandle,
+        resources: &GlobalResources,
+        dest: Rectangle,
+    ) {
+        let texture = match self.get_level() {
+            1 => (&resources.air_one),
+            2 => (&resources.air_two),
+            3 | _ => (&resources.air_three),
+        };
+
+        draw_handle.draw_texture_pro(
+            texture,
+            Rectangle {
+                x: 0.0,
+                y: 0.0,
+                width: texture.width as f32,
+                height: texture.height as f32,
+            },
+            dest,
+            Vector2 { x: 0.0, y: 0.0 },
+            0.0,
+            Color::WHITE,
+        );
     }
     fn get_level(&self) -> u8 {
         self.level
@@ -163,8 +219,31 @@ impl ItemBase for Flashlight {
         return "See better for longer".to_string();
     }
 
-    fn get_texture(&self, draw_handle: &RaylibDrawHandle, resources: &GlobalResources, dest: Rectangle) {
-        todo!()
+    fn get_texture(
+        &self,
+        draw_handle: &mut RaylibDrawHandle,
+        resources: &GlobalResources,
+        dest: Rectangle,
+    ) {
+        let texture = match self.get_level() {
+            1 => (&resources.flashlight_one),
+            2 => (&resources.flashlight_two),
+            3 | _ => (&resources.flashlight_three),
+        };
+
+        draw_handle.draw_texture_pro(
+            texture,
+            Rectangle {
+                x: 0.0,
+                y: 0.0,
+                width: texture.width as f32,
+                height: texture.height as f32,
+            },
+            dest,
+            Vector2 { x: 0.0, y: 0.0 },
+            0.0,
+            Color::WHITE,
+        );
     }
     fn get_level(&self) -> u8 {
         self.level
@@ -215,8 +294,31 @@ impl ItemBase for Flippers {
         return "Swim faster, and look stupid\nat the same time!".to_string();
     }
 
-    fn get_texture(&self, draw_handle: &RaylibDrawHandle, resources: &GlobalResources, dest: Rectangle) {
-        todo!()
+    fn get_texture(
+        &self,
+        draw_handle: &mut RaylibDrawHandle,
+        resources: &GlobalResources,
+        dest: Rectangle,
+    ) {
+        let texture = match self.get_level() {
+            1 => (&resources.flippers_one),
+            2 => (&resources.flippers_two),
+            3 | _ => (&resources.flippers_three),
+        };
+
+        draw_handle.draw_texture_pro(
+            texture,
+            Rectangle {
+                x: 0.0,
+                y: 0.0,
+                width: texture.width as f32,
+                height: texture.height as f32,
+            },
+            dest,
+            Vector2 { x: 0.0, y: 0.0 },
+            0.0,
+            Color::WHITE,
+        );
     }
     fn get_level(&self) -> u8 {
         self.level
