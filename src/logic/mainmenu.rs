@@ -34,8 +34,8 @@ impl Screen for MainMenuScreen {
 
         // Render title
         draw_handle.draw_text(
-            "PINK MAN SWIM",
-            (win_height / 2) - 120,
+            "ONE BREATH",
+            (win_height / 2) - 80,
             win_width / 8,
             80,
             Color::BLACK,
