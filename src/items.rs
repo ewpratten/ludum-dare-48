@@ -1,12 +1,14 @@
-use raylib::texture::Texture2D;
+use raylib::{math::Rectangle, prelude::RaylibDrawHandle, texture::Texture2D};
 use serde::{Deserialize, Serialize};
+
+use crate::resources::GlobalResources;
 
 pub trait ItemBase {
     fn get_cost(&self) -> u32;
     fn get_level(&self) -> u8;
     fn get_name(&self) -> String;
     fn get_description(&self) -> String;
-    fn get_texture(&self) -> &Texture2D;
+    fn get_texture(&self, draw_handle: &RaylibDrawHandle, resources: &GlobalResources, dest: Rectangle);
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
@@ -57,7 +59,7 @@ impl ItemBase for StunGun {
         return "Stun your enemies!\nJust don't point it at yourself.".to_string();
     }
 
-    fn get_texture(&self) -> &Texture2D {
+    fn get_texture(&self, draw_handle: &RaylibDrawHandle, resources: &GlobalResources, dest: Rectangle) {
         todo!()
     }
     fn get_level(&self) -> u8 {
@@ -109,7 +111,7 @@ impl ItemBase for AirBag {
         return "Its.. a bag.\nFilled with air. Duh".to_string();
     }
 
-    fn get_texture(&self) -> &Texture2D {
+    fn get_texture(&self, draw_handle: &RaylibDrawHandle, resources: &GlobalResources, dest: Rectangle) {
         todo!()
     }
     fn get_level(&self) -> u8 {
@@ -161,7 +163,7 @@ impl ItemBase for Flashlight {
         return "See better for longer".to_string();
     }
 
-    fn get_texture(&self) -> &Texture2D {
+    fn get_texture(&self, draw_handle: &RaylibDrawHandle, resources: &GlobalResources, dest: Rectangle) {
         todo!()
     }
     fn get_level(&self) -> u8 {
@@ -213,7 +215,7 @@ impl ItemBase for Flippers {
         return "Swim faster, and look stupid\nat the same time!".to_string();
     }
 
-    fn get_texture(&self) -> &Texture2D {
+    fn get_texture(&self, draw_handle: &RaylibDrawHandle, resources: &GlobalResources, dest: Rectangle) {
         todo!()
     }
     fn get_level(&self) -> u8 {
