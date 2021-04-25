@@ -11,7 +11,7 @@ mod items;
 use gamecore::{GameCore, GameProgress, GameState};
 use lib::{utils::profiler::GameProfiler, wrappers::audio::player::AudioPlayer};
 use log::info;
-use logic::{gameend::GameEndScreen, ingame::InGameScreen, loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen, screen::Screen};
+use logic::{gameend::GameEndScreen, ingame::InGameScreen, loadingscreen::LoadingScreen, mainmenu::MainMenuScreen, pausemenu::PauseMenuScreen, screen::Screen, shopscreen::ShopScreen};
 use raylib::prelude::*;
 use world::{World, load_world_colliders};
 
@@ -63,6 +63,7 @@ fn main() {
     let mut pause_menu_screen = PauseMenuScreen::new();
     let mut ingame_screen = InGameScreen::new();
     let mut game_end_screen = GameEndScreen::new();
+    let mut shop_screen = ShopScreen::new();
 
     // Main rendering loop
     while !raylib.window_should_close() {
@@ -96,6 +97,12 @@ fn main() {
                 &mut game_core,
             ),
             GameState::GameEnd => game_end_screen.render(
+                &mut draw_handle,
+                &raylib_thread,
+                &mut audio_system,
+                &mut game_core,
+            ),
+            GameState::InShop => shop_screen.render(
                 &mut draw_handle,
                 &raylib_thread,
                 &mut audio_system,
