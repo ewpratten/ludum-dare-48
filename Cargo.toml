@@ -1,5 +1,5 @@
 [package]
-name = "pink-man-swim"
+name = "ldgame"
 version = "0.1.0"
 authors = ["Evan Pratten <ewpratten@gmail.com>"]
 edition = "2018"
