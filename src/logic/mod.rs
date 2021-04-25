@@ -5,3 +5,4 @@ pub mod pausemenu;
 pub mod ingame;
 pub mod gameend;
 pub mod shop;
+pub mod winscreen;

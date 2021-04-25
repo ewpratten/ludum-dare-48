@@ -222,6 +222,10 @@ impl Screen for InGameScreen {
             return Some(GameState::GameEnd);
         }
 
+		if game_core.world.end_position.distance_to(game_core.player.position) <= 70.0{
+			return Some(GameState::WinGame);
+		}
+
         return None;
     }
 }

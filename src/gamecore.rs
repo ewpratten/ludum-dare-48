@@ -25,7 +25,8 @@ pub enum GameState {
     GameQuit,
     InGame,
     GameEnd,
-    InShop
+    InShop,
+	WinGame
 }
 
 impl fmt::Display for GameState {
