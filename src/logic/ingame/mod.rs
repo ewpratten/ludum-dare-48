@@ -102,7 +102,7 @@ impl Screen for InGameScreen {
         };
 
 		// Creates items for shop
-		if draw_handle.get_time() - game_core.last_state_change_time >= 0.05{
+		if draw_handle.get_time() - game_core.last_state_change_time <= 0.05{
 			self.shop.create_items(Vector2::new(win_width as f32, win_height as f32));
 		}
 		

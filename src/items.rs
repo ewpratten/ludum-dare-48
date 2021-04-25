@@ -19,13 +19,59 @@ impl StunGun {
             duration: 0.75,
         }
     }
+	pub fn lvl3() -> Self {
+        Self {
+            range: 80.0,
+            duration: 1.0,
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-pub struct AirBag;
+pub struct AirBag{
+	extra_oxygen: u32,
+}
+
+impl AirBag {
+    pub fn lvl1() -> Self {
+        Self {
+            extra_oxygen: 15,
+        }
+    }
+    pub fn lvl2() -> Self {
+        Self {
+            extra_oxygen: 30,
+        }
+    }
+	pub fn lvl3() -> Self {
+        Self {
+            extra_oxygen: 45,
+        }
+    }
+}
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
-pub struct Flashlight;
+pub struct Flashlight{
+	power_level: f32,
+}
+
+impl Flashlight{
+    pub fn lvl1() -> Self {
+        Self {
+            power_level: 0.25,
+        }
+    }
+    pub fn lvl2() -> Self {
+        Self {
+            power_level: 0.5,
+        }
+    }
+	pub fn lvl3() -> Self {
+        Self {
+            power_level: 1.0,
+        }
+    }
+}
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Flippers {
@@ -43,6 +89,11 @@ impl Flippers {
             speed_increase: 1.5
         }
     }
+	pub fn lvl3() -> Self {
+        Self {
+            speed_increase: 1.8
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
@@ -58,8 +109,8 @@ impl ShopItems{
 
 	pub fn get_inital_items() -> [ShopItems; 4]{
 	
-		[ShopItems::StunGun(1, 10, String::from("Stun Gun")), ShopItems::AirBag(1, 10, String::from("Air Bag")), 
-			ShopItems::Flashlight(1, 12, String::from("Flash Light")), ShopItems::Flippers(1, 10, String::from("Flippers"))]
+		[ShopItems::StunGun(0, 5, String::from("Stun Gun")), ShopItems::AirBag(0, 5, String::from("Air Bag")), 
+			ShopItems::Flashlight(0, 5, String::from("Flash Light")), ShopItems::Flippers(0, 5, String::from("Flippers"))]
 
 
 	}
@@ -80,10 +131,10 @@ impl ShopItems{
 	pub fn get_cost(item: &ShopItems) -> u8{
 
 		match item {
-		    ShopItems::StunGun(x, _, _) => *x,
-		    ShopItems::AirBag(x, _, _) => *x,
-		    ShopItems::Flashlight(x, _, _) => *x,
-		    ShopItems::Flippers(x, _, _) => *x
+		    ShopItems::StunGun(_, x, _) => *x,
+		    ShopItems::AirBag(_, x, _) => *x,
+		    ShopItems::Flashlight(_, x, _) => *x,
+		    ShopItems::Flippers(_, x, _) => *x
 		}
 
 	}
@@ -98,6 +149,8 @@ impl ShopItems{
 		}
 
 	}
+
+	
 
 
 }
