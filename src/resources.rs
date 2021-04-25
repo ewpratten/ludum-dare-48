@@ -16,9 +16,17 @@ pub struct GlobalResources {
     pub player_animation_regular: FrameAnimationWrapper,
     pub player_animation_boost_charge: FrameAnimationWrapper,
     pub player_animation_boost: FrameAnimationWrapper,
+    pub player_animation_stunned: FrameAnimationWrapper,
 
     // Cave
-    pub cave_mid_layer: Texture2D
+    pub cave_mid_layer: Texture2D,
+
+    // Enemies
+    pub jellyfish_animation_regular: FrameAnimationWrapper,
+    pub jellyfish_animation_attack: FrameAnimationWrapper,
+
+    // Darkness layer
+    pub darkness_overlay: Texture2D
 }
 
 impl GlobalResources {
@@ -59,9 +67,40 @@ impl GlobalResources {
                 21,
                 30,
             ),
+            player_animation_stunned: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/character/stunned.png")?,
+                )?,
+                Vector2 { x: 12.0, y: 22.0 },
+                4,
+                100 / 8,
+            ),
             cave_mid_layer: raylib.load_texture_from_image(
                 &thread,
                 &Image::load_image("./assets/img/map/cave.png")?,
+            )?,
+            jellyfish_animation_regular: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/jelly.png")?,
+                )?,
+                Vector2 { x: 10.0, y: 10.0 },
+                6,
+                4,
+            ),
+            jellyfish_animation_attack: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/jellyAttack.png")?,
+                )?,
+                Vector2 { x: 20.0, y: 20.0 },
+                15,
+                4,
+            ),
+            darkness_overlay: raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/map/darkness.png")?,
             )?,
         })
     }

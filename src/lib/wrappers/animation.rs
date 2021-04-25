@@ -2,7 +2,7 @@ use raylib::{core::color::Color, math::{Rectangle, Vector2}, prelude::{RaylibDra
 
 /// A wrapper around an animation spritesheet
 pub struct FrameAnimationWrapper {
-    sprite_sheet: Texture2D,
+    pub sprite_sheet: Texture2D,
     size: Vector2,
     frame_count: u32,
     frames_per_second: u8,

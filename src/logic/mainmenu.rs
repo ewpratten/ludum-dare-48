@@ -1,9 +1,6 @@
 use raylib::prelude::*;
 
-use crate::{
-    gamecore::{GameCore, GameState},
-    lib::wrappers::audio::player::AudioPlayer,
-};
+use crate::{gamecore::{GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer, pallette::WATER_DARK};
 
 use super::screen::Screen;
 
@@ -34,40 +31,48 @@ impl Screen for MainMenuScreen {
         draw_handle.draw_text(
             "ONE BREATH",
             (win_height / 2) - 80,
-            win_width / 4,
-            40,
+            win_width / 8,
+            80,
             Color::BLACK,
         );
+
+        // Get mouse position data
+        let mouse_position = draw_handle.get_mouse_position();
+        let hovering_play_button = mouse_position.y > (win_width as f32 / 4.0) 
+            && mouse_position.y < (win_width as f32 / 4.0) + 60.0;
+        let hovering_quit_button = mouse_position.y > (win_width as f32 / 4.0) + 100.0
+            && mouse_position.y < (win_width as f32 / 4.0) + 160.0;
 
         // Play and quit
         draw_handle.draw_text(
             "Play",
-            (win_height / 2) - 80,
-            (win_width / 4) + 100,
-            20,
-            Color::BLACK,
+            (win_height / 2) + 120,
+            (win_width / 4),
+            60,
+            match hovering_play_button {
+                true => Color::GREEN,
+                false => Color::BLACK,
+            },
         );
         draw_handle.draw_text(
             "Quit",
-            (win_height / 2) - 80,
-            (win_width / 4) + 140,
-            20,
-            Color::BLACK,
+            (win_height / 2) + 130,
+            (win_width / 4) + 100,
+            60,
+            match hovering_quit_button {
+                true => Color::GREEN,
+                false => Color::BLACK,
+            },
         );
 
         // Handle button presses
-        let mouse_position = draw_handle.get_mouse_position();
         let mouse_clicked = draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON);
 
         // Check clicks
         if mouse_clicked {
-            if mouse_position.y > (win_width as f32 / 4.0) + 100.0
-                && mouse_position.y < (win_width as f32 / 4.0) + 120.0
-            {
+            if hovering_play_button {
                 return Some(GameState::InGame);
-            } else if mouse_position.y > (win_width as f32 / 4.0) + 140.0
-                && mouse_position.y < (win_width as f32 / 4.0) + 180.0
-            {
+            } else if hovering_quit_button {
                 return Some(GameState::GameQuit);
             }
         }

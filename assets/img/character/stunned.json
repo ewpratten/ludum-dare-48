@@ -1,0 +1,50 @@
+{ "frames": {
+   "walk1 0.png": {
+    "frame": { "x": 0, "y": 0, "w": 12, "h": 22 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 12, "h": 22 },
+    "sourceSize": { "w": 12, "h": 22 },
+    "duration": 200
+   },
+   "walk1 1.png": {
+    "frame": { "x": 12, "y": 0, "w": 12, "h": 22 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 12, "h": 22 },
+    "sourceSize": { "w": 12, "h": 22 },
+    "duration": 200
+   },
+   "walk1 2.png": {
+    "frame": { "x": 24, "y": 0, "w": 12, "h": 22 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 12, "h": 22 },
+    "sourceSize": { "w": 12, "h": 22 },
+    "duration": 200
+   },
+   "walk1 3.png": {
+    "frame": { "x": 36, "y": 0, "w": 12, "h": 22 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 12, "h": 22 },
+    "sourceSize": { "w": 12, "h": 22 },
+    "duration": 200
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.27-x64",
+  "image": "stunned.png",
+  "format": "RGBA8888",
+  "size": { "w": 48, "h": 22 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

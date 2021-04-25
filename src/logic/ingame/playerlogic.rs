@@ -5,13 +5,13 @@ use crate::{
     pallette::{TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96},
 };
 
-const NORMAL_PLAYER_SPEED: i32 = 3;
+const NORMAL_PLAYER_SPEED: i32 = 1;
 const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
 const CAMERA_FOLLOW_SPEED: f32 = 0.7;
 const TURN_SPEED: f32 = 0.15;
 const BOOST_DECREASE_PER_SECOND: f32 = 0.65;
 const BOOST_REGEN_PER_SECOND: f32 = 0.25;
-const BREATH_DECREASE_PER_SECOND: f32 = 0.01;
+const BREATH_DECREASE_PER_SECOND: f32 = 0.02;
 
 pub fn update_player_movement(
     draw_handle: &mut RaylibDrawHandle,
@@ -65,7 +65,9 @@ pub fn update_player_movement(
     }
 
     // set angle
-    game_core.player.direction = Vector2::new(f32::cos(player_angle), f32::sin(player_angle));
+    if !game_core.player.is_stunned() {
+        game_core.player.direction = Vector2::new(f32::cos(player_angle), f32::sin(player_angle));
+    }
 
     // In the case the player is in "null", just jump the camera to them
     if game_core.player.position == Vector2::zero() {
@@ -76,8 +78,12 @@ pub fn update_player_movement(
     let user_request_boost = draw_handle.is_mouse_button_down(MouseButton::MOUSE_LEFT_BUTTON);
     let user_request_action = draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_RIGHT_BUTTON);
 
+    if user_request_action {
+        game_core.player.begin_attack(&mut game_core.world, draw_handle.get_time());
+    }
+
     // Move the player in their direction
-    let speed_multiplier;
+    let mut speed_multiplier;
     if user_request_boost && game_core.player.boost_percent >= 0.0 {
         // Set the speed multiplier
         speed_multiplier = BOOST_PLAYER_SPEED as f32;
@@ -122,29 +128,58 @@ pub fn update_player_movement(
         }
     }
 
+    // Handle flippers doing a speed increase
+    if game_core.player.inventory.flippers.is_some() {
+        speed_multiplier = speed_multiplier
+            * game_core
+                .player
+                .inventory
+                .flippers
+                .as_ref()
+                .unwrap()
+                .speed_increase;
+    }
+
     // Update the player's breath
     game_core.player.breath_percent =
         (game_core.player.breath_percent - BREATH_DECREASE_PER_SECOND * dt as f32).clamp(0.0, 1.0);
 
     // Only do this if the mouse is far enough away
-    let player_real_movement = game_core.player.direction * speed_multiplier;
-    if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0 {
-        game_core.player.is_moving = true;
-        game_core.player.position += player_real_movement;
+    let player_stunned = game_core.player.stun_timer > 0.0;
+    let mut player_real_movement = game_core.player.direction * speed_multiplier;
+    if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0
+        && !game_core.player.is_stunned()
+    {
+        if game_core.player.is_moving {
+            // move in x
+            game_core.player.position.x += player_real_movement.x;
 
-        // Check for any collisions
-        for collider in game_core.world.colliders.iter() {
-            if game_core.player.collides_with_rec(collider) {
-                game_core.player.is_moving = false;
-                break;
+            // Check for any collisions
+            for collider in game_core.world.colliders.iter() {
+                if game_core.player.collides_with_rec(collider) {
+                    game_core.player.position.x -= player_real_movement.x;
+                    player_real_movement.x = 0.0;
+                    break;
+                }
+            }
+
+            // move in y
+            game_core.player.position.y += player_real_movement.y;
+
+            // Check for any collisions
+            for collider in game_core.world.colliders.iter() {
+                if game_core.player.collides_with_rec(collider) {
+                    game_core.player.position.y -= player_real_movement.y;
+                    player_real_movement.y = 0.0;
+                    break;
+                }
             }
         }
+    }
 
-        if !game_core.player.is_moving {
-            game_core.player.position -= player_real_movement;
-        }
-    } else {
-        game_core.player.is_moving = false;
+    // Handle updating the stun timer
+    if player_stunned {
+        game_core.player.stun_timer -= dt;
     }
 
     // Move the camera to follow the player
@@ -167,62 +202,4 @@ pub fn update_player_movement(
     // if game_core.master_camera.target.y < -100.0 {
     //     game_core.master_camera.target.y = -100.0;
     // }
-}
-
-pub fn render_player(context_2d: &mut RaylibMode2D<RaylibDrawHandle>, game_core: &mut GameCore) {
-    // Get the player
-    let player = &game_core.player;
-
-    // Convert the player direction to a rotation
-    let player_rotation = Vector2::zero().angle_to(player.direction);
-
-    // Render the player's boost ring
-    // This functions both as a breath meter, and as a boost meter
-    let boost_ring_max_radius = player.size.x + 5.0;
-    context_2d.draw_circle(
-        player.position.x as i32,
-        player.position.y as i32,
-        boost_ring_max_radius * player.boost_percent,
-        TRANSLUCENT_WHITE_64,
-    );
-    context_2d.draw_ring(
-        Vector2 {
-            x: player.position.x as i32 as f32,
-            y: player.position.y as i32 as f32,
-        },
-        boost_ring_max_radius,
-        boost_ring_max_radius + 1.0,
-        0,
-        (360.0 * player.breath_percent) as i32,
-        0,
-        TRANSLUCENT_WHITE_96,
-    );
-
-    // Render the player based on what is happening
-    if player.is_boost_charging {
-        game_core.resources.player_animation_boost_charge.draw(
-            context_2d,
-            player.position,
-            player_rotation.to_degrees() - 90.0,
-        );
-    } else if player.is_boosting {
-        game_core.resources.player_animation_boost.draw(
-            context_2d,
-            player.position,
-            player_rotation.to_degrees() - 90.0,
-        );
-    } else if player.is_moving {
-        game_core.resources.player_animation_regular.draw(
-            context_2d,
-            player.position,
-            player_rotation.to_degrees() - 90.0,
-        );
-    } else {
-        game_core.resources.player_animation_regular.draw_frame(
-            context_2d,
-            player.position,
-            player_rotation.to_degrees() - 90.0,
-            0,
-        );
-    }
 }
