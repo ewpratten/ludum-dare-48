@@ -1,11 +1,8 @@
 use raylib::prelude::*;
 
-use crate::{
-    gamecore::{GameCore, GameState},
-    lib::wrappers::audio::player::AudioPlayer,
-};
+use crate::{gamecore::{GameCore, GameState}, items::{AirBag, Flashlight, Flippers, ItemBase, StunGun}, lib::wrappers::audio::player::AudioPlayer};
 
-use super::itemui::ShopItemUi;
+use super::{item::ShopItemWrapper, itemui::ShopItemUi};
 
 pub fn render_shop(
     draw_handle: &mut RaylibDrawHandle,
@@ -27,89 +24,70 @@ pub fn render_shop(
         Color::BLACK,
     );
 
-    // Stun Gun
-    let stun_gun_buy_ui = ShopItemUi::new(
-        "Stun Gun".to_string(),
+    // Bounds for use in item row sizing
+    let first_bounds = Rectangle {
+        x: bounds.x + 5.0,
+        y: bounds.y + 100.0,
+        width: bounds.width - 10.0,
+        height: 50.0,
+    };
+
+    // Create items
+    let stun_gun_buy_ui = ShopItemWrapper::new(
         match &game_core.player.inventory.stun_gun {
-            Some(x) => x.level,
-            None => 0,
+            Some(x) => match x.get_level() {
+                1 => StunGun::lvl2(),
+                _ => StunGun::lvl3(),
+            },
+            None => StunGun::lvl1(),
         },
-        3,
-        10,
+        &game_core.player.inventory.stun_gun,
+        first_bounds,
+        0,
     );
-    stun_gun_buy_ui.render(
-        draw_handle,
-        Rectangle {
-            x: bounds.x + 5.0,
-            y: bounds.y + 100.0,
-            width: bounds.width - 10.0,
-            height: 50.0,
-        },
-        game_core.player.coins >= stun_gun_buy_ui.cost,
-    );
-
-    // Flippers
-    let flippers_buy_ui = ShopItemUi::new(
-        "Flippers".to_string(),
-        match &game_core.player.inventory.flippers {
-            Some(x) => x.level,
-            None => 0,
-        },
-        3,
-        10,
-    );
-    flippers_buy_ui.render(
-        draw_handle,
-        Rectangle {
-            x: bounds.x + 5.0,
-            y: bounds.y + 160.0,
-            width: bounds.width - 10.0,
-            height: 50.0,
-        },
-        game_core.player.coins >= flippers_buy_ui.cost,
-    );
-
-    // Flashlight
-    let flashlight_buy_ui = ShopItemUi::new(
-        "Flashlight".to_string(),
-        match &game_core.player.inventory.flashlight {
-            Some(x) => x.level,
-            None => 0,
-        },
-        3,
-        10,
-    );
-    flashlight_buy_ui.render(
-        draw_handle,
-        Rectangle {
-            x: bounds.x + 5.0,
-            y: bounds.y + 220.0,
-            width: bounds.width - 10.0,
-            height: 50.0,
-        },
-        game_core.player.coins >= flashlight_buy_ui.cost,
-    );
-
-    // Air Bag
-    let air_bag_buy_ui = ShopItemUi::new(
-        "Bag of Air".to_string(),
+    let air_bag_buy_ui = ShopItemWrapper::new(
         match &game_core.player.inventory.air_bag {
-            Some(x) => x.level,
-            None => 0,
+            Some(x) => match x.get_level() {
+                1 => AirBag::lvl2(),
+                _ => AirBag::lvl3(),
+            },
+            None => AirBag::lvl1(),
         },
+        &game_core.player.inventory.air_bag,
+        first_bounds,
+        1,
+    );
+    let flashlight_buy_ui = ShopItemWrapper::new(
+        match &game_core.player.inventory.flashlight {
+            Some(x) => match x.get_level() {
+                1 => Flashlight::lvl2(),
+                _ => Flashlight::lvl3(),
+            },
+            None => Flashlight::lvl1(),
+        },
+        &game_core.player.inventory.flashlight,
+        first_bounds,
+        2,
+    );
+    let flippers_buy_ui = ShopItemWrapper::new(
+        match &game_core.player.inventory.flippers {
+            Some(x) => match x.get_level() {
+                1 => Flippers::lvl2(),
+                _ => Flippers::lvl3(),
+            },
+            None => Flippers::lvl1(),
+        },
+        &game_core.player.inventory.flippers,
+        first_bounds,
         3,
-        10,
     );
-    air_bag_buy_ui.render(
-        draw_handle,
-        Rectangle {
-            x: bounds.x + 5.0,
-            y: bounds.y + 280.0,
-            width: bounds.width - 10.0,
-            height: 50.0,
-        },
-        game_core.player.coins >= air_bag_buy_ui.cost,
-    );
+
+    // Render items
+    stun_gun_buy_ui.render(draw_handle, &game_core.player);
+    air_bag_buy_ui.render(draw_handle, &game_core.player);
+    flashlight_buy_ui.render(draw_handle, &game_core.player);
+    flippers_buy_ui.render(draw_handle, &game_core.player);
+
 
     return None;
 }

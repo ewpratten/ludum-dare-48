@@ -14,17 +14,15 @@ pub struct ShopItemWrapper<T: ItemBase + Clone> {
 
 impl<T: ItemBase + Clone> ShopItemWrapper<T> {
     pub fn new(
-        name: String,
         item: T,
         from_inventory: &Option<T>,
         first_item_bounds: Rectangle,
-        index: u8,
-        player: &Player,
+        index: u8
     ) -> Self {
         // Build new bounds for the UI row
         let new_bounds = Rectangle {
             x: first_item_bounds.x,
-            y: first_item_bounds.y + (first_item_bounds.height + 5.0 * index as f32),
+            y: first_item_bounds.y + ((first_item_bounds.height + 5.0) * index as f32),
             width: first_item_bounds.width,
             height: first_item_bounds.height,
         };
@@ -32,7 +30,7 @@ impl<T: ItemBase + Clone> ShopItemWrapper<T> {
         Self {
             bounds: new_bounds,
             ui: ShopItemUi::new(
-                name,
+                item.get_name(),
                 match from_inventory {
                     Some(x) => x.get_level(),
                     None => 0,
