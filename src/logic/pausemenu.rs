@@ -157,7 +157,7 @@ impl Screen for PauseMenuScreen {
             },
         );
         draw_handle.draw_text(
-            "Quit",
+            "Menu",
             bottom_left_button_dimensions.x as i32 + 15,
             bottom_left_button_dimensions.y as i32 + 5,
             30,
@@ -182,7 +182,7 @@ impl Screen for PauseMenuScreen {
         // Handle click actions on the buttons
         if draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON) {
             if mouse_over_bottom_left_button {
-                return Some(GameState::GameQuit);
+                return Some(GameState::MainMenu);
             } else if mouse_over_bottom_right_button {
                 return Some(game_core.last_state);
             }
