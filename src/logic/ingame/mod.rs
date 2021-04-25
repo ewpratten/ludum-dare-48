@@ -19,12 +19,17 @@ pub enum InGameState {
 
 pub struct InGameScreen {
     current_state: InGameState,
+    shader_time_var_location: i32,
 }
 
 impl InGameScreen {
-    pub fn new() -> Self {
+    pub unsafe fn new(game_core: &GameCore) -> Self {
         Self {
             current_state: InGameState::SWIMMING,
+            shader_time_var_location: raylib::ffi::GetShaderLocation(
+                *game_core.resources.pixel_shader,
+                rstr!("time").as_ptr(),
+            ),
         }
     }
 
@@ -262,13 +267,10 @@ impl Screen for InGameScreen {
         }
 
         // Update the shader's internal time
-        unsafe {
-            let time_var_location = raylib::ffi::GetShaderLocation(
-                *game_core.resources.pixel_shader,
-                rstr!("time").as_ptr(),
-            );
-            game_core.resources.pixel_shader.set_shader_value(time_var_location, draw_handle.get_time() as f32);
-        }
+        game_core
+            .resources
+            .pixel_shader
+            .set_shader_value(self.shader_time_var_location, draw_handle.get_time() as f32);
 
         // Render the 2D context via the ripple shader
         {
@@ -288,7 +290,7 @@ impl Screen for InGameScreen {
                     x: -10.0,
                     y: -10.0,
                     width: win_width as f32 + 20.0,
-                    height: win_height as f32 + 20.0
+                    height: win_height as f32 + 20.0,
                 },
                 Vector2::zero(),
                 0.0,
