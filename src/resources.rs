@@ -238,7 +238,7 @@ impl GlobalResources {
                 )?,
                 Vector2 { x: 10.0, y: 20.0 },
                 6,
-                1,
+                2,
             ),
 			
         })
