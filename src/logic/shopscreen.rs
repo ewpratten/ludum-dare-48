@@ -9,16 +9,6 @@ use super::screen::Screen;
 
 const SCREEN_PANEL_SIZE: Vector2 = Vector2 { x: 300.0, y: 380.0 };
 
-pub struct Item {
-    x_pose: i32,
-    y_pose: i32,
-    width: i32,
-    height: i32,
-    cost: u8,
-    level: u8,
-    name: String,
-}
-
 #[derive(Debug, Default)]
 pub struct ShopScreen {
     // shop_items: Vec<Item>,
@@ -31,14 +21,39 @@ impl ShopScreen {
         }
     }
 
-    fn render_buy_section(
+    fn render_shop(
         &mut self,
         draw_handle: &mut RaylibDrawHandle,
         _thread: &RaylibThread,
         audio_system: &mut AudioPlayer,
         game_core: &mut GameCore,
-        draw_bounds: Rectangle
+        bounds: Rectangle,
+    ) -> Option<GameState> {
+        // Render background
+        draw_handle.draw_rectangle_rec(bounds, Color::WHITE);
+        draw_handle.draw_rectangle_lines_ex(bounds, 3, Color::BLACK);
+
+        return None;
+    }
+
+    fn render_stats(
+        &mut self,
+        draw_handle: &mut RaylibDrawHandle,
+        game_core: &mut GameCore,
+        bounds: Rectangle,
     ) {
+        // Render background
+        draw_handle.draw_rectangle_rec(bounds, Color::WHITE);
+        draw_handle.draw_rectangle_lines_ex(bounds, 3, Color::BLACK);
+
+        // Coins
+        draw_handle.draw_text(
+            &format!("Fish: {}", game_core.player.coins.min(99)),
+            bounds.x as i32 + 5,
+            bounds.y as i32 + 5,
+            20,
+            Color::BLACK,
+        );
     }
 
     // // Creates all the items
@@ -82,7 +97,7 @@ impl Screen for ShopScreen {
     fn render(
         &mut self,
         draw_handle: &mut RaylibDrawHandle,
-        _thread: &RaylibThread,
+        thread: &RaylibThread,
         audio_system: &mut AudioPlayer,
         game_core: &mut GameCore,
     ) -> Option<GameState> {
@@ -90,9 +105,32 @@ impl Screen for ShopScreen {
         draw_handle.clear_background(Color::GRAY);
         // TODO: Maybe we can stick some art here?
 
-        
+        // Window dimensions
+        let win_height = draw_handle.get_screen_height();
+        let win_width = draw_handle.get_screen_width();
 
-        return None;
+        // Build a rect for the shop UI to sit inside
+        let shop_ui_bounds = Rectangle {
+            x: win_width as f32 - (win_width as f32 / 5.0),
+            y: 0.0,
+            width: win_width as f32 / 5.0,
+            height: win_height as f32,
+        };
+        let stats_ui_bounds = Rectangle {
+            x: win_width as f32 - (win_width as f32 / 5.0) - 100.0,
+            y: 10.0,
+            width: 90.0,
+            height: 120.0,
+        };
+
+        // Render the shop UI
+        let next_state =
+            self.render_shop(draw_handle, thread, audio_system, game_core, shop_ui_bounds);
+
+        // Render the stats UI
+        self.render_stats(draw_handle, game_core, stats_ui_bounds);
+
+        return next_state;
     }
 }
 // pub fn render_shop(
