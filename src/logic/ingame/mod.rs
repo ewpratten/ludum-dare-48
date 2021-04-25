@@ -179,10 +179,8 @@ impl Screen for InGameScreen {
             {
                 let mut context_2d = draw_handle.begin_mode2D(game_core.master_camera);
 
-				
                 // Clear frame
                 context_2d.clear_background(Color::BLACK);
-
 
                 // Render the world
                 self.render_world(&mut context_2d, game_core, dt);
@@ -210,16 +208,12 @@ impl Screen for InGameScreen {
                     );
                 }
 
-				
-				// Render transponder
-				game_core.resources.transponder.draw(&mut context_2d, game_core.world.end_position + Vector2::new(0.0, -50.0), 0.0);
-
-
-
-
-
-
-
+                // Render transponder
+                game_core.resources.transponder.draw(
+                    &mut context_2d,
+                    game_core.world.end_position,
+                    0.0,
+                );
 
                 // Render Player
                 game_core
@@ -261,9 +255,14 @@ impl Screen for InGameScreen {
             return Some(GameState::GameEnd);
         }
 
-		if game_core.world.end_position.distance_to(game_core.player.position) <= 70.0{
-			return Some(GameState::WinGame);
-		}
+        if game_core
+            .world
+            .end_position
+            .distance_to(game_core.player.position)
+            <= 70.0
+        {
+            return Some(GameState::WinGame);
+        }
 
         return None;
     }
