@@ -174,7 +174,7 @@ impl Screen for InGameScreen {
         // Open a 2D context
         {
             unsafe {
-                raylib::ffi::BeginTextureMode(*game_core.resources.ripple_texture);
+                raylib::ffi::BeginTextureMode(*game_core.resources.shader_texture);
             }
             {
                 let mut context_2d = draw_handle.begin_mode2D(game_core.master_camera);
@@ -221,16 +221,16 @@ impl Screen for InGameScreen {
         // Render the 2D context via the ripple shader
         {
             let mut shader_context =
-                draw_handle.begin_shader_mode(&game_core.resources.ripple_shader);
+                draw_handle.begin_shader_mode(&game_core.resources.pixel_shader);
 
             // Blit the texture
             shader_context.draw_texture_rec(
-                &game_core.resources.ripple_texture,
+                &game_core.resources.shader_texture,
                 Rectangle {
                     x: 0.0,
                     y: 0.0,
-                    width: game_core.resources.ripple_texture.width() as f32,
-                    height: (game_core.resources.ripple_texture.height() as f32) * -1.0,
+                    width: game_core.resources.shader_texture.width() as f32,
+                    height: (game_core.resources.shader_texture.height() as f32) * -1.0,
                 },
                 Vector2::zero(),
                 Color::WHITE,
