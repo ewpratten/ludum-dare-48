@@ -19,12 +19,17 @@ pub enum InGameState {
 
 pub struct InGameScreen {
     current_state: InGameState,
+    shader_time_var_location: i32,
 }
 
 impl InGameScreen {
-    pub fn new() -> Self {
+    pub unsafe fn new(game_core: &GameCore) -> Self {
         Self {
             current_state: InGameState::SWIMMING,
+            shader_time_var_location: raylib::ffi::GetShaderLocation(
+                *game_core.resources.pixel_shader,
+                rstr!("time").as_ptr(),
+            ),
         }
     }
 
@@ -65,7 +70,12 @@ impl InGameScreen {
                 width: game_core.resources.background_back.width as f32,
                 height: game_core.resources.background_back.height as f32,
             },
-            Rectangle::new(0.0,0.0, (game_core.resources.background_back.width * 2) as f32, (game_core.resources.background_back.height * 2) as f32),
+            Rectangle::new(
+                0.0,
+                0.0,
+                (game_core.resources.background_back.width * 2) as f32,
+                (game_core.resources.background_back.height * 2) as f32,
+            ),
             Vector2 { x: 0.0, y: 0.0 },
             0.0,
             Color::WHITE,
@@ -78,7 +88,12 @@ impl InGameScreen {
                 width: game_core.resources.background_front.width as f32,
                 height: game_core.resources.background_front.height as f32,
             },
-            Rectangle::new(0.0 ,0.0, (game_core.resources.background_front.width * 2) as f32,(game_core.resources.background_front.height * 2) as f32),
+            Rectangle::new(
+                0.0,
+                0.0,
+                (game_core.resources.background_front.width * 2) as f32,
+                (game_core.resources.background_front.height * 2) as f32,
+            ),
             Vector2 { x: 0.0, y: 0.0 },
             0.0,
             Color::WHITE,
@@ -205,10 +220,8 @@ impl Screen for InGameScreen {
             {
                 let mut context_2d = draw_handle.begin_mode2D(game_core.master_camera);
 
-				
                 // Clear frame
                 context_2d.clear_background(Color::BLACK);
-
 
                 // Render the world
                 self.render_world(&mut context_2d, game_core, dt);
@@ -236,16 +249,12 @@ impl Screen for InGameScreen {
                     );
                 }
 
-				
-				// Render transponder
-				game_core.resources.transponder.draw(&mut context_2d, game_core.world.end_position + Vector2::new(0.0, -50.0), 0.0);
-
-
-
-
-
-
-
+                // Render transponder
+                game_core.resources.transponder.draw(
+                    &mut context_2d,
+                    game_core.world.end_position,
+                    0.0,
+                );
 
                 // Render Player
                 game_core
@@ -257,13 +266,19 @@ impl Screen for InGameScreen {
             }
         }
 
+        // Update the shader's internal time
+        game_core
+            .resources
+            .pixel_shader
+            .set_shader_value(self.shader_time_var_location, draw_handle.get_time() as f32);
+
         // Render the 2D context via the ripple shader
         {
             let mut shader_context =
                 draw_handle.begin_shader_mode(&game_core.resources.pixel_shader);
 
             // Blit the texture
-            shader_context.draw_texture_rec(
+            shader_context.draw_texture_pro(
                 &game_core.resources.shader_texture,
                 Rectangle {
                     x: 0.0,
@@ -271,7 +286,14 @@ impl Screen for InGameScreen {
                     width: game_core.resources.shader_texture.width() as f32,
                     height: (game_core.resources.shader_texture.height() as f32) * -1.0,
                 },
+                Rectangle {
+                    x: -10.0,
+                    y: -10.0,
+                    width: win_width as f32 + 20.0,
+                    height: win_height as f32 + 20.0,
+                },
                 Vector2::zero(),
+                0.0,
                 Color::WHITE,
             );
         }
@@ -287,9 +309,14 @@ impl Screen for InGameScreen {
             return Some(GameState::GameEnd);
         }
 
-		if game_core.world.end_position.distance_to(game_core.player.position) <= 70.0{
-			return Some(GameState::WinGame);
-		}
+        if game_core
+            .world
+            .end_position
+            .distance_to(game_core.player.position)
+            <= 70.0
+        {
+            return Some(GameState::WinGame);
+        }
 
         return None;
     }
