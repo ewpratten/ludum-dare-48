@@ -54,7 +54,7 @@ impl ItemBase for StunGun {
     }
 
     fn get_description(&self) -> String {
-        return "Stun your enemies! Just don't point it at yourself.".to_string();
+        return "Stun your enemies!\nJust don't point it at yourself.".to_string();
     }
 
     fn get_texture(&self) -> &Texture2D {
@@ -106,7 +106,7 @@ impl ItemBase for AirBag {
     }
 
     fn get_description(&self) -> String {
-        return "Its.. a bag. Filled with air. Duh".to_string();
+        return "Its.. a bag.\nFilled with air. Duh".to_string();
     }
 
     fn get_texture(&self) -> &Texture2D {
@@ -210,7 +210,7 @@ impl ItemBase for Flippers {
     }
 
     fn get_description(&self) -> String {
-        return "Swim faster, and look stupid at the same time!".to_string();
+        return "Swim faster, and look stupid\nat the same time!".to_string();
     }
 
     fn get_texture(&self) -> &Texture2D {
