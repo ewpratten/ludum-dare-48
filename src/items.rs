@@ -89,4 +89,9 @@ impl Flippers {
             speed_increase: 1.5
         }
     }
+    pub fn lvl3() -> Self {
+        Self {
+            speed_increase: 1.8
+        }
+    }
 }
