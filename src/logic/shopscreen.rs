@@ -21,7 +21,7 @@ pub struct Item {
 
 #[derive(Debug, Default)]
 pub struct ShopScreen {
-    shop_items: Vec<Item>,
+    // shop_items: Vec<Item>,
 }
 
 impl ShopScreen {
@@ -31,41 +31,41 @@ impl ShopScreen {
         }
     }
 
-    // Creates all the items
-    pub fn create_items(&mut self, screen_dimension: Vector2) {
-        // gets every item.. hacky
-        let items = ShopItems::get_inital_items();
+    // // Creates all the items
+    // pub fn create_items(&mut self, screen_dimension: Vector2) {
+    //     // gets every item.. hacky
+    //     let items = ShopItems::get_inital_items();
 
-        // sets sizes any random number is just a number I think looks good
-        let screen_width = screen_dimension.x as f32;
-        let screen_height = screen_dimension.y as f32;
+    //     // sets sizes any random number is just a number I think looks good
+    //     let screen_width = screen_dimension.x as f32;
+    //     let screen_height = screen_dimension.y as f32;
 
-        let box_height = screen_height * 0.15;
-        let box_width = screen_width * 0.1;
+    //     let box_height = screen_height * 0.15;
+    //     let box_width = screen_width * 0.1;
 
-        let start_width = screen_width - (box_width * 4.0) - 40.0;
-        let draw_height = screen_height - 20.0 - box_height;
+    //     let start_width = screen_width - (box_width * 4.0) - 40.0;
+    //     let draw_height = screen_height - 20.0 - box_height;
 
-        let mut item_vec = Vec::new();
+    //     let mut item_vec = Vec::new();
 
-        for box_num in 0..4 {
-            let x_pose = start_width + box_width * box_num as f32;
+    //     for box_num in 0..4 {
+    //         let x_pose = start_width + box_width * box_num as f32;
 
-            // adds an item struct to the item list
-            item_vec.push(Item {
-                x_pose: ((x_pose + (5 * box_num) as f32) as i32),
-                y_pose: (draw_height as i32),
-                width: (box_width as i32),
-                height: (box_height as i32),
-                // Crazy hacky but this gets the data from the enum
-                cost: (ShopItems::get_cost(&items.get(box_num).unwrap())),
-                level: (ShopItems::get_level(&items.get(box_num).unwrap())),
-                name: (ShopItems::get_name(&items.get(box_num).unwrap())),
-            });
-        }
+    //         // adds an item struct to the item list
+    //         item_vec.push(Item {
+    //             x_pose: ((x_pose + (5 * box_num) as f32) as i32),
+    //             y_pose: (draw_height as i32),
+    //             width: (box_width as i32),
+    //             height: (box_height as i32),
+    //             // Crazy hacky but this gets the data from the enum
+    //             cost: (ShopItems::get_cost(&items.get(box_num).unwrap())),
+    //             level: (ShopItems::get_level(&items.get(box_num).unwrap())),
+    //             name: (ShopItems::get_name(&items.get(box_num).unwrap())),
+    //         });
+    //     }
 
-        self.shop_items = item_vec;
-    }
+    //     self.shop_items = item_vec;
+    // }
 }
 
 impl Screen for ShopScreen {
@@ -178,134 +178,134 @@ impl Screen for ShopScreen {
         return None;
     }
 }
-pub fn render_shop(
-    draw_handle: &mut RaylibDrawHandle,
-    game_core: &mut GameCore,
-    inGameScreen: &mut InGameScreen,
-) {
-    // Pressing F exits from buying
-    if draw_handle.is_key_pressed(KeyboardKey::KEY_F) {
-        inGameScreen.current_state = InGameState::SWIMMING;
-    }
+// pub fn render_shop(
+//     draw_handle: &mut RaylibDrawHandle,
+//     game_core: &mut GameCore,
+//     inGameScreen: &mut InGameScreen,
+// ) {
+//     // Pressing F exits from buying
+//     if draw_handle.is_key_pressed(KeyboardKey::KEY_F) {
+//         inGameScreen.current_state = InGameState::SWIMMING;
+//     }
 
-    let mouse_position = draw_handle.get_mouse_position();
+//     let mouse_position = draw_handle.get_mouse_position();
 
-    draw_handle.draw_text(
-        &format!("Coins: {}", game_core.player.coins),
-        15,
-        15,
-        30,
-        Color::WHITE,
-    );
+//     draw_handle.draw_text(
+//         &format!("Coins: {}", game_core.player.coins),
+//         15,
+//         15,
+//         30,
+//         Color::WHITE,
+//     );
 
-    // Draws shop boxes
-    for mut item in inGameScreen.shop.shop_items.iter_mut() {
-        // If hovering on square draw full
-        if mouse_position.x >= item.x_pose as f32
-            && mouse_position.x <= item.x_pose as f32 + item.width as f32
-            && mouse_position.y >= item.y_pose as f32
-            && mouse_position.y <= item.y_pose as f32 + item.width as f32
-        {
-            // Draw rect
-            draw_handle.draw_rectangle(
-                item.x_pose,
-                item.y_pose,
-                item.width,
-                item.height,
-                Color::BLACK,
-            );
+//     // Draws shop boxes
+//     for mut item in inGameScreen.shop.shop_items.iter_mut() {
+//         // If hovering on square draw full
+//         if mouse_position.x >= item.x_pose as f32
+//             && mouse_position.x <= item.x_pose as f32 + item.width as f32
+//             && mouse_position.y >= item.y_pose as f32
+//             && mouse_position.y <= item.y_pose as f32 + item.width as f32
+//         {
+//             // Draw rect
+//             draw_handle.draw_rectangle(
+//                 item.x_pose,
+//                 item.y_pose,
+//                 item.width,
+//                 item.height,
+//                 Color::BLACK,
+//             );
 
-            // Preform purchasing functions
-            if draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON)
-                && game_core.player.coins >= item.cost as u32
-            {
-                // Remove currency
-                game_core.world.spend_coins(item.cost.into());
-                game_core.player.coins -= item.cost as u32;
+//             // Preform purchasing functions
+//             if draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON)
+//                 && game_core.player.coins >= item.cost as u32
+//             {
+//                 // Remove currency
+//                 game_core.world.spend_coins(item.cost.into());
+//                 game_core.player.coins -= item.cost as u32;
 
-                // Upgrade item in inventory
-                match &(item.name)[..] {
-                    "Stun Gun" => {
-                        match item.level {
-                            0 => game_core.player.inventory.stun_gun = Some(items::StunGun::lvl1()),
-                            1 => game_core.player.inventory.stun_gun = Some(items::StunGun::lvl2()),
-                            2 => game_core.player.inventory.stun_gun = Some(items::StunGun::lvl3()),
-                            _ => (return),
-                        };
-                        item.cost += 5;
-                        item.level += 1;
-                    }
-                    "Air Bag" => {
-                        match item.level {
-                            0 => {
-                                game_core.player.inventory.air_bag = Some(items::AirBag::lvl1());
-                            }
-                            1 => {
-                                game_core.player.inventory.air_bag = Some(items::AirBag::lvl2());
-                            }
-                            2 => {
-                                game_core.player.inventory.air_bag = Some(items::AirBag::lvl3());
-                            }
-                            _ => (return),
-                        };
-                        item.cost += 5;
-                        item.level += 1;
-                    }
-                    "Flash Light" => {
-                        match item.level {
-                            0 => {
-                                game_core.player.inventory.flashlight =
-                                    Some(items::Flashlight::lvl1());
-                            }
-                            1 => {
-                                game_core.player.inventory.flashlight =
-                                    Some(items::Flashlight::lvl2());
-                            }
-                            2 => {
-                                game_core.player.inventory.flashlight =
-                                    Some(items::Flashlight::lvl3());
-                            }
-                            _ => (return),
-                        };
-                        item.cost += 5;
-                        item.level += 1;
-                    }
-                    "Flippers" => {
-                        match item.level {
-                            0 => {
-                                game_core.player.inventory.flippers = Some(items::Flippers::lvl1());
-                            }
-                            1 => {
-                                game_core.player.inventory.flippers = Some(items::Flippers::lvl2());
-                            }
-                            2 => {
-                                game_core.player.inventory.flippers = Some(items::Flippers::lvl3());
-                            }
-                            _ => (return),
-                        };
-                        item.cost += 5;
-                        item.level += 1;
-                    }
-                    _ => (return),
-                };
-            }
-        } else {
-            // outlines if not hovered
-            draw_handle.draw_rectangle_lines(
-                item.x_pose,
-                item.y_pose,
-                item.width,
-                item.height,
-                Color::BLACK,
-            );
-        }
-        // Draw text about object
-        draw_handle.draw_text(
-            &format!("{}: ${}", item.name, item.cost),
-            item.x_pose + 5,
-            item.y_pose + 5,
-            12,
-            Color::BLACK,
-        );
-    }
-}
+//                 // Upgrade item in inventory
+//                 match &(item.name)[..] {
+//                     "Stun Gun" => {
+//                         match item.level {
+//                             0 => game_core.player.inventory.stun_gun = Some(items::StunGun::lvl1()),
+//                             1 => game_core.player.inventory.stun_gun = Some(items::StunGun::lvl2()),
+//                             2 => game_core.player.inventory.stun_gun = Some(items::StunGun::lvl3()),
+//                             _ => (return),
+//                         };
+//                         item.cost += 5;
+//                         item.level += 1;
+//                     }
+//                     "Air Bag" => {
+//                         match item.level {
+//                             0 => {
+//                                 game_core.player.inventory.air_bag = Some(items::AirBag::lvl1());
+//                             }
+//                             1 => {
+//                                 game_core.player.inventory.air_bag = Some(items::AirBag::lvl2());
+//                             }
+//                             2 => {
+//                                 game_core.player.inventory.air_bag = Some(items::AirBag::lvl3());
+//                             }
+//                             _ => (return),
+//                         };
+//                         item.cost += 5;
+//                         item.level += 1;
+//                     }
+//                     "Flash Light" => {
+//                         match item.level {
+//                             0 => {
+//                                 game_core.player.inventory.flashlight =
+//                                     Some(items::Flashlight::lvl1());
+//                             }
+//                             1 => {
+//                                 game_core.player.inventory.flashlight =
+//                                     Some(items::Flashlight::lvl2());
+//                             }
+//                             2 => {
+//                                 game_core.player.inventory.flashlight =
+//                                     Some(items::Flashlight::lvl3());
+//                             }
+//                             _ => (return),
+//                         };
+//                         item.cost += 5;
+//                         item.level += 1;
+//                     }
+//                     "Flippers" => {
+//                         match item.level {
+//                             0 => {
+//                                 game_core.player.inventory.flippers = Some(items::Flippers::lvl1());
+//                             }
+//                             1 => {
+//                                 game_core.player.inventory.flippers = Some(items::Flippers::lvl2());
+//                             }
+//                             2 => {
+//                                 game_core.player.inventory.flippers = Some(items::Flippers::lvl3());
+//                             }
+//                             _ => (return),
+//                         };
+//                         item.cost += 5;
+//                         item.level += 1;
+//                     }
+//                     _ => (return),
+//                 };
+//             }
+//         } else {
+//             // outlines if not hovered
+//             draw_handle.draw_rectangle_lines(
+//                 item.x_pose,
+//                 item.y_pose,
+//                 item.width,
+//                 item.height,
+//                 Color::BLACK,
+//             );
+//         }
+//         // Draw text about object
+//         draw_handle.draw_text(
+//             &format!("{}: ${}", item.name, item.cost),
+//             item.x_pose + 5,
+//             item.y_pose + 5,
+//             12,
+//             Color::BLACK,
+//         );
+//     }
+// }
