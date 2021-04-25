@@ -135,6 +135,18 @@ pub fn render_shop(
             height: 250.0,
         };
 
+        // Get the hovered item
+        let hovered_item: &dyn ItemBase;
+        if hovering_stun_gun {
+            hovered_item = stun_gun_buy_ui.get_item();
+        } else if hovering_air_bag {
+            hovered_item = air_bag_buy_ui.get_item();
+        } else if hovering_flashlight {
+            hovered_item = flashlight_buy_ui.get_item();
+        } else {
+            hovered_item = flippers_buy_ui.get_item();
+        }
+
         // Draw background box
         draw_handle.draw_rectangle_rec(box_bounds, Color::WHITE);
         draw_handle.draw_rectangle_lines_ex(box_bounds, 3, Color::BLACK);
@@ -145,10 +157,16 @@ pub fn render_shop(
                 x: box_bounds.x + (box_bounds.width / 2.0) - 40.0,
                 y: box_bounds.y + 10.0,
             },
-            Vector2 {
-                x: 80.0,
-                y: 80.0
-            },
+            Vector2 { x: 80.0, y: 80.0 },
+            Color::BLACK,
+        );
+
+        // Render item description
+        draw_handle.draw_text(
+            &hovered_item.get_description(),
+            box_bounds.x as i32 + 10,
+            box_bounds.y as i32 + 100,
+            30,
             Color::BLACK,
         );
     }
