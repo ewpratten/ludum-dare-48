@@ -9,10 +9,10 @@ set -e
 # Make a uni-bundle
 echo "Creating a fat bundle for all platforms"
 rm -rf ./bundle/release
-rm -rf ./bundle/pink-man-swim.zip
+rm -rf ./bundle/ldgame.zip
 mkdir -p ./bundle/release
 cp -r ./assets ./bundle/release
-cp ./bundle/linux/release/pink-man-swim ./bundle/release/pink-man-swim
-cp ./bundle/windows/release/pink-man-swim.exe ./bundle/release/pink-man-swim.exe
+cp ./bundle/linux/release/ldgame ./bundle/release/ldgame
+cp ./bundle/windows/release/ldgame.exe ./bundle/release/ldgame.exe
 cd ./bundle/release
-zip -r ../pink-man-swim.zip ./
+zip -r ../ldgame.zip ./
