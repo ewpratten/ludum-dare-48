@@ -11,7 +11,6 @@ use crate::{
 
 use super::screen::Screen;
 
-
 pub struct InGameScreen {
     shader_time_var_location: i32,
 }

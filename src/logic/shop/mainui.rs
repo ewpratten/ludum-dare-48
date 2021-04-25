@@ -1,17 +1,15 @@
-use raylib::prelude::*;
-
+use super::item::ShopItemWrapper;
 use crate::{
     gamecore::{GameCore, GameState},
     items::{AirBag, Flashlight, Flippers, ItemBase, StunGun},
     lib::{utils::button::OnScreenButton, wrappers::audio::player::AudioPlayer},
 };
-
-use super::{item::ShopItemWrapper, itemui::ShopItemUi};
+use raylib::prelude::*;
 
 pub fn render_shop(
     draw_handle: &mut RaylibDrawHandle,
     _thread: &RaylibThread,
-    audio_system: &mut AudioPlayer,
+    _audio_system: &mut AudioPlayer,
     game_core: &mut GameCore,
     bounds: Rectangle,
 ) -> Option<GameState> {
@@ -87,10 +85,26 @@ pub fn render_shop(
     );
 
     // Render items
-    stun_gun_buy_ui.render(draw_handle, &game_core.player, &game_core.player.inventory.stun_gun);
-    air_bag_buy_ui.render(draw_handle, &game_core.player, &game_core.player.inventory.air_bag);
-    flashlight_buy_ui.render(draw_handle, &game_core.player, &game_core.player.inventory.flashlight);
-    flippers_buy_ui.render(draw_handle, &game_core.player, &game_core.player.inventory.flippers);
+    stun_gun_buy_ui.render(
+        draw_handle,
+        &game_core.player,
+        &game_core.player.inventory.stun_gun,
+    );
+    air_bag_buy_ui.render(
+        draw_handle,
+        &game_core.player,
+        &game_core.player.inventory.air_bag,
+    );
+    flashlight_buy_ui.render(
+        draw_handle,
+        &game_core.player,
+        &game_core.player.inventory.flashlight,
+    );
+    flippers_buy_ui.render(
+        draw_handle,
+        &game_core.player,
+        &game_core.player.inventory.flippers,
+    );
 
     // Handle buying items
     if stun_gun_buy_ui.can_player_afford(&game_core.player, &game_core.player.inventory.stun_gun)
@@ -105,7 +119,8 @@ pub fn render_shop(
         let item = air_bag_buy_ui.purchase(&mut game_core.player);
         game_core.player.inventory.air_bag = Some(item);
     }
-    if flashlight_buy_ui.can_player_afford(&game_core.player, &game_core.player.inventory.flashlight)
+    if flashlight_buy_ui
+        .can_player_afford(&game_core.player, &game_core.player.inventory.flashlight)
         && flashlight_buy_ui.user_clicked_buy(draw_handle)
     {
         let item = flashlight_buy_ui.purchase(&mut game_core.player);
@@ -151,8 +166,7 @@ pub fn render_shop(
         draw_handle.draw_rectangle_rec(box_bounds, Color::WHITE);
         draw_handle.draw_rectangle_lines_ex(box_bounds, 3, Color::BLACK);
 
-			
-		hovered_item.get_texture(
+        hovered_item.get_texture(
             draw_handle,
             &game_core.resources,
             Rectangle {
@@ -160,9 +174,8 @@ pub fn render_shop(
                 y: box_bounds.y + 10.0,
                 width: (80.0),
                 height: (80.0),
-            }
+            },
         );
-		
 
         // Render item description
         draw_handle.draw_text(

@@ -1,11 +1,13 @@
 use raylib::prelude::*;
 
-use crate::{gamecore::{GameCore, GameState}, lib::{utils::calculate_linear_slide, wrappers::audio::player::AudioPlayer}};
+use crate::{
+    gamecore::{GameCore, GameState},
+    lib::{utils::calculate_linear_slide, wrappers::audio::player::AudioPlayer},
+};
 
 use super::screen::Screen;
 
 const SECONDS_PER_LOGO: f64 = 4.0;
-const RUST_ORANGE: Color = Color::new(222, 165, 132, 255);
 
 #[derive(Debug, PartialEq)]
 enum LoadingScreenState {
@@ -138,7 +140,7 @@ impl Screen for LoadingScreen {
     fn render(
         &mut self,
         draw_handle: &mut RaylibDrawHandle,
-        thread: &RaylibThread,
+        _thread: &RaylibThread,
         _audio_system: &mut AudioPlayer,
         game_core: &mut GameCore,
     ) -> Option<GameState> {

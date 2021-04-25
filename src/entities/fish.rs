@@ -1,10 +1,7 @@
 use rand::{prelude::ThreadRng, Rng};
 use raylib::prelude::*;
 
-use crate::{
-    player::Player,
-    resources::GlobalResources,
-};
+use crate::{player::Player, resources::GlobalResources};
 
 const FISH_VISION: f32 = 25.0;
 const FISH_MAX_SPEED: f32 = 2.0;
@@ -55,7 +52,12 @@ impl FishEntity {
         return output;
     }
 
-    pub fn handle_follow_player(&mut self, player: &Player, _dt: f64, other_fish: &Vec<FishEntity>) {
+    pub fn handle_follow_player(
+        &mut self,
+        player: &Player,
+        _dt: f64,
+        other_fish: &Vec<FishEntity>,
+    ) {
         let mut acceleration: Vector2 = Vector2::zero();
 
         let mut steer: Vector2 = Vector2::zero();
@@ -133,7 +135,6 @@ impl FishEntity {
     }
 
     pub fn handle_free_movement(&mut self, player: &mut Player, _dt: f64) {
-
         // Handle player picking up fish
         if player.position.distance_to(self.position).abs() <= player.size.y * 2.2 {
             self.following_player = true;
