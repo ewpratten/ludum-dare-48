@@ -12,7 +12,7 @@ rm -rf ./bundle/linux/release-x86_64-unknown-linux-gnu.zip
 mkdir -p ./bundle/linux/release
 
 echo "Copying binary"
-cp ./target/x86_64-unknown-linux-gnu/release/one-breath ./bundle/linux/release
+cp ./target/x86_64-unknown-linux-gnu/release/pink-man-swim ./bundle/linux/release
 
 echo "Copying assets"
 cp -r ./assets ./bundle/linux/release
