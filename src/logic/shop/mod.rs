@@ -36,7 +36,7 @@ impl ShopScreen {
         // Title
         draw_handle.draw_text(
             "SHOP",
-            bounds.x as i32 + 30,
+            bounds.x as i32 + (bounds.width / 2.0) as i32 - 50,
             bounds.y as i32 + 20,
             40,
             Color::BLACK,
