@@ -1,4 +1,7 @@
-# ludum-dare-48
+<img src="./assets/img/logos/readme.png" width="100%">
+
+# Pink Man Swim
+
 
 [![Build](https://github.com/Ewpratten/ludum-dare-48/actions/workflows/build.yml/badge.svg)](https://github.com/Ewpratten/ludum-dare-48/actions/workflows/build.yml)
 [![Bundle](https://github.com/Ewpratten/ludum-dare-48/actions/workflows/bundle.yml/badge.svg)](https://github.com/Ewpratten/ludum-dare-48/actions/workflows/bundle.yml)
