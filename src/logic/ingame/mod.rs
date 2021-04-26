@@ -3,13 +3,11 @@ mod playerlogic;
 
 use raylib::prelude::*;
 
-use crate::{
-    entities::enemy::base::EnemyBase,
-    gamecore::{GameCore, GameState},
-    lib::wrappers::audio::player::AudioPlayer,
-};
+use crate::{entities::enemy::{base::EnemyBase, whirlpool::Whirlpool}, gamecore::{GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer};
 
 use super::screen::Screen;
+use crate::entities::fish::FishEntity;
+
 
 pub struct InGameScreen {
     shader_time_var_location: i32,
@@ -239,6 +237,27 @@ impl Screen for InGameScreen {
                         dt,
                     );
                 }
+
+				// Iterates over whirlpools and runs render and logic funcs
+				for whirlpool_mob in game_core.world.whirlpool.iter_mut(){
+					whirlpool_mob.handle_logic(&mut game_core.player, dt);
+					whirlpool_mob.render(&mut context_2d, &mut game_core.player, &mut game_core.resources, dt);
+
+					// Spawns 10 fish on spawn
+					if whirlpool_mob.should_remove(){
+						for _ in 0..10{
+							game_core.world.fish.push(FishEntity::new(whirlpool_mob.position));
+						}
+					}
+					
+					
+				}
+
+				// Removes whirlpools set for removal
+				game_core.world.whirlpool.retain(|x| !x.should_remove());
+				
+
+
 
                 // Render transponder
                 game_core.resources.transponder.draw(

@@ -20,7 +20,7 @@ pub fn update_player_movement(
     // Handle player movement
     let mouse_pose = draw_handle.get_mouse_position();
     let mouse_world_pose = draw_handle.get_screen_to_world2D(mouse_pose, game_core.master_camera);
-    let raw_movement_direction = mouse_world_pose - game_core.player.position;
+    let mut raw_movement_direction = mouse_world_pose - game_core.player.position;
     let mut normalized_movement_direction = raw_movement_direction;
     normalized_movement_direction.normalize();
 
@@ -157,6 +157,70 @@ pub fn update_player_movement(
             .speed_increase;
     }
 
+
+
+
+	// Creates variable to calculate the distant
+	let mut movement_drift = Vector2::new(0.0, 0.0);
+
+	// Check each whirlpool for effects
+	for whirlpool in game_core.world.whirlpool.iter_mut(){
+		
+		
+		// check if its in range and not to close
+		if game_core.player.position.distance_to(whirlpool.position) <= 100.0 && game_core.player.position.distance_to(whirlpool.position) >= 10.0{
+
+			// Calculates info for formulas
+
+			// Deltas between positions
+			let net_pose = game_core.player.position - whirlpool.position;
+
+			// Angle between: UNITS: RADIANS
+			let angle = net_pose.y.atan2(net_pose.x);
+
+
+			// Calculates force
+			let force = 15.0 / game_core.player.position.distance_to(whirlpool.position);
+
+			// Calculates componets of force
+			let mut force_x = (force as f32  * angle.cos()).clamp(-5.0, 5.0);
+			let mut force_y = (force as f32 * angle.sin()).clamp(-5.0, 5.0);
+
+			// Prevents Nan erros
+			if force_x.is_nan(){
+				force_x = 5.0 * net_pose.x;
+			}
+
+			if force_y.is_nan(){
+				force_y = 5.0 * net_pose.y;
+			}
+
+			// Adds values to drift tracker
+			movement_drift.x -= force_x;
+			movement_drift.y -= force_y;
+
+		}
+
+	}
+
+	// Checks collision
+	game_core.player.position.x += movement_drift.x;
+	for collider in game_core.world.colliders.iter() {
+		if game_core.player.collides_with_rec(collider) {
+			game_core.player.position.x -= movement_drift.x;
+			break;
+		}
+    }
+
+	game_core.player.position.y += movement_drift.y;
+	for collider in game_core.world.colliders.iter() {
+		if game_core.player.collides_with_rec(collider) {
+			game_core.player.position.y -= movement_drift.y;
+			break;
+		}
+	}
+		
+
     // Handle movement and collisions
     if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0
         && !game_core.player.is_stunned()
@@ -191,7 +255,12 @@ pub fn update_player_movement(
     // Handle updating the stun timer
     if player_stunned {
         game_core.player.stun_timer -= dt;
-    }
+	}
+
+
+	
+
+
 
     // Move the camera to follow the player
     let player_screen_position =
@@ -199,7 +268,7 @@ pub fn update_player_movement(
 
     // Camera only moves if you get close to the edge of the screen
     if player_screen_position.distance_to(window_center).abs() > 100.0 {
-        game_core.master_camera.target += player_real_movement;
+        game_core.master_camera.target += player_real_movement + movement_drift;
     }
 
     // If the player is not on screen, snap the camera to them

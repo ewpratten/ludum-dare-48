@@ -32,6 +32,7 @@ pub struct GlobalResources {
     pub jellyfish_animation_attack: FrameAnimationWrapper,
     pub octopus_animation_regular: FrameAnimationWrapper,
     pub octopus_animation_attack: FrameAnimationWrapper,
+	pub whirlpool: FrameAnimationWrapper,
 
     // Darkness layer
     pub darkness_overlay: Texture2D,
@@ -247,6 +248,15 @@ impl GlobalResources {
                 6,
                 2,
             ),
+            whirlpool: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/whirlpool.png")?,
+                )?,
+                Vector2 { x: 20.0, y: 20.0 },
+                4,
+                4,
+			),
         })
     }
 }

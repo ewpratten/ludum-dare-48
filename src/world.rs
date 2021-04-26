@@ -6,8 +6,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     entities::{
-        enemy::{jellyfish::JellyFish, octopus::Octopus},
+        enemy::{jellyfish::JellyFish, octopus::Octopus, whirlpool::Whirlpool,},
         fish::FishEntity,
+		
     },
     player::Player,
 };
@@ -26,8 +27,11 @@ pub struct World {
     #[serde(skip)]
     pub colliders: Vec<Rectangle>,
 
+	// Mobs
     pub jellyfish: Vec<JellyFish>,
     pub octopus: Vec<Octopus>,
+	pub whirlpool: Vec<Whirlpool>,
+    
 }
 
 impl World {
@@ -52,6 +56,8 @@ impl World {
                 height: collider.height,
             });
         }
+
+		
 
         Ok(result)
     }
