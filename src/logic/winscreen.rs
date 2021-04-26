@@ -22,8 +22,8 @@ impl Screen for WinScreen {
     fn render(
         &mut self,
         draw_handle: &mut RaylibDrawHandle,
-        thread: &RaylibThread,
-        audio_system: &mut AudioPlayer,
+        _thread: &RaylibThread,
+        _audio_system: &mut AudioPlayer,
         game_core: &mut GameCore,
     ) -> Option<GameState> {
         let win_height = draw_handle.get_screen_height();
@@ -57,7 +57,8 @@ impl Screen for WinScreen {
         // Render message
         draw_handle.draw_text(
             "You can use the transponder to \ncontact help!",
-            ((win_width / 2) - ((SCREEN_PANEL_SIZE.x as i32 + 6) / 2)) + (0.15 * SCREEN_PANEL_SIZE.x)as i32,
+            ((win_width / 2) - ((SCREEN_PANEL_SIZE.x as i32 + 6) / 2))
+                + (0.15 * SCREEN_PANEL_SIZE.x) as i32,
             (win_height / 2) - (SCREEN_PANEL_SIZE.y as i32 / 2) + 80,
             15,
             Color::BLACK,
@@ -87,7 +88,7 @@ impl Screen for WinScreen {
         {
             game_core.switch_state(GameState::MainMenu, Some(draw_handle));
         }
-		
+
         return None;
     }
 }

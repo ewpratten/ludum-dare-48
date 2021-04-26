@@ -3,26 +3,19 @@ mod playerlogic;
 
 use raylib::prelude::*;
 
-use crate::{entities::enemy::{base::EnemyBase, whirlpool::Whirlpool}, gamecore::{GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer, pallette::{SKY, WATER, WATER_DARK}};
+use crate::{entities::enemy::{base::EnemyBase, whirlpool::Whirlpool}, gamecore::{GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer};
 
 use super::screen::Screen;
 use crate::entities::fish::FishEntity;
 
 
-pub enum InGameState {
-    BUYING,
-    SWIMMING,
-}
-
 pub struct InGameScreen {
-    current_state: InGameState,
     shader_time_var_location: i32,
 }
 
 impl InGameScreen {
     pub unsafe fn new(game_core: &GameCore) -> Self {
         Self {
-            current_state: InGameState::SWIMMING,
             shader_time_var_location: raylib::ffi::GetShaderLocation(
                 *game_core.resources.pixel_shader,
                 rstr!("time").as_ptr(),
@@ -185,8 +178,8 @@ impl Screen for InGameScreen {
     fn render(
         &mut self,
         draw_handle: &mut RaylibDrawHandle,
-        thread: &RaylibThread,
-        audio_system: &mut AudioPlayer,
+        _thread: &RaylibThread,
+        _audio_system: &mut AudioPlayer,
         game_core: &mut GameCore,
     ) -> Option<GameState> {
         // Calculate DT
@@ -204,7 +197,6 @@ impl Screen for InGameScreen {
             x: (win_width as f32 / 2.0),
             y: (win_height as f32 / 2.0),
         };
-        let camera_window_center = window_center * (1.0 / game_core.master_camera.zoom);
 
         // Update player movement
         playerlogic::update_player_movement(draw_handle, game_core, window_center);
@@ -261,12 +253,6 @@ impl Screen for InGameScreen {
 
 				game_core.world.whirlpool.retain(|x| !x.should_remove());
 				
-				
-				
-
-
-
-
 
 
 

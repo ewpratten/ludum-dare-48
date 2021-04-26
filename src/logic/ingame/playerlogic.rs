@@ -1,13 +1,9 @@
 use raylib::prelude::*;
 
-use crate::{
-    gamecore::GameCore,
-    pallette::{TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64, TRANSLUCENT_WHITE_96},
-};
+use crate::gamecore::GameCore;
 
 const NORMAL_PLAYER_SPEED: i32 = 1;
 const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
-const CAMERA_FOLLOW_SPEED: f32 = 0.7;
 const TURN_SPEED: f32 = 0.15;
 const BOOST_DECREASE_PER_SECOND: f32 = 0.65;
 const BOOST_REGEN_PER_SECOND: f32 = 0.25;
@@ -79,7 +75,9 @@ pub fn update_player_movement(
     let user_request_action = draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_RIGHT_BUTTON);
 
     if user_request_action {
-        game_core.player.begin_attack(&mut game_core.world, draw_handle.get_time());
+        game_core
+            .player
+            .begin_attack(&mut game_core.world, draw_handle.get_time());
     }
 
     // Move the player in their direction
@@ -150,7 +148,13 @@ pub fn update_player_movement(
 
     // Handle the player wearing flippers
     if game_core.player.inventory.flippers.is_some() {
-        player_real_movement *= game_core.player.inventory.flippers.as_ref().unwrap().speed_increase;
+        player_real_movement *= game_core
+            .player
+            .inventory
+            .flippers
+            .as_ref()
+            .unwrap()
+            .speed_increase;
     }
 
 
@@ -256,8 +260,6 @@ pub fn update_player_movement(
 
 
     // Move the camera to follow the player
-    let direction_from_cam_to_player =
-        (game_core.player.position - window_center) - game_core.master_camera.target;
     let player_screen_position =
         draw_handle.get_world_to_screen2D(game_core.player.position, game_core.master_camera);
 

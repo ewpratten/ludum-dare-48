@@ -1,11 +1,11 @@
 use crate::{
     lib::utils::calculate_linear_slide,
-    pallette::{TRANSLUCENT_RED_64, TRANSLUCENT_WHITE_128, TRANSLUCENT_WHITE_64},
+    pallette::{TRANSLUCENT_RED_64, TRANSLUCENT_WHITE_128},
     player::Player,
 };
 
 use super::base::EnemyBase;
-use rand::{prelude::ThreadRng, Rng};
+use rand::Rng;
 use raylib::prelude::*;
 use serde::{Deserialize, Serialize};
 
@@ -13,7 +13,6 @@ const OCTOPUS_SUCK_AIR_DELAY: f64 = 3.5;
 const OCTOPUS_SUCK_AIR_RANGE: f32 = 70.0;
 const OCTOPUS_SUCK_AIR_DURATION: f64 = 1.0;
 const OCTOPUS_SUCK_AIR_AMOUNT: f32 = 0.1;
-// const RNG: ThreadRng = rand::thread_rng();
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 struct OctopusAirBubble {
@@ -124,7 +123,7 @@ impl EnemyBase for Octopus {
         }
     }
 
-    fn handle_logic(&mut self, player: &mut crate::player::Player, dt: f64) {
+    fn handle_logic(&mut self, player: &mut crate::player::Player, _dt: f64) {
         if self.suck_air_time_remaining > 0.0 && !self.has_taken_air_from_player {
             if player.position.distance_to(self.current_position).abs() <= OCTOPUS_SUCK_AIR_RANGE {
                 // Take air from the player
@@ -136,7 +135,7 @@ impl EnemyBase for Octopus {
         }
     }
 
-    fn handle_getting_attacked(&mut self, stun_duration: f64, current_time: f64) {
+    fn handle_getting_attacked(&mut self, stun_duration: f64, _current_time: f64) {
         self.stunned_timer = stun_duration;
         self.max_stunned_time = stun_duration;
     }

@@ -1,5 +1,9 @@
-use failure::Error;
-use raylib::{RaylibHandle, RaylibThread, math::Vector2, shaders::Shader, texture::{Image, RenderTexture2D, Texture2D}};
+use raylib::{
+    math::Vector2,
+    shaders::Shader,
+    texture::{Image, RenderTexture2D, Texture2D},
+    RaylibHandle, RaylibThread,
+};
 
 use crate::lib::wrappers::animation::FrameAnimationWrapper;
 
@@ -13,7 +17,7 @@ pub struct GlobalResources {
     pub player_animation_boost_charge: FrameAnimationWrapper,
     pub player_animation_boost: FrameAnimationWrapper,
     pub player_animation_stunned: FrameAnimationWrapper,
-    
+
     // Fish
     pub fish_animation_idle: FrameAnimationWrapper,
     pub fish_animation_swim: FrameAnimationWrapper,
@@ -31,7 +35,7 @@ pub struct GlobalResources {
 
     // Darkness layer
     pub darkness_overlay: Texture2D,
-    
+
     // Backgrounds
     pub background_front: Texture2D,
     pub background_back: Texture2D,
@@ -39,25 +43,24 @@ pub struct GlobalResources {
     // Shop & items
     pub shop_background: Texture2D,
 
-	pub flashlight_one: Texture2D,
-	pub flashlight_two: Texture2D,
-	pub flashlight_three: Texture2D,
+    pub flashlight_one: Texture2D,
+    pub flashlight_two: Texture2D,
+    pub flashlight_three: Texture2D,
 
-	pub stun_gun_one: Texture2D,
-	pub stun_gun_two: Texture2D,
-	pub stun_gun_three: Texture2D,
+    pub stun_gun_one: Texture2D,
+    pub stun_gun_two: Texture2D,
+    pub stun_gun_three: Texture2D,
 
-	pub air_one: Texture2D,
-	pub air_two: Texture2D,
-	pub air_three: Texture2D,
+    pub air_one: Texture2D,
+    pub air_two: Texture2D,
+    pub air_three: Texture2D,
 
-	pub flippers_one: Texture2D,
-	pub flippers_two: Texture2D,
-	pub flippers_three: Texture2D,
+    pub flippers_one: Texture2D,
+    pub flippers_two: Texture2D,
+    pub flippers_three: Texture2D,
 
-	// Treasure
-	pub transponder: FrameAnimationWrapper,
-	
+    // Treasure
+    pub transponder: FrameAnimationWrapper,
 }
 
 impl GlobalResources {
@@ -130,7 +133,11 @@ impl GlobalResources {
                 &Image::load_image("./assets/img/map/cave.png")?,
             )?,
             pixel_shader: raylib.load_shader(&thread, None, Some("./assets/shaders/pixel.fs"))?,
-            shader_texture: raylib.load_render_texture(&thread, raylib.get_screen_width() as u32, raylib.get_screen_height() as u32)?,
+            shader_texture: raylib.load_render_texture(
+                &thread,
+                raylib.get_screen_width() as u32,
+                raylib.get_screen_height() as u32,
+            )?,
             jellyfish_animation_regular: FrameAnimationWrapper::new(
                 raylib.load_texture_from_image(
                     &thread,
@@ -240,7 +247,6 @@ impl GlobalResources {
                 6,
                 2,
             ),
-			
         })
     }
 }
