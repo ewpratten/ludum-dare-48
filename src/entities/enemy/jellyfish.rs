@@ -6,7 +6,7 @@ use crate::{
 use raylib::prelude::*;
 use serde::{Deserialize, Serialize};
 
-const JELLYFISH_STUN_DURATION: f64 = 0.75;
+const JELLYFISH_STUN_DURATION: f64 = 1.5;
 const JELLYFISH_STUN_REACH: f32 = 20.0;
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]

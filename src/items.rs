@@ -32,25 +32,25 @@ impl StunGun {
     pub fn lvl1() -> Self {
         Self {
             range: 30.0,
-            duration: 0.75,
+            duration: 2.0,
             level: 1,
-            cost: 30,
+            cost: 15,
         }
     }
     pub fn lvl2() -> Self {
         Self {
             range: 60.0,
-            duration: 1.25,
+            duration: 2.5,
             level: 2,
-            cost: 40,
+            cost: 25,
         }
     }
     pub fn lvl3() -> Self {
         Self {
             range: 80.0,
-            duration: 1.0,
+            duration: 3.0,
             level: 3,
-            cost: 50,
+            cost: 40,
         }
     }
 }
@@ -111,14 +111,14 @@ impl AirBag {
         Self {
             extra_oxygen: 0.15,
             level: 1,
-            cost: 30,
+            cost: 25,
         }
     }
     pub fn lvl2() -> Self {
         Self {
             extra_oxygen: 0.30,
             level: 2,
-            cost: 40,
+            cost: 35,
         }
     }
     pub fn lvl3() -> Self {
@@ -186,21 +186,21 @@ impl Flashlight {
         Self {
             radius: 0.25,
             level: 1,
-            cost: 40,
+            cost: 20,
         }
     }
     pub fn lvl2() -> Self {
         Self {
             radius: 0.5,
             level: 2,
-            cost: 50,
+            cost: 30,
         }
     }
     pub fn lvl3() -> Self {
         Self {
             radius: 1.0,
             level: 3,
-            cost: 60,
+            cost: 50,
         }
     }
 }
@@ -259,21 +259,21 @@ pub struct Flippers {
 impl Flippers {
     pub fn lvl1() -> Self {
         Self {
-            speed_increase: 1.2,
+            speed_increase: 1.1,
             level: 1,
             cost: 30,
         }
     }
     pub fn lvl2() -> Self {
         Self {
-            speed_increase: 1.5,
+            speed_increase: 1.2,
             level: 2,
             cost: 40,
         }
     }
     pub fn lvl3() -> Self {
         Self {
-            speed_increase: 1.8,
+            speed_increase: 1.3,
             level: 3,
             cost: 50,
         }
