@@ -4,6 +4,8 @@ use crate::gamecore::GameCore;
 
 const NORMAL_PLAYER_SPEED: i32 = 1;
 const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
+const PLAYER_FRICTION: f32 = 1.05;
+const WHIRLPOOL_PULL: f32 = 3.0;
 const TURN_SPEED: f32 = 0.15;
 const BOOST_DECREASE_PER_SECOND: f32 = 0.65;
 const BOOST_REGEN_PER_SECOND: f32 = 0.25;
@@ -157,18 +159,14 @@ pub fn update_player_movement(
             .speed_increase;
     }
 
-
-
-
-	// Creates variable to calculate the distant
-	let mut movement_drift = Vector2::new(0.0, 0.0);
+    let mut should_apply_friction: bool = true; 
 
 	// Check each whirlpool for effects
 	for whirlpool in game_core.world.whirlpool.iter_mut(){
 		
 		
 		// check if its in range and not to close
-		if game_core.player.position.distance_to(whirlpool.position) <= 100.0 && game_core.player.position.distance_to(whirlpool.position) >= 10.0{
+		if game_core.player.position.distance_to(whirlpool.position) <= 50.0 && game_core.player.position.distance_to(whirlpool.position) >= 10.0{
 
 			// Calculates info for formulas
 
@@ -180,7 +178,7 @@ pub fn update_player_movement(
 
 
 			// Calculates force
-			let force = 15.0 / game_core.player.position.distance_to(whirlpool.position);
+			let force = WHIRLPOOL_PULL / game_core.player.position.distance_to(whirlpool.position);
 
 			// Calculates componets of force
 			let mut force_x = (force as f32  * angle.cos()).clamp(-5.0, 5.0);
@@ -196,56 +194,54 @@ pub fn update_player_movement(
 			}
 
 			// Adds values to drift tracker
-			movement_drift.x -= force_x;
-			movement_drift.y -= force_y;
+			game_core.player.additional_vel.x -= force_x;
+			game_core.player.additional_vel.y -= force_y;
 
+            should_apply_friction = false;
 		}
 
 	}
 
-	// Checks collision
-	game_core.player.position.x += movement_drift.x;
-	for collider in game_core.world.colliders.iter() {
-		if game_core.player.collides_with_rec(collider) {
-			game_core.player.position.x -= movement_drift.x;
-			break;
-		}
+    if should_apply_friction {
+        game_core.player.additional_vel.x /= PLAYER_FRICTION;
+        game_core.player.additional_vel.y /= PLAYER_FRICTION;
+        if f32::round(game_core.player.additional_vel.x * 10.0) == 0.0 {
+            game_core.player.additional_vel.x = 0.0;
+        }
+        if f32::round(game_core.player.additional_vel.y * 10.0) == 0.0 {
+            game_core.player.additional_vel.y = 0.0;
+        }
     }
 
-	game_core.player.position.y += movement_drift.y;
-	for collider in game_core.world.colliders.iter() {
-		if game_core.player.collides_with_rec(collider) {
-			game_core.player.position.y -= movement_drift.y;
-			break;
-		}
-	}
-		
+    if !(raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0) {
+        player_real_movement = Vector2::zero();
+    }
 
     // Handle movement and collisions
-    if raw_movement_direction.distance_to(Vector2::zero()) > game_core.player.size.y / 2.0
-        && !game_core.player.is_stunned()
-    {
+    if !game_core.player.is_stunned() {
         if game_core.player.is_moving {
             // move in x
-            game_core.player.position.x += player_real_movement.x;
+            game_core.player.position.x += player_real_movement.x + game_core.player.additional_vel.x;
 
             // Check for any collisions
             for collider in game_core.world.colliders.iter() {
                 if game_core.player.collides_with_rec(collider) {
-                    game_core.player.position.x -= player_real_movement.x;
+                    game_core.player.position.x -= player_real_movement.x + game_core.player.additional_vel.x;
                     player_real_movement.x = 0.0;
+                    game_core.player.additional_vel.x = 0.0;
                     break;
                 }
             }
 
             // move in y
-            game_core.player.position.y += player_real_movement.y;
+            game_core.player.position.y += player_real_movement.y + game_core.player.additional_vel.y;
 
             // Check for any collisions
             for collider in game_core.world.colliders.iter() {
                 if game_core.player.collides_with_rec(collider) {
-                    game_core.player.position.y -= player_real_movement.y;
+                    game_core.player.position.y -= player_real_movement.y + game_core.player.additional_vel.y;
                     player_real_movement.y = 0.0;
+                    game_core.player.additional_vel.y = 0.0;
                     break;
                 }
             }
@@ -268,7 +264,7 @@ pub fn update_player_movement(
 
     // Camera only moves if you get close to the edge of the screen
     if player_screen_position.distance_to(window_center).abs() > 100.0 {
-        game_core.master_camera.target += player_real_movement + movement_drift;
+        game_core.master_camera.target += player_real_movement + game_core.player.additional_vel;
     }
 
     // If the player is not on screen, snap the camera to them

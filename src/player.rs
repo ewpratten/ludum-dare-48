@@ -32,6 +32,7 @@ impl PlayerInventory {
 pub struct Player {
     pub position: Vector2,
     pub direction: Vector2,
+    pub additional_vel: Vector2,
     pub size: Vector2,
     pub radius: f32,
     pub coins: u32,
@@ -48,6 +49,7 @@ pub struct Player {
 impl Player {
     pub fn new(spawn: &Vector2) -> Self {
         Self {
+            additional_vel: Vector2::zero(),
             boost_percent: 1.0,
             size: Vector2 { x: 11.0, y: 21.0 },
             breath_percent: 1.0,
