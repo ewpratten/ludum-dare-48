@@ -10,9 +10,6 @@ use crate::{
 use raylib::prelude::*;
 use serde::{Deserialize, Serialize};
 
-const AOE_RING_MAX_RADIUS: f32 = 60.0;
-const STUN_ATTACK_TIME: f64 = 0.75;
-
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 pub struct PlayerInventory {
     pub stun_gun: Option<StunGun>,
@@ -35,6 +32,7 @@ impl PlayerInventory {
 pub struct Player {
     pub position: Vector2,
     pub direction: Vector2,
+    pub additional_vel: Vector2,
     pub size: Vector2,
     pub radius: f32,
     pub coins: u32,
@@ -51,6 +49,7 @@ pub struct Player {
 impl Player {
     pub fn new(spawn: &Vector2) -> Self {
         Self {
+            additional_vel: Vector2::zero(),
             boost_percent: 1.0,
             size: Vector2 { x: 11.0, y: 21.0 },
             breath_percent: 1.0,
@@ -74,33 +73,6 @@ impl Player {
     }
 
     pub fn collides_with_rec(&self, rectangle: &Rectangle) -> bool {
-        // // Build a bounding box of the player by their corners
-        // let top_left_corner = self.position - (self.size / 2.0);
-        // let bottom_right_corner = self.position + (self.size / 2.0);
-        // let top_right_corner = Vector2 {
-        //     x: bottom_right_corner.x,
-        //     y: top_left_corner.y,
-        // };
-        // let bottom_left_corner = Vector2 {
-        //     x: top_left_corner.x,
-        //     y: bottom_right_corner.y,
-        // };
-
-        // // Get the rotation
-        // let rotation = Vector2::zero().angle_to(self.direction);
-
-        // // Rotate the bounds
-        // let top_left_corner = rotate_vector(top_left_corner, rotation);
-        // let bottom_right_corner = rotate_vector(bottom_right_corner, rotation);
-        // let top_right_corner = rotate_vector(top_right_corner, rotation);
-        // let bottom_left_corner = rotate_vector(bottom_left_corner, rotation);
-
-        // // Check for collisions
-        // return rectangle.check_collision_point_rec(top_left_corner)
-        //     || rectangle.check_collision_point_rec(bottom_right_corner)
-        //     || rectangle.check_collision_point_rec(top_right_corner)
-        //     || rectangle.check_collision_point_rec(bottom_left_corner);
-
         return rectangle.check_collision_circle_rec(self.position, self.radius);
     }
 
@@ -125,6 +97,11 @@ impl Player {
             for octopus in world.octopus.iter_mut() {
                 if octopus.current_position.distance_to(self.position).abs() <= stun_reach {
                     octopus.handle_getting_attacked(self.attacking_timer, current_time);
+                }
+            }
+			for whirlpool in world.whirlpool.iter_mut() {
+                if whirlpool.position.distance_to(self.position).abs() <= stun_reach {
+                    whirlpool.handle_getting_attacked(self.attacking_timer, current_time);
                 }
             }
         }

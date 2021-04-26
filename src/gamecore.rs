@@ -5,15 +5,13 @@ use std::{fmt, fs::File, io::BufReader};
 use raylib::{
     camera::Camera2D, math::Vector2, prelude::RaylibDrawHandle, RaylibHandle, RaylibThread,
 };
-
+use failure::Error;
 use crate::{
     player::{Player, PlayerInventory},
     resources::GlobalResources,
     world::World,
 };
 
-use failure::Error;
-use log::debug;
 use serde::{Deserialize, Serialize};
 
 /// Overall states for the game
@@ -26,7 +24,7 @@ pub enum GameState {
     InGame,
     GameEnd,
     InShop,
-	WinGame
+    WinGame,
 }
 
 impl fmt::Display for GameState {
@@ -80,7 +78,6 @@ impl GameProgress {
     }
 
     pub fn update(&mut self, new_progress: &GameProgress) {
-
         // Bring in new data
         self.coins = new_progress.coins;
         self.inventory = new_progress.inventory.clone();
@@ -92,7 +89,6 @@ impl GameProgress {
         if result.is_err() {
             println!("Could not save game state. Holding in RAM");
         }
-
     }
 }
 
@@ -152,8 +148,6 @@ impl GameCore {
     }
 
     pub fn switch_state(&mut self, new_state: GameState, draw_handle: Option<&RaylibDrawHandle>) {
-        debug!("Switching global state to: {}", new_state);
-
         self.last_state = self.state;
         self.state = new_state;
 

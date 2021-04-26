@@ -1,10 +1,6 @@
-use std::marker::PhantomData;
-
-use raylib::prelude::*;
-
-use crate::{items::ItemBase, player::Player, world::World};
-
 use super::itemui::ShopItemUi;
+use crate::{items::ItemBase, player::Player};
+use raylib::prelude::*;
 
 pub struct ShopItemWrapper<T: ItemBase + Clone> {
     bounds: Rectangle,
@@ -17,7 +13,7 @@ impl<T: ItemBase + Clone> ShopItemWrapper<T> {
         item: T,
         from_inventory: &Option<T>,
         first_item_bounds: Rectangle,
-        index: u8
+        index: u8,
     ) -> Self {
         // Build new bounds for the UI row
         let new_bounds = Rectangle {
@@ -47,7 +43,9 @@ impl<T: ItemBase + Clone> ShopItemWrapper<T> {
     }
 
     pub fn can_player_afford(&self, player: &Player, players_item: &Option<T>) -> bool {
-        return player.coins >= self.item.get_cost() && ((players_item.is_some() && players_item.as_ref().unwrap().get_level() < 3) || players_item.is_none());
+        return player.coins >= self.item.get_cost()
+            && ((players_item.is_some() && players_item.as_ref().unwrap().get_level() < 3)
+                || players_item.is_none());
     }
 
     pub fn purchase(&self, player: &mut Player) -> T {
@@ -59,14 +57,26 @@ impl<T: ItemBase + Clone> ShopItemWrapper<T> {
     }
 
     pub fn user_clicked_buy(&self, draw_handle: &mut RaylibDrawHandle) -> bool {
-        return self.ui.buy_button_hovered && draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON);
+        return self.ui.buy_button_hovered
+            && draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON);
     }
 
     pub fn user_hovering_row(&self, draw_handle: &mut RaylibDrawHandle) -> bool {
-        return self.bounds.check_collision_point_rec(draw_handle.get_mouse_position());
+        return self
+            .bounds
+            .check_collision_point_rec(draw_handle.get_mouse_position());
     }
 
-    pub fn render(&mut self, draw_handle: &mut RaylibDrawHandle, player: &Player, players_item: &Option<T>) {
-        self.ui.render(draw_handle, self.bounds, self.can_player_afford(player, players_item));
+    pub fn render(
+        &mut self,
+        draw_handle: &mut RaylibDrawHandle,
+        player: &Player,
+        players_item: &Option<T>,
+    ) {
+        self.ui.render(
+            draw_handle,
+            self.bounds,
+            self.can_player_afford(player, players_item),
+        );
     }
 }

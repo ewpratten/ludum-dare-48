@@ -2,7 +2,6 @@ use raylib::{
     color::Color,
     math::{Rectangle, Vector2},
     prelude::{RaylibDraw, RaylibDrawHandle},
-    texture::Texture2D,
 };
 use serde::{Deserialize, Serialize};
 
