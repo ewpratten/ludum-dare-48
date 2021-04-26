@@ -49,30 +49,30 @@ impl LoadingScreen {
         win_height: i32,
         win_width: i32,
     ) {
-        // Determine how far through rendering this logo we are
-        // This value is used to determine the logo alpha
-        let playthrough_percent =
-            (draw_handle.get_time() - self.last_state_switch_time) / SECONDS_PER_LOGO;
+        // // Determine how far through rendering this logo we are
+        // // This value is used to determine the logo alpha
+        // let playthrough_percent =
+        //     (draw_handle.get_time() - self.last_state_switch_time) / SECONDS_PER_LOGO;
 
-        // Build a color mask
-        let mask = self.get_logo_mask(playthrough_percent);
+        // // Build a color mask
+        // let mask = self.get_logo_mask(playthrough_percent);
 
-        // Get the logo
-        let logo = &game_core.resources.game_logo;
+        // // Get the logo
+        // let logo = &game_core.resources.game_logo;
 
-        // Render the logo
-        draw_handle.draw_texture(
-            logo,
-            (win_width / 2) - (logo.width / 2),
-            (win_height / 2) - (logo.height / 2),
-            mask,
-        );
+        // // Render the logo
+        // draw_handle.draw_texture(
+        //     logo,
+        //     (win_width / 2) - (logo.width / 2),
+        //     (win_height / 2) - (logo.height / 2),
+        //     mask,
+        // );
 
         // Move on to next logo if needed
-        if playthrough_percent >= 1.0 {
+        // if playthrough_percent >= 1.0 {
             self.state = LoadingScreenState::RaylibLogo;
             self.last_state_switch_time = draw_handle.get_time();
-        }
+        // }
     }
 
     fn show_raylib_logo(
