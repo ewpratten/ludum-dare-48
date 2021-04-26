@@ -31,6 +31,10 @@ pub struct GlobalResources {
 
     // Darkness layer
     pub darkness_overlay: Texture2D,
+    
+    // Backgrounds
+    pub background_front: Texture2D,
+    pub background_back: Texture2D,
 
     // Shop & items
     pub shop_background: Texture2D,
@@ -166,6 +170,14 @@ impl GlobalResources {
             darkness_overlay: raylib.load_texture_from_image(
                 &thread,
                 &Image::load_image("./assets/img/map/darkness.png")?,
+            )?,
+            background_front: raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/map/backFront.png")?,
+            )?,
+            background_back: raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/map/backBack.png")?,
             )?,
             shop_background: raylib.load_texture_from_image(
                 &thread,

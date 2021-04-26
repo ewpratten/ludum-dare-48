@@ -125,7 +125,7 @@ impl Screen for PauseMenuScreen {
         draw_handle.draw_text(
             "Credits:\n\t- @ewpratten\n\t- @rsninja722\n\t- @wm-c\n\t- @catarinaburghi",
             (win_width / 2) - (SCREEN_PANEL_SIZE.x as i32 / 2) + 10,
-            (win_height / 2) - (SCREEN_PANEL_SIZE.y as i32 / 2) + 120,
+            (win_height / 2) - (SCREEN_PANEL_SIZE.y as i32 / 2) + 170,
             20,
             Color::BLACK,
         );
