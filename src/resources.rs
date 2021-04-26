@@ -1,9 +1,4 @@
-use raylib::{
-    math::Vector2,
-    shaders::Shader,
-    texture::{Image, RenderTexture2D, Texture2D},
-    RaylibHandle, RaylibThread,
-};
+use raylib::{RaylibHandle, RaylibThread, audio::Sound, math::Vector2, shaders::Shader, texture::{Image, RenderTexture2D, Texture2D}};
 
 use crate::lib::wrappers::animation::FrameAnimationWrapper;
 
@@ -66,6 +61,9 @@ pub struct GlobalResources {
 
     // Treasure
     pub transponder: FrameAnimationWrapper,
+
+    // Audio
+    pub breath: Sound,
 }
 
 impl GlobalResources {
@@ -159,7 +157,7 @@ impl GlobalResources {
                 )?,
                 Vector2 { x: 20.0, y: 20.0 },
                 15,
-                4,
+                6,
             ),
             octopus_animation_regular: FrameAnimationWrapper::new(
                 raylib.load_texture_from_image(
@@ -297,6 +295,7 @@ impl GlobalResources {
                 4,
                 2,
 			),
+            breath: Sound::load_sound("./assets/audio/breath.mp3")?
         })
     }
 }
