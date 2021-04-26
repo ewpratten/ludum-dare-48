@@ -39,3 +39,10 @@ impl std::ops::Deref for AudioPlayer {
         &self.backend
     }
 }
+
+
+impl std::ops::DerefMut for AudioPlayer {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.backend
+    }
+}

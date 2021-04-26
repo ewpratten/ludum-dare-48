@@ -1,6 +1,7 @@
+use raylib::core::audio::RaylibAudio;
 use raylib::prelude::*;
 
-use crate::gamecore::GameCore;
+use crate::{gamecore::GameCore, lib::wrappers::audio::player::AudioPlayer};
 
 const NORMAL_PLAYER_SPEED: i32 = 1;
 const BOOST_PLAYER_SPEED: i32 = NORMAL_PLAYER_SPEED * 2;
@@ -11,14 +12,19 @@ const BOOST_DECREASE_PER_SECOND: f32 = 0.65;
 const BOOST_REGEN_PER_SECOND: f32 = 0.25;
 const BREATH_DECREASE_PER_SECOND: f32 = 0.02;
 
+
+
 pub fn update_player_movement(
     draw_handle: &mut RaylibDrawHandle,
     game_core: &mut GameCore,
     window_center: Vector2,
 ) {
+    
+    // let mut p: AudioPlayer = AudioPlayer::new(RaylibAudio::init_audio_device());
+    // p.play_sound(&game_core.resources.breath);
     // Calculate DT
     let dt = draw_handle.get_time() - game_core.last_frame_time;
-
+    
     // Handle player movement
     let mouse_pose = draw_handle.get_mouse_position();
     let mouse_world_pose = draw_handle.get_screen_to_world2D(mouse_pose, game_core.master_camera);
@@ -80,6 +86,7 @@ pub fn update_player_movement(
         game_core
             .player
             .begin_attack(&mut game_core.world, draw_handle.get_time());
+            println!("{{\"x\":{}, \"y\":{}}},",f32::round(game_core.player.position.x),f32::round(game_core.player.position.y));
     }
 
     // Move the player in their direction
