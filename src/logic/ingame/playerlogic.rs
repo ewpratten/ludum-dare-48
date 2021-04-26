@@ -18,7 +18,7 @@ pub fn update_player_movement(
 ) {
     // Calculate DT
     let dt = draw_handle.get_time() - game_core.last_frame_time;
-
+    
     // Handle player movement
     let mouse_pose = draw_handle.get_mouse_position();
     let mouse_world_pose = draw_handle.get_screen_to_world2D(mouse_pose, game_core.master_camera);
@@ -80,6 +80,7 @@ pub fn update_player_movement(
         game_core
             .player
             .begin_attack(&mut game_core.world, draw_handle.get_time());
+            println!("{{\"x\":{}, \"y\":{}}},",f32::round(game_core.player.position.x),f32::round(game_core.player.position.y));
     }
 
     // Move the player in their direction
