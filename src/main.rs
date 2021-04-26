@@ -23,7 +23,7 @@ const DEFAULT_WINDOW_DIMENSIONS: Vector2 = Vector2 {
     x: 1080.0,
     y: 720.0,
 };
-const WINDOW_TITLE: &str = r"One Breath";
+const WINDOW_TITLE: &str = r"Deep Breath";
 const MAX_FPS: u32 = 60;
 
 fn main() {

@@ -10,7 +10,7 @@ use raylib::prelude::*;
 use serde::{Deserialize, Serialize};
 
 const OCTOPUS_SUCK_AIR_DELAY: f64 = 3.5;
-const OCTOPUS_SUCK_AIR_RANGE: f32 = 70.0;
+const OCTOPUS_SUCK_AIR_RANGE: f32 = 40.0;
 const OCTOPUS_SUCK_AIR_DURATION: f64 = 1.0;
 const OCTOPUS_SUCK_AIR_AMOUNT: f32 = 0.1;
 
