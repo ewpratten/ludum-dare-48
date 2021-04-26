@@ -52,10 +52,40 @@
     ],
     "jellyfish": [
         {
-            "position": {
-                "x": 280,
-                "y": 200
-            }
+            "position": {"x": 280, "y": 200}
+        },
+        {
+            "position": {"x":502, "y":489}
+        },
+        {
+            "position": {"x":564, "y":421}
+        },
+        {
+            "position": {"x":336, "y":496}
+        },
+        {
+            "position": {"x":308, "y":838}
+        },
+        {
+            "position": {"x":392, "y":1008}
+        },
+        {
+            "position": {"x":313, "y":973}
+        },
+        {
+            "position": {"x":367, "y":898}
+        },
+        {
+            "position": {"x":340, "y":1023}
+        },
+        {
+            "position": {"x":271, "y":1010}
+        },
+        {
+            "position": {"x":529, "y":1226}
+        },
+        {
+            "position": {"x":284, "y":1536}
         }
     ],
     "octopus": [
@@ -68,6 +98,56 @@
                 "x": 550,
                 "y": 130
             }
+        },
+        {
+            "position_a" : {
+                "x": 316,
+                "y": 384
+            },
+            "position_b" : {
+                "x": 154,
+                "y": 350
+            }
+        },
+        {
+            "position_a" : {
+                "x": 542,
+                "y": 612
+            },
+            "position_b" : {
+                "x": 535,
+                "y": 486
+            }
+        },
+        {
+            "position_a" : {
+                "x": 285,
+                "y": 1211
+            },
+            "position_b" : {
+                "x": 365,
+                "y": 1156
+            }
+        },
+        {
+            "position_a" : {
+                "x": 199,
+                "y": 1629
+            },
+            "position_b" : {
+                "x": 316,
+                "y": 1731
+            }
+        },
+        {
+            "position_a" : {
+                "x": 320,
+                "y": 1705
+            },
+            "position_b" : {
+                "x": 233,
+                "y": 1582
+            }
         }
     ],
 	"whirlpool": [
@@ -78,7 +158,30 @@
             },
 			"should_remove": false,
 			"rotation": 0
+        },
+		{
+            "position" : {
+                "x":73, 
+                "y":868
+            },
+			"should_remove": false,
+			"rotation": 0
+        },
+		{
+            "position" : {
+                "x":486, 
+                "y":828
+            },
+			"should_remove": false,
+			"rotation": 0
+        },
+		{
+            "position" : {
+                "x":441, 
+                "y":1663
+            },
+			"should_remove": false,
+			"rotation": 0
         }
-
 	]
 }
