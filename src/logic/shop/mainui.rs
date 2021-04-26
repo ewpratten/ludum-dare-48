@@ -14,7 +14,7 @@ pub fn render_shop(
     bounds: Rectangle,
 ) -> Option<GameState> {
     // Render background
-    draw_handle.draw_rectangle_rec(bounds, Color::WHITE);
+    draw_handle.draw_rectangle_rec(bounds, Color::new(255, 255, 255, 125));
     draw_handle.draw_rectangle_lines_ex(bounds, 3, Color::BLACK);
 
     // Title

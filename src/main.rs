@@ -140,11 +140,8 @@ fn main() {
                     .create_statistics(&game_core, draw_handle.get_time());
                 game_core.progress.update(&new_progress);
 
-                // For now, just quit
-                // This also throws a SEGFAULT.. yay for unsafe code..
-                unsafe {
-                    raylib::ffi::CloseWindow();
-                }
+                // Break the render loop
+                break;
             }
 
             game_core.switch_state(new_state, Some(&draw_handle));
