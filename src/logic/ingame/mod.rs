@@ -3,14 +3,11 @@ mod playerlogic;
 
 use raylib::prelude::*;
 
-use crate::{
-    entities::enemy::base::EnemyBase,
-    gamecore::{GameCore, GameState},
-    lib::wrappers::audio::player::AudioPlayer,
-    pallette::{SKY, WATER, WATER_DARK},
-};
+use crate::{entities::enemy::{base::EnemyBase, whirlpool::Whirlpool}, gamecore::{GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer, pallette::{SKY, WATER, WATER_DARK}};
 
 use super::screen::Screen;
+use crate::entities::fish::FishEntity;
+
 
 pub enum InGameState {
     BUYING,
@@ -210,6 +207,21 @@ impl Screen for InGameScreen {
                     );
                 }
 
+				let mut iter_count = 0;
+				for whirlpool_mob in game_core.world.whirlpool.iter_mut(){
+					whirlpool_mob.handle_logic(&mut game_core.player, dt);
+					whirlpool_mob.render(&mut context_2d, &mut game_core.player, &mut game_core.resources, dt);
+					if whirlpool_mob.should_remove(){
+						for _ in 0..10{
+							game_core.world.fish.push(FishEntity::new(whirlpool_mob.position));
+						}
+					}
+					
+					
+				}
+
+				game_core.world.whirlpool.retain(|x| !x.should_remove());
+				
 				
 				// Render transponder
 				game_core.resources.transponder.draw(&mut context_2d, game_core.world.end_position + Vector2::new(0.0, -50.0), 0.0);

@@ -127,6 +127,11 @@ impl Player {
                     octopus.handle_getting_attacked(self.attacking_timer, current_time);
                 }
             }
+			for whirlpool in world.whirlpool.iter_mut() {
+                if whirlpool.position.distance_to(self.position).abs() <= stun_reach {
+                    whirlpool.handle_getting_attacked(self.attacking_timer, current_time);
+                }
+            }
         }
     }
 

@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::io::Read;
 use failure::Error;
 
-use crate::{entities::{enemy::{jellyfish::JellyFish, octopus::Octopus}, fish::FishEntity}, player::Player};
+use crate::{entities::{enemy::{jellyfish::JellyFish, octopus::Octopus, whirlpool::Whirlpool}, fish::FishEntity}, player::Player};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct World {
@@ -21,8 +21,10 @@ pub struct World {
     #[serde(skip)]
     pub colliders: Vec<Rectangle>,
 
+	// Mobs
     pub jellyfish: Vec<JellyFish>,
     pub octopus: Vec<Octopus>,
+	pub whirlpool: Vec<Whirlpool>,
     
 }
 
@@ -48,6 +50,8 @@ impl World {
                 height: collider.height,
             });
         }
+
+		
 
         Ok(result)
     }
