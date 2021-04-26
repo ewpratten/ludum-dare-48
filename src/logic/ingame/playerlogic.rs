@@ -160,30 +160,33 @@ pub fn update_player_movement(
 
 
 
-	
+	// Creates variable to calculate the distant
 	let mut movement_drift = Vector2::new(0.0, 0.0);
+
+	// Check each whirlpool for effects
 	for whirlpool in game_core.world.whirlpool.iter_mut(){
 		
 		
-
+		// check if its in range and not to close
 		if game_core.player.position.distance_to(whirlpool.position) <= 100.0 && game_core.player.position.distance_to(whirlpool.position) >= 10.0{
 
-			let player_pose = game_core.player.position;
-			let	whirlpool_pose = whirlpool.position;
-			let net_pose = player_pose - whirlpool_pose;
-			
+			// Calculates info for formulas
 
+			// Deltas between positions
+			let net_pose = game_core.player.position - whirlpool.position;
 
+			// Angle between: UNITS: RADIANS
 			let angle = net_pose.y.atan2(net_pose.x);
 
 
 			// Calculates force
-			let force = 15.0 / game_core.player.position.distance_to(whirlpool.position) ;
+			let force = 15.0 / game_core.player.position.distance_to(whirlpool.position);
 
-
+			// Calculates componets of force
 			let mut force_x = (force as f32  * angle.cos()).clamp(-5.0, 5.0);
 			let mut force_y = (force as f32 * angle.sin()).clamp(-5.0, 5.0);
 
+			// Prevents Nan erros
 			if force_x.is_nan(){
 				force_x = 5.0 * net_pose.x;
 			}
@@ -192,6 +195,7 @@ pub fn update_player_movement(
 				force_y = 5.0 * net_pose.y;
 			}
 
+			// Adds values to drift tracker
 			movement_drift.x -= force_x;
 			movement_drift.y -= force_y;
 
@@ -199,7 +203,7 @@ pub fn update_player_movement(
 
 	}
 
-
+	// Checks collision
 	game_core.player.position.x += movement_drift.x;
 	for collider in game_core.world.colliders.iter() {
 		if game_core.player.collides_with_rec(collider) {

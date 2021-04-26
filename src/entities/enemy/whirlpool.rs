@@ -8,12 +8,17 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 pub struct Whirlpool{
 	pub position: Vector2,
+
+	// Track if it needs removing
 	pub should_remove: bool,
+	
+	// variable for tracking rotation
 	pub rotation: f32,
 }
 
 impl Whirlpool{
 
+	// hook to see if item needs removing
 	pub fn should_remove(&self) -> bool{
 		return self.should_remove;
 	}
@@ -37,6 +42,7 @@ impl EnemyBase for Whirlpool{
 
     }
 
+	// Whirlpool removed if shoot
     fn handle_getting_attacked(&mut self, stun_duration: f64, current_time: f64) {
 		self.should_remove = true;
     }
