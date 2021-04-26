@@ -1,6 +1,6 @@
 <img src="./assets/img/logos/readme.png" width="100%">
 
-# \[Game Name\]
+# Deep Breath
 
 
 [![Build](https://github.com/Ewpratten/ludum-dare-48/actions/workflows/build.yml/badge.svg)](https://github.com/Ewpratten/ludum-dare-48/actions/workflows/build.yml)
@@ -9,7 +9,9 @@
 [![Rust 1.51](https://img.shields.io/badge/Rust-1.51-orange)](https://www.rust-lang.org/)
 [![Made with Raylib](https://img.shields.io/badge/Made%20With-raylib-blue)](https://www.raylib.com/)
 
-*\[Game Name\]* is a ...
+**Deep Breath** is an exploration game where you explore an underwater cave in hopes of finding your lost transponder. Items and upgrades can be acquired along the way to assist your search.
+
+This game was written in [Rust](https://www.rust-lang.org/), on top of **[@raysan5](https://github.com/raysan5/)**'s [`raylib`](https://github.com/raysan5/raylib) graphics library. For most of our team, this has been our first big Rust project.
 
 ## Development Resources
 
