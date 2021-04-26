@@ -11,7 +11,7 @@
 
 **Deep Breath** is an exploration game where you explore an underwater cave in hopes of finding your lost transponder. Items and upgrades can be acquired along the way to assist your search.
 
-This game was written in [Rust](https://www.rust-lang.org/), on top of [Rust bindings](https://github.com/deltaphc/raylib-rs) to the [`raylib`](https://github.com/raysan5/raylib) graphics library. For most of our team, this has been our first big Rust project.
+This game was written in [Rust](https://www.rust-lang.org/), on top of [Rust bindings](https://github.com/deltaphc/raylib-rs) to the [`raylib`](https://github.com/raysan5/raylib) graphics library. For most of the team, this has been our first big Rust project.
 
 This has been our second game produced for Ludum Dare. Check out the first [here](https://ldjam.com/events/ludum-dare/46/micromanaged-mike).
 
