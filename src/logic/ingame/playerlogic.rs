@@ -80,7 +80,7 @@ pub fn update_player_movement(
         game_core
             .player
             .begin_attack(&mut game_core.world, draw_handle.get_time());
-            println!("{{\"x\":{}, \"y\":{}}},",f32::round(game_core.player.position.x),f32::round(game_core.player.position.y));
+            //println!("{{\"x\":{}, \"y\":{}}},",f32::round(game_core.player.position.x),f32::round(game_core.player.position.y));
     }
 
     // Move the player in their direction
@@ -214,9 +214,8 @@ pub fn update_player_movement(
 			// Angle between: UNITS: RADIANS
 			let angle = net_pose.y.atan2(net_pose.x);
 
-
 			// Calculates force
-			let force = 1.0 / game_core.player.position.distance_to(pufferfish.position);
+			let force = 1.0;
 
 			// Calculates componets of force
 			let mut force_x = (force as f32  * angle.cos()).clamp(-1.0, 1.0);
