@@ -2,15 +2,14 @@ mod hud;
 mod playerlogic;
 
 use raylib::prelude::*;
-
-use crate::{entities::enemy::{base::EnemyBase, whirlpool::Whirlpool}, gamecore::{GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer};
+use crate::{entities::enemy::{base::EnemyBase, whirlpool::Whirlpool}, gamecore::{self, GameCore, GameState}, lib::wrappers::audio::player::AudioPlayer};
 
 use super::screen::Screen;
 use crate::entities::fish::FishEntity;
 
-
 pub struct InGameScreen {
     shader_time_var_location: i32,
+    swim_playing: bool,
 }
 
 impl InGameScreen {
@@ -20,6 +19,7 @@ impl InGameScreen {
                 *game_core.resources.pixel_shader,
                 rstr!("time").as_ptr(),
             ),
+            swim_playing: false,
         }
     }
 
@@ -28,6 +28,7 @@ impl InGameScreen {
         context_2d: &mut RaylibMode2D<RaylibDrawHandle>,
         game_core: &mut GameCore,
         dt: f64,
+        audio_system: &mut AudioPlayer,
     ) {
         // Build source bounds
         let source_bounds = Rectangle {
@@ -92,7 +93,9 @@ impl InGameScreen {
         // Render fish
         let fish_clone = game_core.world.fish.clone();
         for fish in game_core.world.fish.iter_mut() {
-            fish.update_position(&mut game_core.player, dt, &fish_clone);
+            if fish.update_position(&mut game_core.player, dt, &fish_clone) {
+                audio_system.play_sound(&game_core.resources.fish_pickup);
+            }
             fish.render(context_2d, &mut game_core.resources);
         }
 
@@ -190,6 +193,11 @@ impl Screen for InGameScreen {
             return Some(GameState::PauseMenu);
         }
 
+        // music
+        if !_audio_system.is_sound_playing(&game_core.resources.song_swim) {
+            _audio_system.play_sound(&game_core.resources.song_swim);
+        }
+
         // Window dimensions
         let win_height = draw_handle.get_screen_height();
         let win_width = draw_handle.get_screen_width();
@@ -199,7 +207,12 @@ impl Screen for InGameScreen {
         };
 
         // Update player movement
-        playerlogic::update_player_movement(draw_handle, game_core, window_center);
+        playerlogic::update_player_movement(draw_handle, game_core, window_center, _audio_system);
+
+        if draw_handle.get_time() % 10.0 <= 0.1 && !_audio_system.is_sound_playing(&game_core.resources.breath){
+            _audio_system.set_sound_volume(&game_core.resources.breath, 0.5);
+            _audio_system.play_sound(&game_core.resources.breath);
+        }
 
         // Open a 2D context
         {
@@ -213,7 +226,7 @@ impl Screen for InGameScreen {
                 context_2d.clear_background(Color::BLACK);
 
                 // Render the world
-                self.render_world(&mut context_2d, game_core, dt);
+                self.render_world(&mut context_2d, game_core, dt, _audio_system);
                 if game_core.show_simple_debug_info {
                     self.render_colliders(&mut context_2d, game_core);
                 }
@@ -229,7 +242,9 @@ impl Screen for InGameScreen {
                     );
                 }
                 for octopus in game_core.world.octopus.iter_mut() {
-                    octopus.handle_logic(&mut game_core.player, dt);
+                    if octopus.handle_logic(&mut game_core.player, dt) == 1 {
+                        _audio_system.play_sound(&game_core.resources.succ);
+                    }
                     octopus.render(
                         &mut context_2d,
                         &mut game_core.player,

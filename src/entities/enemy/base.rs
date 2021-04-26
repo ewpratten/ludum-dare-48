@@ -10,6 +10,6 @@ pub trait EnemyBase {
         resources: &mut GlobalResources,
         dt: f64,
     );
-    fn handle_logic(&mut self, player: &mut Player, dt: f64);
+    fn handle_logic(&mut self, player: &mut Player, dt: f64) -> u8;
     fn handle_getting_attacked(&mut self, stun_duration: f64, current_time: f64);
 }

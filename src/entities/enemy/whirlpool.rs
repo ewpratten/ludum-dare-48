@@ -38,8 +38,8 @@ impl EnemyBase for Whirlpool{
         self.rotation += 1.0;
     }
 
-    fn handle_logic(&mut self, player: &mut crate::player::Player, dt: f64) {
-
+    fn handle_logic(&mut self, player: &mut crate::player::Player, dt: f64) -> u8 {
+        return 0;
     }
 
 	// Whirlpool removed if shoot

@@ -1,7 +1,7 @@
 use rand::{prelude::ThreadRng, Rng};
 use raylib::prelude::*;
 
-use crate::{player::Player, resources::GlobalResources};
+use crate::{gamecore::{self, GameCore}, lib::wrappers::audio::player::AudioPlayer, player::Player, resources::GlobalResources};
 
 const FISH_VISION: f32 = 25.0;
 const FISH_MAX_SPEED: f32 = 2.0;
@@ -11,6 +11,7 @@ const FISH_FACTOR_PLAYER: f32 = 0.1;
 const FISH_FACTOR_COHESION: f32 = 0.1;
 const FISH_SEPARATION_DISTANCE: f32 = 15.0;
 const FISH_FACTOR_SEPARATION: f32 = 1.5;
+
 
 #[derive(Debug, Clone)]
 pub struct FishEntity {
@@ -134,25 +135,31 @@ impl FishEntity {
         self.position += self.velocity;
     }
 
-    pub fn handle_free_movement(&mut self, player: &mut Player, _dt: f64) {
+    pub fn handle_free_movement(&mut self, player: &mut Player, _dt: f64) -> bool {
         // Handle player picking up fish
         if player.position.distance_to(self.position).abs() <= player.size.y * 2.2 {
             self.following_player = true;
             self.velocity = self.direction.normalized();
             self.current_frame = 0;
             self.animation_counter = 0;
-
+            
             // Add currency to the player
             player.coins += 1;
+            
+            return true;
         }
+        return false
     }
 
-    pub fn update_position(&mut self, player: &mut Player, dt: f64, other_fish: &Vec<FishEntity>) {
+    pub fn update_position(&mut self, player: &mut Player, dt: f64, other_fish: &Vec<FishEntity>) -> bool{
         if self.following_player {
             self.handle_follow_player(player, dt, other_fish);
         } else {
-            self.handle_free_movement(player, dt);
+            if self.handle_free_movement(player, dt) {
+                return true;
+            }
         }
+        return false;
     }
 
     pub fn render(

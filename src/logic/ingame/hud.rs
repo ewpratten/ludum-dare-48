@@ -18,6 +18,9 @@ pub fn render_hud(
             + slider_bound_height,
     };
 
+    draw_handle.draw_rectangle(10, 10, 20, 700, Color::new(0, 50, 255, 50));
+    draw_handle.draw_rectangle( 10, 710 - (game_core.player.breath_percent * 450.0) as i32, 20, (game_core.player.breath_percent * 450.0) as i32, Color::new(0, 50, 255, 125));
+
     // Render the base of the slider
     draw_handle.draw_rectangle(
         (progress_slider_position.x - slider_bound_height) as i32,

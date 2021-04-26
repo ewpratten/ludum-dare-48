@@ -28,6 +28,10 @@ Core libraries:
  - [`serde`](https://serde.rs/)
  - [`serialstudio-rs`](https://github.com/Ewpratten/serialstudio-rs)
 
+Sound Samples:
+ - [JavierZumer](https://freesound.org/people/JavierZumer/sounds/257236/)
+ - [Noted451](https://freesound.org/people/Noted451/sounds/531015/)
+
 ### VSCode Setup
 
 If using VSCode, disable the `Rust` extension, and install everything in the **Workspace Recommendations** (You will see this list by searching `@recommended` in the extensions panel)

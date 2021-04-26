@@ -44,6 +44,7 @@ pub struct Player {
     pub inventory: PlayerInventory,
     pub stun_timer: f64,
     pub attacking_timer: f64,
+    pub has_stunned: bool,
 }
 
 impl Player {
@@ -55,6 +56,7 @@ impl Player {
             breath_percent: 1.0,
             is_moving: true,
             radius: 4.5,
+            has_stunned: false,
             position: spawn.clone(),
             inventory: PlayerInventory::new(),
             ..Default::default()
@@ -65,6 +67,7 @@ impl Player {
         self.position = position;
         self.breath_percent = 1.0;
         self.boost_percent = 1.0;
+        self.has_stunned = false;
 
         // Handle an air bag being used
         if self.inventory.air_bag.is_some() {
@@ -145,25 +148,28 @@ impl Player {
 
         // Render the player's boost ring
         // This functions both as a breath meter, and as a boost meter
-        let boost_ring_max_radius = self.size.x + 5.0;
-        context_2d.draw_circle(
-            self.position.x as i32,
-            self.position.y as i32,
-            boost_ring_max_radius * self.boost_percent,
-            TRANSLUCENT_WHITE_64,
-        );
-        context_2d.draw_ring(
-            Vector2 {
-                x: self.position.x as i32 as f32,
-                y: self.position.y as i32 as f32,
-            },
-            boost_ring_max_radius,
-            boost_ring_max_radius + 1.0,
-            0,
-            (360.0 * self.breath_percent) as i32,
-            0,
-            TRANSLUCENT_WHITE_96,
-        );
+        // let boost_ring_max_radius = self.size.x + 5.0;
+        // context_2d.draw_circle(
+        //     self.position.x as i32,
+        //     self.position.y as i32,
+        //     boost_ring_max_radius * self.boost_percent,
+        //     TRANSLUCENT_WHITE_64,
+        // );
+
+        context_2d.draw_rectangle(self.position.x as i32 - 15,self.position.y as i32 + 15, 30, 4, Color::new(255, 255, 0, 50));
+        context_2d.draw_rectangle(self.position.x as i32 - 15,self.position.y as i32 + 15, (30.0 * self.boost_percent) as i32, 4, Color::new(255, 255, 0, 125));
+        // context_2d.draw_ring(
+        //     Vector2 {
+        //         x: self.position.x as i32 as f32,
+        //         y: self.position.y as i32 as f32,
+        //     },
+        //     boost_ring_max_radius,
+        //     boost_ring_max_radius + 1.0,
+        //     0,
+        //     (360.0 * self.breath_percent) as i32,
+        //     0,
+        //     TRANSLUCENT_WHITE_96,
+        // );
 
         // Calculate AOE ring
         if self.is_stun_gun_active() {

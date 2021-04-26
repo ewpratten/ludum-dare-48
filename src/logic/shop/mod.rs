@@ -33,6 +33,10 @@ impl Screen for ShopScreen {
         // Render the background
         draw_handle.draw_texture(&game_core.resources.shop_background, 0, 0, Color::WHITE);
 
+        if !audio_system.is_sound_playing(&game_core.resources.song_shop) {
+            audio_system.play_sound(&game_core.resources.song_shop);
+        }
+
         // Window dimensions
         let win_height = draw_handle.get_screen_height();
         let win_width = draw_handle.get_screen_width();

@@ -61,11 +61,11 @@ impl ItemBase for StunGun {
     }
 
     fn get_name(&self) -> String {
-        return "Stun Gun".to_string();
+        return "Stun Bomb".to_string();
     }
 
     fn get_description(&self) -> String {
-        return "Stun your enemies!\nJust don't point it at yourself.".to_string();
+        return "Right click to stun enemies\n one use per dive".to_string();
     }
 
     fn get_texture(

@@ -123,16 +123,19 @@ impl EnemyBase for Octopus {
         }
     }
 
-    fn handle_logic(&mut self, player: &mut crate::player::Player, _dt: f64) {
+    fn handle_logic(&mut self, player: &mut crate::player::Player, _dt: f64) -> u8 {
         if self.suck_air_time_remaining > 0.0 && !self.has_taken_air_from_player {
             if player.position.distance_to(self.current_position).abs() <= OCTOPUS_SUCK_AIR_RANGE {
                 // Take air from the player
                 player.breath_percent -= OCTOPUS_SUCK_AIR_AMOUNT;
-
+                
                 // Set the flag
                 self.has_taken_air_from_player = true;
+
+                return 1;
             }
         }
+        return 0;
     }
 
     fn handle_getting_attacked(&mut self, stun_duration: f64, _current_time: f64) {
