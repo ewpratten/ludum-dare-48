@@ -28,6 +28,10 @@ pub struct GlobalResources {
     pub octopus_animation_regular: FrameAnimationWrapper,
     pub octopus_animation_attack: FrameAnimationWrapper,
 	pub whirlpool: FrameAnimationWrapper,
+	pub pufferfish_big: FrameAnimationWrapper,
+	pub pufferfish_small: FrameAnimationWrapper,
+	pub pufferfish_attack: FrameAnimationWrapper,
+	pub pufferfish_expand: FrameAnimationWrapper,
 
     // Darkness layer
     pub darkness_overlay: Texture2D,
@@ -254,6 +258,42 @@ impl GlobalResources {
                 Vector2 { x: 20.0, y: 20.0 },
                 4,
                 4,
+			),
+            pufferfish_big: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/pufferFishBigIdle.png")?,
+                )?,
+                Vector2 { x: 19.0, y: 19.0 },
+                3,
+                2,
+			),
+            pufferfish_small: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/pufferFishIdle.png")?,
+                )?,
+                Vector2 { x: 19.0, y: 19.0 },
+                6,
+                2,
+			),
+            pufferfish_attack: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/pufferFishAttack.png")?,
+                )?,
+                Vector2 { x: 39.0, y: 25.0 },
+                4,
+                2,
+			),
+            pufferfish_expand: FrameAnimationWrapper::new(
+                raylib.load_texture_from_image(
+                    &thread,
+                    &Image::load_image("./assets/img/enemies/pufferFishExpand.png")?,
+                )?,
+                Vector2 { x: 19.0, y: 19.0 },
+                4,
+                2,
 			),
             breath: Sound::load_sound("./assets/audio/breath.mp3")?
         })

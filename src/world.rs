@@ -4,14 +4,7 @@ use failure::Error;
 use raylib::math::{Rectangle, Vector2};
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    entities::{
-        enemy::{jellyfish::JellyFish, octopus::Octopus, whirlpool::Whirlpool,},
-        fish::FishEntity,
-		
-    },
-    player::Player,
-};
+use crate::{entities::{enemy::{jellyfish::JellyFish, octopus::Octopus, pufferfish::Pufferfish, whirlpool::Whirlpool}, fish::FishEntity}, player::Player};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct World {
@@ -31,6 +24,7 @@ pub struct World {
     pub jellyfish: Vec<JellyFish>,
     pub octopus: Vec<Octopus>,
 	pub whirlpool: Vec<Whirlpool>,
+	pub pufferfish: Vec<Pufferfish>
     
 }
 
