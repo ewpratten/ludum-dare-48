@@ -40,5 +40,14 @@
 			"rotation": 0
         }
 
+	],
+	"pufferfish": [
+		{
+			"position" : {
+				"x": 400,
+				"y": 150
+			}
+		}
+
 	]
 }
