@@ -36,7 +36,8 @@
                 "x": 250,
                 "y": 250
             },
-			"should_remove": false
+			"should_remove": false,
+			"rotation": 0
         }
 
 	]

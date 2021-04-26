@@ -177,20 +177,19 @@ pub fn update_player_movement(
 			let angle = net_pose.y.atan2(net_pose.x);
 
 
-
 			// Calculates force
-			let force = 1.0;
+			let force = 15.0 / game_core.player.position.distance_to(whirlpool.position) ;
 
 
-			let mut force_x = (force as f32  * angle.cos()).clamp(-1.0, 1.0);
-			let mut force_y = (force as f32 * angle.sin()).clamp(-1.0, 1.0);
+			let mut force_x = (force as f32  * angle.cos()).clamp(-5.0, 5.0);
+			let mut force_y = (force as f32 * angle.sin()).clamp(-5.0, 5.0);
 
 			if force_x.is_nan(){
-				force_x = 1.0 * net_pose.x;
+				force_x = 5.0 * net_pose.x;
 			}
 
 			if force_y.is_nan(){
-				force_y = 1.0 * net_pose.y;
+				force_y = 5.0 * net_pose.y;
 			}
 
 			movement_drift.x -= force_x;

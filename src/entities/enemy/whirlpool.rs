@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 pub struct Whirlpool{
 	pub position: Vector2,
 	pub should_remove: bool,
+	pub rotation: f32,
 }
 
 impl Whirlpool{
@@ -27,7 +28,9 @@ impl EnemyBase for Whirlpool{
         resources: &mut crate::resources::GlobalResources,
         dt: f64,
     ) {
-        context_2d.draw_circle(self.position.x as i32, self.position.y as i32, 12.0, Color::RED);
+
+		resources.whirlpool.draw(context_2d, Vector2{x: self.position.x, y: self.position.y}, self.rotation);
+        self.rotation += 1.0;
     }
 
     fn handle_logic(&mut self, player: &mut crate::player::Player, dt: f64) {
