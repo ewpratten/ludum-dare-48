@@ -147,9 +147,6 @@ fn main() {
             game_core.switch_state(new_state, Some(&draw_handle));
         }
 
-        // Feed the audio engine
-        // audio_system.update();
-
         // Feed the profiler
         // This only runs in the dev profile.
         #[cfg(debug_assertions)]
