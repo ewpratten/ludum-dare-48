@@ -46,7 +46,13 @@
 			"position" : {
 				"x": 400,
 				"y": 150
-			}
+			},
+			"is_knocking_back": false,
+			"time_knocking_back": 0.0,
+			"inflate_timer": 0.0,
+			"size": 6.0,
+			"is_stunned": false
+
 		}
 
 	]

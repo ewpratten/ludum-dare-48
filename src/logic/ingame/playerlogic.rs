@@ -202,6 +202,45 @@ pub fn update_player_movement(
 
 	}
 
+	for pufferfish in game_core.world.pufferfish.iter_mut(){
+
+		if pufferfish.is_knocking_back{
+			// Calculates info for formulas
+
+			// Deltas between positions
+			let net_pose = game_core.player.position - pufferfish.position;
+
+			// Angle between: UNITS: RADIANS
+			let angle = net_pose.y.atan2(net_pose.x);
+
+
+			// Calculates force
+			let force = 1.0 / game_core.player.position.distance_to(pufferfish.position);
+
+			// Calculates componets of force
+			let mut force_x = (force as f32  * angle.cos()).clamp(-1.0, 1.0);
+			let mut force_y = (force as f32 * angle.sin()).clamp(-1.0, 1.0);
+
+			// Prevents Nan erros
+			if force_x.is_nan(){
+				force_x = 1.0 * net_pose.x;
+			}
+
+			if force_y.is_nan(){
+				force_y = 1.0 * net_pose.y;
+			}
+
+			game_core.player.additional_vel.x += force_x;
+			game_core.player.additional_vel.y += force_y;
+
+            should_apply_friction = false;
+
+		}
+
+
+
+	}
+
     if should_apply_friction {
         game_core.player.additional_vel.x /= PLAYER_FRICTION;
         game_core.player.additional_vel.y /= PLAYER_FRICTION;
