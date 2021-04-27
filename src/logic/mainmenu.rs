@@ -90,10 +90,11 @@ impl Screen for MainMenuScreen {
             if hovering_play_button {
                 // Reset the world
                 game_core.world.reset(&mut game_core.player);
-
+                _audio_system.play_sound(&game_core.resources.ui_click);
                 // Start playing
                 return Some(GameState::InGame);
             } else if hovering_shop_button {
+                _audio_system.play_sound(&game_core.resources.ui_click);
                 return Some(GameState::InShop);
             } else if hovering_quit_button {
                 return Some(GameState::GameQuit);

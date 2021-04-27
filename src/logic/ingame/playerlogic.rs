@@ -1,6 +1,6 @@
 use raylib::core::audio::RaylibAudio;
 use raylib::prelude::*;
-
+use rand::{prelude::ThreadRng, Rng};
 use crate::{gamecore::GameCore, lib::wrappers::audio::player::AudioPlayer};
 
 const NORMAL_PLAYER_SPEED: i32 = 1;
@@ -18,10 +18,9 @@ pub fn update_player_movement(
     draw_handle: &mut RaylibDrawHandle,
     game_core: &mut GameCore,
     window_center: Vector2,
+    audio_system: &mut AudioPlayer
 ) {
     
-    // let mut p: AudioPlayer = AudioPlayer::new(RaylibAudio::init_audio_device());
-    // p.play_sound(&game_core.resources.breath);
     // Calculate DT
     let dt = draw_handle.get_time() - game_core.last_frame_time;
     
@@ -82,11 +81,26 @@ pub fn update_player_movement(
     let user_request_boost = draw_handle.is_mouse_button_down(MouseButton::MOUSE_LEFT_BUTTON);
     let user_request_action = draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_RIGHT_BUTTON);
 
-    if user_request_action {
+    if user_request_action && !game_core.player.has_stunned {
+        game_core.player.has_stunned = true;
         game_core
             .player
             .begin_attack(&mut game_core.world, draw_handle.get_time());
-            //println!("{{\"x\":{}, \"y\":{}}},",f32::round(game_core.player.position.x),f32::round(game_core.player.position.y));
+    }
+
+    if user_request_action {
+        // println!("{{\"x\":{}, \"y\":{}}},",f32::round(game_core.player.position.x),f32::round(game_core.player.position.y));
+    }
+
+    // die sound
+    if game_core.player.breath_percent <= 0.06 {
+        if !audio_system.is_sound_playing(&game_core.resources.die) {
+            audio_system.play_sound(&game_core.resources.die);
+        }
+    }
+
+    if (game_core.player.stun_timer > 0.0 || game_core.player.is_stun_gun_active()) && !audio_system.is_sound_playing(&game_core.resources.zap) {
+        audio_system.play_sound(&game_core.resources.zap);
     }
 
     // Move the player in their direction
@@ -94,6 +108,21 @@ pub fn update_player_movement(
     if user_request_boost && game_core.player.boost_percent >= 0.0 {
         // Set the speed multiplier
         speed_multiplier = BOOST_PLAYER_SPEED as f32;
+
+        // swim sound
+        if  !audio_system.is_sound_playing(&game_core.resources.swim1) && !audio_system.is_sound_playing(&game_core.resources.swim2) && !audio_system.is_sound_playing(&game_core.resources.swim3) && !audio_system.is_sound_playing(&game_core.resources.swim4) {
+            let mut rng = rand::thread_rng();
+            let num = rng.gen_range(0..3);
+            if num == 0 {
+                audio_system.play_sound(&game_core.resources.swim1);
+            } else if num == 1 {
+                audio_system.play_sound(&game_core.resources.swim2);
+            } else if num == 2 {
+                audio_system.play_sound(&game_core.resources.swim3);
+            } else {
+                audio_system.play_sound(&game_core.resources.swim4);
+            }
+        }
 
         // Decrease the boost
         game_core.player.boost_percent -= BOOST_DECREASE_PER_SECOND * dt as f32;
@@ -221,7 +250,7 @@ pub fn update_player_movement(
 			let angle = net_pose.y.atan2(net_pose.x);
 
 			// Calculates force
-			let force = 1.0;
+			let force = 0.2;
 
 			// Calculates componets of force
 			let mut force_x = (force as f32  * angle.cos()).clamp(-1.0, 1.0);

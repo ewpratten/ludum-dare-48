@@ -276,6 +276,19 @@
 			"stun_timer": 0.0,
 			"puffer_state": "SmallIdle"
 
+		},
+		{
+			"position" : {
+                "x":260, 
+                "y":1472
+            },
+			"is_knocking_back": false,
+			"time_knocking_back": 0.0,
+			"inflate_timer": 0.0,
+			"is_large": false,
+			"stun_timer": 0.0,
+			"puffer_state": "SmallIdle"
+
 		}
 
 	]

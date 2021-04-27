@@ -58,12 +58,28 @@ pub struct GlobalResources {
     pub flippers_one: Texture2D,
     pub flippers_two: Texture2D,
     pub flippers_three: Texture2D,
+    
+    // tut
+    pub tut1: Texture2D,
+    pub tut2: Texture2D,
 
     // Treasure
     pub transponder: FrameAnimationWrapper,
 
     // Audio
     pub breath: Sound,
+    pub swim1: Sound,
+    pub swim2: Sound,
+    pub swim3: Sound,
+    pub swim4: Sound,
+    pub die: Sound,
+    pub ui_buy: Sound,
+    pub ui_click: Sound,
+    pub fish_pickup: Sound,
+    pub song_shop: Sound,
+    pub song_swim: Sound,
+    pub zap: Sound,
+    pub succ: Sound,
 }
 
 impl GlobalResources {
@@ -241,6 +257,14 @@ impl GlobalResources {
                 &thread,
                 &Image::load_image("./assets/img/items/flippers3.png")?,
             )?),
+            tut1: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/map/tut1.png")?,
+            )?),
+            tut2: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/map/tut2.png")?,
+            )?),
             transponder: FrameAnimationWrapper::new(
                 raylib.load_texture_from_image(
                     &thread,
@@ -266,7 +290,7 @@ impl GlobalResources {
                 )?,
                 Vector2 { x: 19.0, y: 19.0 },
                 3,
-                2,
+                4,
 			),
             pufferfish_small: FrameAnimationWrapper::new(
                 raylib.load_texture_from_image(
@@ -275,7 +299,7 @@ impl GlobalResources {
                 )?,
                 Vector2 { x: 19.0, y: 19.0 },
                 6,
-                2,
+                4,
 			),
             pufferfish_attack: FrameAnimationWrapper::new(
                 raylib.load_texture_from_image(
@@ -284,7 +308,7 @@ impl GlobalResources {
                 )?,
                 Vector2 { x: 39.0, y: 25.0 },
                 4,
-                2,
+                4,
 			),
             pufferfish_expand: FrameAnimationWrapper::new(
                 raylib.load_texture_from_image(
@@ -293,9 +317,21 @@ impl GlobalResources {
                 )?,
                 Vector2 { x: 19.0, y: 19.0 },
                 4,
-                2,
+                4,
 			),
-            breath: Sound::load_sound("./assets/audio/breath.mp3")?
+            breath: Sound::load_sound("./assets/audio/breath.mp3")?,
+            swim1: Sound::load_sound("./assets/audio/swim1.mp3")?,
+            swim2: Sound::load_sound("./assets/audio/swim2.mp3")?,
+            swim3: Sound::load_sound("./assets/audio/swim3.mp3")?,
+            swim4: Sound::load_sound("./assets/audio/swim4.mp3")?,
+            die: Sound::load_sound("./assets/audio/die.mp3")?,
+            ui_buy: Sound::load_sound("./assets/audio/uiBuy.mp3")?,
+            ui_click: Sound::load_sound("./assets/audio/uiClick.mp3")?,
+            fish_pickup: Sound::load_sound("./assets/audio/fishPickup.mp3")?,
+            song_shop: Sound::load_sound("./assets/audio/shopSong.mp3")?,
+            song_swim: Sound::load_sound("./assets/audio/swimSong.mp3")?,
+            zap: Sound::load_sound("./assets/audio/zap.mp3")?,
+            succ: Sound::load_sound("./assets/audio/succ.mp3")?,
         })
     }
 }

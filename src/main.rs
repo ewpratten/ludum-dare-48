@@ -131,6 +131,16 @@ fn main() {
         // If needed, update the global state
         if new_state.is_some() {
             let new_state = new_state.unwrap();
+            
+            // stop music
+            if (new_state != GameState::PauseMenu && game_core.state != GameState::PauseMenu) || new_state == GameState::MainMenu {
+                if audio_system.is_sound_playing(&game_core.resources.song_shop) {
+                    audio_system.stop_sound(&game_core.resources.song_shop);
+                }
+                if audio_system.is_sound_playing(&game_core.resources.song_swim) {
+                    audio_system.stop_sound(&game_core.resources.song_swim);
+                }
+            }
 
             // Handle game quit
             if new_state == GameState::GameQuit {

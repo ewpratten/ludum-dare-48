@@ -171,8 +171,10 @@ impl Screen for PauseMenuScreen {
         // Handle click actions on the buttons
         if draw_handle.is_mouse_button_pressed(MouseButton::MOUSE_LEFT_BUTTON) {
             if menu_button.is_hovered(draw_handle) {
+                audio_system.play_sound(&game_core.resources.ui_click);
                 return Some(GameState::MainMenu);
             } else if close_button.is_hovered(draw_handle) {
+                audio_system.play_sound(&game_core.resources.ui_click);
                 return Some(game_core.last_state);
             }
         }

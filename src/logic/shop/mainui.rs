@@ -112,12 +112,14 @@ pub fn render_shop(
     {
         let item = stun_gun_buy_ui.purchase(&mut game_core.player);
         game_core.player.inventory.stun_gun = Some(item);
+        _audio_system.play_sound(&game_core.resources.ui_buy);
     }
     if air_bag_buy_ui.can_player_afford(&game_core.player, &game_core.player.inventory.air_bag)
         && air_bag_buy_ui.user_clicked_buy(draw_handle)
     {
         let item = air_bag_buy_ui.purchase(&mut game_core.player);
         game_core.player.inventory.air_bag = Some(item);
+        _audio_system.play_sound(&game_core.resources.ui_buy);
     }
     if flashlight_buy_ui
         .can_player_afford(&game_core.player, &game_core.player.inventory.flashlight)
@@ -125,12 +127,14 @@ pub fn render_shop(
     {
         let item = flashlight_buy_ui.purchase(&mut game_core.player);
         game_core.player.inventory.flashlight = Some(item);
+        _audio_system.play_sound(&game_core.resources.ui_buy);
     }
     if flippers_buy_ui.can_player_afford(&game_core.player, &game_core.player.inventory.flippers)
         && flippers_buy_ui.user_clicked_buy(draw_handle)
     {
         let item = flippers_buy_ui.purchase(&mut game_core.player);
         game_core.player.inventory.flippers = Some(item);
+        _audio_system.play_sound(&game_core.resources.ui_buy);
     }
 
     // Render the tooltip box
@@ -232,6 +236,7 @@ pub fn render_shop(
                 .player
                 .create_statistics(game_core, draw_handle.get_time());
             game_core.progress.update(&new_progress);
+            _audio_system.play_sound(&game_core.resources.ui_click);
         }
 
         if menu_button.is_hovered(draw_handle) {

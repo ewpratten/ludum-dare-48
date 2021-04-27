@@ -39,7 +39,7 @@ impl EnemyBase for Pufferfish {
 
 		// Render the stun ring
         if is_stunned {
-			println!("Stunned");
+			// println!("Stunned");
             let stun_ring_alpha =
                 calculate_linear_slide(self.stun_timer / 1.0);
             context_2d.draw_circle_v(
@@ -66,7 +66,7 @@ impl EnemyBase for Pufferfish {
                     angle,
                 );
 
-				if self.position.distance_to(player.position).abs() <= 100.0 && self.inflate_timer > 1.0{
+				if self.position.distance_to(player.position).abs() <= 100.0 && self.inflate_timer > 2.0{
 					self.puffer_state = PufferState::Growing;
 				}
 				self.is_large = false;
@@ -128,7 +128,7 @@ impl EnemyBase for Pufferfish {
         }
     }
 
-    fn handle_logic(&mut self, player: &mut crate::player::Player, dt: f64) {
+    fn handle_logic(&mut self, player: &mut crate::player::Player, dt: f64) -> u8 {
 
 
 
@@ -143,6 +143,8 @@ impl EnemyBase for Pufferfish {
 			self.puffer_state = PufferState::Blowing;
 			self.inflate_timer = 0.0;
 		}
+
+        return 0;
 
     }
 
