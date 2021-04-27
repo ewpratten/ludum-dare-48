@@ -37,6 +37,14 @@ impl Screen for ShopScreen {
             audio_system.play_sound(&game_core.resources.song_shop);
         }
 
+        draw_handle.draw_text(
+            &format!("you really need to get to the bottom huh?\n Well then buy my wares,\n they will help you get to your doo-hicky"),
+            10,
+            50,
+            20,
+            Color::WHITE,
+        );
+
         // Window dimensions
         let win_height = draw_handle.get_screen_height();
         let win_width = draw_handle.get_screen_width();

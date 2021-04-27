@@ -98,6 +98,48 @@ impl InGameScreen {
             }
             fish.render(context_2d, &mut game_core.resources);
         }
+        context_2d.draw_texture_pro(
+            &game_core.resources.tut1,
+            Rectangle {
+                x: 0.0,
+                y: 0.0,
+                width: 44.0,
+                height: 41.0,
+            },
+            Rectangle {
+                x: 110.0,
+                y: 100.0,
+                width: 44.0,
+                height: 41.0,
+            },
+            Vector2 {
+                x: 0.0,
+                y: 0.0,
+            },
+            0.0,
+            Color::WHITE,
+        );
+        context_2d.draw_texture_pro(
+            &game_core.resources.tut2,
+            Rectangle {
+                x: 0.0,
+                y: 0.0,
+                width: 44.0,
+                height: 41.0,
+            },
+            Rectangle {
+                x: 160.0,
+                y: 110.0,
+                width: 44.0,
+                height: 41.0,
+            },
+            Vector2 {
+                x: 0.0,
+                y: 0.0,
+            },
+            0.0,
+            Color::WHITE,
+        );
 
         // Render the world texture
         context_2d.draw_texture_rec(

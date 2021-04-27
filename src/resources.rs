@@ -58,6 +58,10 @@ pub struct GlobalResources {
     pub flippers_one: Texture2D,
     pub flippers_two: Texture2D,
     pub flippers_three: Texture2D,
+    
+    // tut
+    pub tut1: Texture2D,
+    pub tut2: Texture2D,
 
     // Treasure
     pub transponder: FrameAnimationWrapper,
@@ -252,6 +256,14 @@ impl GlobalResources {
             flippers_three: (raylib.load_texture_from_image(
                 &thread,
                 &Image::load_image("./assets/img/items/flippers3.png")?,
+            )?),
+            tut1: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/map/tut1.png")?,
+            )?),
+            tut2: (raylib.load_texture_from_image(
+                &thread,
+                &Image::load_image("./assets/img/map/tut2.png")?,
             )?),
             transponder: FrameAnimationWrapper::new(
                 raylib.load_texture_from_image(
