@@ -183,5 +183,113 @@
 			"should_remove": false,
 			"rotation": 0
         }
+
+	],
+	"pufferfish": [
+		{
+			"position" : {
+				"x": 261,
+				"y": 387
+			},
+			"is_knocking_back": false,
+			"time_knocking_back": 0.0,
+			"inflate_timer": 0.0,
+			"is_large": false,
+			"stun_timer": 0.0,
+			"puffer_state": "SmallIdle"
+
+		},
+		{
+			"position" : {
+				"x": 195,
+				"y": 694
+			},
+			"is_knocking_back": false,
+			"time_knocking_back": 0.0,
+			"inflate_timer": 0.0,
+			"is_large": false,
+			"stun_timer": 0.0,
+			"puffer_state": "SmallIdle"
+
+		},
+		{
+			"position" : {
+				"x": 635,
+				"y": 731
+			},
+			"is_knocking_back": false,
+			"time_knocking_back": 0.0,
+			"inflate_timer": 0.0,
+			"is_large": false,
+			"stun_timer": 0.0,
+			"puffer_state": "SmallIdle"
+
+		},
+		{
+			"position" : {
+				"x": 169,
+				"y": 1104
+			},
+			"is_knocking_back": false,
+			"time_knocking_back": 0.0,
+			"inflate_timer": 0.0,
+			"is_large": false,
+			"stun_timer": 0.0,
+			"puffer_state": "SmallIdle"
+
+		},
+		{
+			"position" : {
+				"x": 478,
+				"y": 1333
+			},
+			"is_knocking_back": false,
+			"time_knocking_back": 0.0,
+			"inflate_timer": 0.0,
+			"is_large": false,
+			"stun_timer": 0.0,
+			"puffer_state": "SmallIdle"
+
+		},
+		{
+			"position" : {
+				"x": 499,
+				"y": 1775
+			},
+			"is_knocking_back": false,
+			"time_knocking_back": 0.0,
+			"inflate_timer": 0.0,
+			"is_large": false,
+			"stun_timer": 0.0,
+			"puffer_state": "SmallIdle"
+
+		},
+		{
+			"position" : {
+				"x": 74,
+				"y": 1259
+			},
+			"is_knocking_back": false,
+			"time_knocking_back": 0.0,
+			"inflate_timer": 0.0,
+			"is_large": false,
+			"stun_timer": 0.0,
+			"puffer_state": "SmallIdle"
+
+		},
+		{
+			"position" : {
+                "x":260, 
+                "y":1472
+            },
+			"is_knocking_back": false,
+			"time_knocking_back": 0.0,
+			"inflate_timer": 0.0,
+			"is_large": false,
+			"stun_timer": 0.0,
+			"puffer_state": "SmallIdle"
+
+		}
+
 	]
 }

@@ -86,7 +86,10 @@ pub fn update_player_movement(
         game_core
             .player
             .begin_attack(&mut game_core.world, draw_handle.get_time());
-            // println!("{{\"x\":{}, \"y\":{}}},",f32::round(game_core.player.position.x),f32::round(game_core.player.position.y));
+    }
+
+    if user_request_action {
+        // println!("{{\"x\":{}, \"y\":{}}},",f32::round(game_core.player.position.x),f32::round(game_core.player.position.y));
     }
 
     // die sound
@@ -232,6 +235,44 @@ pub fn update_player_movement(
 
             should_apply_friction = false;
 		}
+
+	}
+
+	for pufferfish in game_core.world.pufferfish.iter_mut(){
+
+		if pufferfish.is_knocking_back{
+			// Calculates info for formulas
+
+			// Deltas between positions
+			let net_pose = game_core.player.position - pufferfish.position;
+
+			// Angle between: UNITS: RADIANS
+			let angle = net_pose.y.atan2(net_pose.x);
+
+			// Calculates force
+			let force = 0.2;
+
+			// Calculates componets of force
+			let mut force_x = (force as f32  * angle.cos()).clamp(-1.0, 1.0);
+			let mut force_y = (force as f32 * angle.sin()).clamp(-1.0, 1.0);
+
+			// Prevents Nan erros
+			if force_x.is_nan(){
+				force_x = 1.0 * net_pose.x;
+			}
+
+			if force_y.is_nan(){
+				force_y = 1.0 * net_pose.y;
+			}
+
+			game_core.player.additional_vel.x += force_x;
+			game_core.player.additional_vel.y += force_y;
+
+            should_apply_friction = false;
+
+		}
+
+
 
 	}
 

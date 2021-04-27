@@ -268,6 +268,17 @@ impl Screen for InGameScreen {
 					
 				}
 
+				// Iterates over pufferfish
+				for pufferfish in game_core.world.pufferfish.iter_mut(){
+
+					pufferfish.handle_logic(&mut game_core.player, dt);
+					pufferfish.render(&mut context_2d, &mut game_core.player, &mut game_core.resources, dt);
+
+
+
+				}
+
+
 				// Removes whirlpools set for removal
 				game_core.world.whirlpool.retain(|x| !x.should_remove());
 				

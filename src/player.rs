@@ -107,6 +107,11 @@ impl Player {
                     whirlpool.handle_getting_attacked(self.attacking_timer, current_time);
                 }
             }
+			for pufferfish in world.pufferfish.iter_mut() {
+                if pufferfish.position.distance_to(self.position).abs() <= stun_reach {
+                    pufferfish.handle_getting_attacked(self.attacking_timer, current_time);
+                }
+            }
         }
     }
 

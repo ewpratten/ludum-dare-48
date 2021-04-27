@@ -34,8 +34,8 @@ impl Screen for MainMenuScreen {
 
         // Render title
         draw_handle.draw_text(
-            "ONE BREATH",
-            (win_height / 2) - 80,
+            "DEEP BREATH",
+            (win_height / 2) - 100,
             win_width / 8,
             80,
             Color::BLACK,
